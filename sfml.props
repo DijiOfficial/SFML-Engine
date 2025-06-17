@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-network.lib;sfml-audio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+	  <PostBuildEvent>
+		  <Command>
+			  xcopy "$(SolutionDir)3rdParty\SFML\bin\sfml-audio-3.dll" "$(OutputPath)" /R /Y
+			  xcopy "$(SolutionDir)3rdParty\SFML\bin\sfml-graphics-3.dll" "$(OutputPath)" /R /Y
+			  xcopy "$(SolutionDir)3rdParty\SFML\bin\sfml-network-3.dll" "$(OutputPath)" /R /Y
+			  xcopy "$(SolutionDir)3rdParty\SFML\bin\sfml-system-3.dll" "$(OutputPath)" /R /Y
+			  xcopy "$(SolutionDir)3rdParty\SFML\bin\sfml-window-3.dll" "$(OutputPath)" /R /Y
+		  </Command>
+	  </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
