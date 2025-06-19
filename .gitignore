@@ -570,6 +570,15 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+# Un-ignore the SFML bin folders and their parents
+!3rdParty/
+!3rdParty/SFML_x64/
+!3rdParty/SFML_x64/bin/
+!3rdParty/SFML_x64/bin/**
+!3rdParty/SFML_x86/
+!3rdParty/SFML_x86/bin/
+!3rdParty/SFML_x86/bin/**
+
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
