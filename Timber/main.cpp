@@ -4,13 +4,13 @@
 #endif
 #endif
 
-#include "engine/core/Engine.h"
+#include "Engine/Core/Engine.h"
 #include "Core/GameLoader.h"
 
 int main(int, char* [])
 {
     const diji::Engine engine("../Timber/Resources/");
-    engine.Run(Scene::DefaultCircle);
+    engine.Run(SceneLoader::Timber);
     
     return 0;
 }

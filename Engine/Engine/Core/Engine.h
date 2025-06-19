@@ -8,7 +8,7 @@ namespace diji
 	{
 	public:
 		explicit Engine(const std::string& dataPath);
-		~Engine() noexcept;
+		~Engine() noexcept = default;
 
 		Engine(const Engine& other) = delete;
 		Engine(Engine&& other) = delete;
@@ -19,6 +19,5 @@ namespace diji
 
 	private:
 		static constexpr float FIXED_TIME_STEP{ 1 / 60.f };
-		//static constexpr float FIXED_TIME_STEP{ 1 / 151.5f };
 	};
 }

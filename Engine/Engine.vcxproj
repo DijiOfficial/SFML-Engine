@@ -19,20 +19,38 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="engine\core\Engine.h" />
-    <ClInclude Include="engine\core\GameObject.h" />
-    <ClInclude Include="engine\input\Command.h" />
-    <ClInclude Include="engine\input\Controller.h" />
-    <ClInclude Include="engine\input\GameActorCommand.h" />
-    <ClInclude Include="engine\input\InputManager.h" />
-    <ClInclude Include="engine\singleton\Singleton.h" />
+    <ClInclude Include="Engine\Components\Component.h" />
+    <ClInclude Include="Engine\Components\Render.h" />
+    <ClInclude Include="Engine\Components\TextureComp.h" />
+    <ClInclude Include="Engine\Components\Transform.h" />
+    <ClInclude Include="Engine\Core\Engine.h" />
+    <ClInclude Include="Engine\Core\GameObject.h" />
+    <ClInclude Include="Engine\Core\Renderer.h" />
+    <ClInclude Include="Engine\Core\Scene.h" />
+    <ClInclude Include="Engine\Input\Command.h" />
+    <ClInclude Include="Engine\Input\Controller.h" />
+    <ClInclude Include="Engine\Input\GameActorCommand.h" />
+    <ClInclude Include="Engine\Input\InputManager.h" />
+    <ClInclude Include="Engine\Singleton\ResourceManager.h" />
+    <ClInclude Include="Engine\Singleton\SceneManager.h" />
+    <ClInclude Include="Engine\Singleton\Singleton.h" />
+    <ClInclude Include="Engine\Singleton\TimeSingleton.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="engine\core\Engine.cpp" />
-    <ClCompile Include="engine\core\GameObject.cpp" />
-    <ClCompile Include="engine\input\Controller.cpp" />
-    <ClCompile Include="engine\input\GameActorCommand.cpp" />
-    <ClCompile Include="engine\input\InputManager.cpp" />
+    <ClCompile Include="Engine\Components\Render.cpp" />
+    <ClCompile Include="Engine\Components\TextureComp.cpp" />
+    <ClCompile Include="Engine\Core\Engine.cpp" />
+    <ClCompile Include="Engine\Core\GameObject.cpp" />
+    <ClCompile Include="Engine\Core\Renderer.cpp" />
+    <ClCompile Include="Engine\Core\Scene.cpp" />
+    <ClCompile Include="Engine\Input\Controller.cpp" />
+    <ClCompile Include="Engine\Input\GameActorCommand.cpp" />
+    <ClCompile Include="Engine\Input\InputManager.cpp" />
+    <ClCompile Include="Engine\Singleton\ResourceManager.cpp" />
+    <ClCompile Include="Engine\Singleton\SceneManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Engine\RAII_Wrappers\" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

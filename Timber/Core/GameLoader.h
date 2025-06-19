@@ -1,6 +1,7 @@
 ﻿#pragma once
-namespace Scene
+namespace SceneLoader
 {
     void DefaultCircle();
     void Load();
+    void Timber();
 }

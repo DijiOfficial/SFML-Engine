@@ -1,0 +1,67 @@
+﻿#include "SceneManager.h"
+
+void diji::SceneManager::Init() const
+{
+    m_ScenesUPtrMap.at(m_ActiveSceneId)->Init();
+}
+
+void diji::SceneManager::Start() const
+{
+    m_ScenesUPtrMap.at(m_ActiveSceneId)->Start();
+}
+
+void diji::SceneManager::FixedUpdate() const
+{
+    m_ScenesUPtrMap.at(m_ActiveSceneId)->FixedUpdate();
+}
+
+void diji::SceneManager::Update() const
+{
+    m_ScenesUPtrMap.at(m_ActiveSceneId)->Update();
+}
+
+void diji::SceneManager::LateUpdate() const
+{
+    m_ScenesUPtrMap.at(m_ActiveSceneId)->LateUpdate();
+}
+
+void diji::SceneManager::Render()
+{
+    m_ScenesUPtrMap.at(m_ActiveSceneId)->Render();
+
+    // Everything has been updated we can load the new scene
+    if (m_IsSceneChange) // todo: async new scene loading, ideally this should be its own function after the whole loop
+    {
+        m_IsSceneChange = false;
+        
+        // Destroy current scene
+       OnDestroy();
+
+        
+        m_ActiveSceneId = m_NextScene;
+        
+        // Load New scene
+        m_ScenesUPtrMap.at(m_ActiveSceneId)->Init();
+        m_ScenesUPtrMap.at(m_ActiveSceneId)->Start();
+    }
+}
+
+void diji::SceneManager::OnDestroy() const
+{
+    m_ScenesUPtrMap.at(m_ActiveSceneId)->OnDestroy();
+}
+
+diji::Scene* diji::SceneManager::CreateScene(const int id)
+{
+    // Check if the scene already exists in the map
+    auto it = m_ScenesUPtrMap.find(id);
+    if (it != m_ScenesUPtrMap.end())
+    {
+        // Scene already exists, return the existing scene
+        return it->second.get();
+    }
+
+    // Scene does not exist, create a new one and store it in the map
+    m_ScenesUPtrMap[id] = std::make_unique<Scene>();
+    return m_ScenesUPtrMap[id].get();
+}

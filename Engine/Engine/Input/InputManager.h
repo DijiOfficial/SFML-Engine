@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../singleton/Singleton.h"
+#include "../Singleton/Singleton.h"
 #include "Controller.h"
 #include "GameActorCommand.h"
 // #include "GameObject.h"
