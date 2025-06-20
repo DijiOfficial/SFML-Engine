@@ -27,11 +27,14 @@ namespace diji
         void SetActiveScene(const int id) { m_ActiveSceneId = id; m_NextScene = id; }
         void SetNextSceneToActivate(const int id) { m_NextScene = id; m_IsSceneChange = true; }
         int GetActiveSceneId() const { return m_ActiveSceneId; }
+        void SetPendingDestroy(GameObject* gameObject);
 		
     private:
         std::map<int, std::unique_ptr<Scene>> m_ScenesUPtrMap;
+        std::vector<GameObject*> m_PendingDestroyVec;
         int m_ActiveSceneId = 0;
         int m_NextScene = 0;
         bool m_IsSceneChange = false;
+        bool m_HasPendingDestroy = false;
     };
 }

@@ -85,6 +85,8 @@ diji::GameObject* diji::Scene::CreateGameObject(const std::string& name, const G
 
 void diji::Scene::Remove(const GameObject* object)
 {
+    object->OnDestroy();
+    
     for (auto it = m_ObjectsUPtrMap.begin(); it != m_ObjectsUPtrMap.end(); ++it)
     {
         if (it->second.get() == object)

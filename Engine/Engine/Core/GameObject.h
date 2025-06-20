@@ -25,16 +25,17 @@ namespace diji
 
 		void Init() const;
 		void OnEnable() const;
-		void Start();
+		void Start() const;
 		
-		void FixedUpdate();
-		void Update();
-		void LateUpdate();
+		void FixedUpdate() const;
+		void Update() const;
+		void LateUpdate() const;
 		void Render() const;
 
-		void OnDisable();
-		void OnDestroy();
+		void OnDisable() const;
+		void OnDestroy() const;
 
+		void Destroy();
 		void CreateDuplicate(GameObject* duplicate) const;
 		
 #pragma region Components

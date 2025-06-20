@@ -179,10 +179,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\Beehaviour.cpp" />
     <ClCompile Include="Core\GameLoader.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\Beehaviour.h" />
     <ClInclude Include="Core\GameLoader.h" />
     <ClInclude Include="Core\GameStates.h" />
   </ItemGroup>

@@ -31,6 +31,7 @@
     <ClInclude Include="Engine\Input\Controller.h" />
     <ClInclude Include="Engine\Input\GameActorCommand.h" />
     <ClInclude Include="Engine\Input\InputManager.h" />
+    <ClInclude Include="Engine\Singleton\RandNumber.h" />
     <ClInclude Include="Engine\Singleton\ResourceManager.h" />
     <ClInclude Include="Engine\Singleton\SceneManager.h" />
     <ClInclude Include="Engine\Singleton\Singleton.h" />
@@ -46,6 +47,7 @@
     <ClCompile Include="Engine\Input\Controller.cpp" />
     <ClCompile Include="Engine\Input\GameActorCommand.cpp" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
+    <ClCompile Include="Engine\Singleton\RandNumber.cpp" />
     <ClCompile Include="Engine\Singleton\ResourceManager.cpp" />
     <ClCompile Include="Engine\Singleton\SceneManager.cpp" />
   </ItemGroup>
