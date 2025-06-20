@@ -27,5 +27,18 @@ void SceneLoader::Timber()
     background->AddComponents<Transform>(0, 0);
     background->AddComponents<Render>();
 
+    const auto tree = timberScene->CreateGameObject("tree");
+    tree->AddComponents<TextureComp>("graphics/tree.png");
+    tree->AddComponents<Transform>(810, 0);
+    tree->AddComponents<Render>();
+
+    const auto bee = timberScene->CreateGameObject("bee");
+    bee->AddComponents<TextureComp>("graphics/bee.png");
+    bee->AddComponents<Transform>(0, 800);
+    bee->AddComponents<Render>();
+
+    const auto bee2 = timberScene->CreateGameObject("bee2", bee);
+    bee2->GetComponent<Transform>()->SetPosition(200, 800);
+    
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(timber::GameState::LEVEL));
 }

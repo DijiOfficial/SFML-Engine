@@ -1,8 +1,56 @@
 ﻿#include "GameObject.h"
 
+#include <variant>
+
 #include "../Components/Render.h"
 #include "../Components/Transform.h"
 // #include <algorithm>
+
+// diji::GameObject::GameObject(const GameObject& other)
+// {
+//     m_PositionIsDirty = other.m_PositionIsDirty;
+//     m_LocalPosition = other.m_LocalPosition;
+//
+// 		
+//     m_RenderCompPtr = other.m_RenderCompPtr;
+//     m_ParentPtr = other.m_ParentPtr;
+//     m_TransformCompPtr = other.m_TransformCompPtr;
+// 		
+//     m_ComponentsPtrVec = other.m_ComponentsPtrVec;
+//     // std::vector<GameObject*> m_ChildrenPtrVec;
+//     
+//     // // Deep copy components
+//     // for (const auto& comp : other.m_ComponentsPtrVec)
+//     // {
+//     //     // Create new component instance
+//     //     auto newComp = comp->Clone();  // Requires Clone() method in Component
+//     //     
+//     //     // Set owner to this new GameObject
+//     //     newComp->SetOwner(this);
+//     //     
+//     //     // Add to components vector
+//     //     m_ComponentsPtrVec.push_back(std::move(newComp));
+//     //     
+//     //     // Update special component pointers
+//     //     if (auto transform = dynamic_cast<Transform*>(m_ComponentsPtrVec.back().get()))
+//     //     {
+//     //         m_TransformCompPtr = transform;
+//     //     }
+//     //     else if (auto render = dynamic_cast<Render*>(m_ComponentsPtrVec.back().get()))
+//     //     {
+//     //         m_RenderCompPtr = render;
+//     //     }
+//     // }
+//     
+//     // // Deep copy children
+//     // for (const auto& child : other.m_ChildrenPtrVec)
+//     // {
+//     //     auto newChild = new GameObject(*child);  // Recursive copy
+//     //     newChild->m_ParentPtr = this;            // Set parent to this object
+//     //     m_ChildrenPtrVec.push_back(newChild);
+//     // }
+// }
+
 
 void diji::GameObject::Init() const
 {
@@ -46,6 +94,15 @@ void diji::GameObject::OnDestroy()
 {
 }
 
+void diji::GameObject::CreateDuplicate(GameObject* duplicate) const
+{
+    for (const auto& entry : m_ComponentStorage)
+    {
+        entry.DuplicateComponents(duplicate);
+    }
+    
+    duplicate->SetLocalPosition(m_LocalPosition);
+}
 
 sf::Vector2f diji::GameObject::GetWorldPosition()
 {

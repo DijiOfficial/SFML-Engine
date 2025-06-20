@@ -27,6 +27,7 @@ namespace diji
         void OnDestroy();
 		
         [[nodiscard]] GameObject* CreateGameObject(const std::string& name);
+        [[nodiscard]] GameObject* CreateGameObject(const std::string& name, const GameObject* original);
         void Remove(const GameObject* object);
         void Remove(const std::string& name);
         void RemoveAll();

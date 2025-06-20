@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <SFML/System/Vector2.hpp>
+#include <functional>
 
 namespace diji
 {
@@ -34,11 +35,24 @@ namespace diji
 		void OnDisable();
 		void OnDestroy();
 
+		void CreateDuplicate(GameObject* duplicate) const;
+		
 #pragma region Components
 		template<typename T, typename... Args>
 		void AddComponents(Args&&... args)
 		{
 			static_assert(std::is_base_of_v<Component, T>, "T must derive from Component");
+
+			// Store a lambda that will re-create this component on a new GameObject
+			m_ComponentStorage.push_back(
+				{[storedArgs = std::make_tuple(std::forward<Args>(args)...)](GameObject* target)
+					{
+						std::apply([&]<typename... T0>(T0&&... unpackedArgs)
+						{
+							target->AddComponents<T>(std::forward<T0>(unpackedArgs)...);
+						}, storedArgs);
+					}
+				});
 
 			m_ComponentsPtrVec.push_back(std::make_unique<T>(this, std::forward<Args>(args)...));
 
@@ -126,6 +140,17 @@ namespace diji
 		std::vector<std::unique_ptr<Component>> m_ComponentsPtrVec;
 		std::vector<GameObject*> m_ChildrenPtrVec;
 
+
+
+		struct ComponentStorage
+		{
+			std::function<void(GameObject*)> DuplicateComponents;
+		};
+		std::vector<ComponentStorage> m_ComponentStorage;
+
+
+
+		
 		bool IsChildOf(GameObject* potentialChild) const;
 		void AddChild(GameObject* child);
 		void RemoveChild(GameObject* child);

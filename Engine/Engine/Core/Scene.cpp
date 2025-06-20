@@ -73,6 +73,16 @@ diji::GameObject* diji::Scene::CreateGameObject(const std::string& name)
     return m_ObjectsUPtrMap.at(name).get();
 }
 
+diji::GameObject* diji::Scene::CreateGameObject(const std::string& name, const GameObject* original)
+{
+    if (m_ObjectsUPtrMap.contains(name))
+        throw std::runtime_error("A GameObject with the given name already exists.");
+
+    m_ObjectsUPtrMap[name] = std::make_unique<GameObject>();
+    original->CreateDuplicate(m_ObjectsUPtrMap.at(name).get());
+    return m_ObjectsUPtrMap.at(name).get();
+}
+
 void diji::Scene::Remove(const GameObject* object)
 {
     for (auto it = m_ObjectsUPtrMap.begin(); it != m_ObjectsUPtrMap.end(); ++it)
