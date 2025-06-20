@@ -18,9 +18,9 @@ void timber::Beehaviour::Start()
 void timber::Beehaviour::Update()
 {
     // could optimise the calls to the singletons
-    m_TransformCompPtr->AddOffset(-m_Speed * diji::TimeSingleton::GetInstance().GetDeltaTime(), 0);
+    m_TransformCompPtr->AddOffset(m_SpeedModifier * m_Speed * diji::TimeSingleton::GetInstance().GetDeltaTime(), 0);
 
-    if (m_TransformCompPtr->GetPosition().x < -100)
+    if (m_TransformCompPtr->GetPosition().x < -205 or m_TransformCompPtr->GetPosition().x > 2005)
     {
         Randomize();
     }
@@ -29,7 +29,7 @@ void timber::Beehaviour::Update()
 void timber::Beehaviour::Randomize()
 {
     const auto& rand = diji::RandNumber::GetInstance();
-    m_Speed = rand.GetRandomRangeFloat(200, 400);
+    m_Speed = rand.GetRandomRangeFloat(m_MinSpeed, m_MaxSpeed);
     
-    m_TransformCompPtr->SetPosition(2000, rand.GetRandomRangeFloat(500, 1000));
+    m_TransformCompPtr->SetPosition(m_StartPosition, rand.GetRandomRangeFloat(m_MinHeight, m_MaxHeight));
 }

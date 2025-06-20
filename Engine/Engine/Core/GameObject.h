@@ -92,6 +92,7 @@ namespace diji
 		
 		const std::vector<std::unique_ptr<Component>>& GetComponents() const { return m_ComponentsPtrVec; }
 
+		// todo: set [[no discard]]
 		template<typename T>
 		T* GetComponent() const
 		{

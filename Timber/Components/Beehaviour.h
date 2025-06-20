@@ -8,7 +8,7 @@ namespace diji
 
 namespace timber 
 {
-    class Beehaviour final : public diji::Component
+    class Beehaviour : public diji::Component
     {
     public:
         Beehaviour(diji::GameObject* ownerPtr) : Component(ownerPtr) {}
@@ -24,11 +24,19 @@ namespace timber
 
         void OnDisable() override {}
         void OnDestroy() override {}
-		
+        
+    protected:
+        float m_MinSpeed = 200.f;
+        float m_MaxSpeed = 400.f;
+        float m_MinHeight = 500.f;
+        float m_MaxHeight = 1000.f;
+        float m_StartPosition = 2000.f;
+        int m_SpeedModifier = -1;
+        
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
         float m_Speed = 0.f;
-
+        
         void Randomize();
     };
 }

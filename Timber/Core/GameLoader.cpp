@@ -1,6 +1,7 @@
 ﻿#include "GameLoader.h"
 #include "GameStates.h"
 #include "../Components/Beehaviour.h"
+#include "../Components/CloudBehaviour.h"
 
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Components/TextureComp.h"
@@ -43,12 +44,14 @@ void SceneLoader::Timber()
     cloud->AddComponents<TextureComp>("graphics/cloud.png");
     cloud->AddComponents<Transform>(0, 0);
     cloud->AddComponents<Render>();
+    cloud->AddComponents<timber::CloudBehaviour>(0.f, 150.f);
     
     const auto cloud2 = timberScene->CreateGameObject("cloud2", cloud);
-    cloud2->GetComponent<Transform>()->SetPosition(0, 250);
+    cloud2->GetComponent<timber::CloudBehaviour>()->SetHeightVariables(-150, 150);
     
     const auto cloud3 = timberScene->CreateGameObject("cloud3", cloud);
-    cloud3->GetComponent<Transform>()->SetPosition(0, 500);
+    cloud3->GetComponent<timber::CloudBehaviour>()->SetHeightVariables(-150, 350);
+
     
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(timber::GameState::LEVEL));
 }
