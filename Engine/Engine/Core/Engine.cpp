@@ -48,6 +48,8 @@ void diji::Engine::Run(const std::function<void()>& load) const
 	sceneManager.Init();
 	sceneManager.Start();
 
+	bool isPaused = false;
+	
 	while (g_window_ptr->isOpen())
 	{
 		const auto currentTime{ std::chrono::high_resolution_clock::now() };
@@ -58,18 +60,21 @@ void diji::Engine::Run(const std::function<void()>& load) const
 		TimeSingleton::GetInstance().SetDeltaTime(deltaTime);
 		while (const std::optional event = g_window_ptr->pollEvent())
 		{
-			if (event->is<sf::Event::Closed>() || not input.ProcessInput(event))
+			if (event->is<sf::Event::Closed>() || not input.ProcessInput(event, isPaused))
 			{
 				g_window_ptr->close();
 				goto gameLoopEnd;
 			}
 		}
 
-		 while (lag >= FIXED_TIME_STEP)
-		 {
-		 	sceneManager.FixedUpdate();
-		 	lag -= FIXED_TIME_STEP;
-		 }
+		if (isPaused)
+			continue;
+		
+		while (lag >= FIXED_TIME_STEP)
+		{
+			sceneManager.FixedUpdate();
+			lag -= FIXED_TIME_STEP;
+		}
 
 		sceneManager.Update();
 		sceneManager.LateUpdate();

@@ -3,7 +3,7 @@
 // #include <format>
 #include <SFML/Window/Event.hpp>
 
-bool diji::InputManager::ProcessInput(const std::optional<sf::Event>& event)
+bool diji::InputManager::ProcessInput(const std::optional<sf::Event>& event, bool& isPaused)
 {
 	if (!event) return m_Continue; // this should never trigger
 
@@ -11,6 +11,7 @@ bool diji::InputManager::ProcessInput(const std::optional<sf::Event>& event)
 	if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
 	{
 		if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) return false;
+		if (keyPressed->scancode == sf::Keyboard::Scancode::Enter) isPaused = !isPaused;
 		ProcessKeyboardInput(keyPressed);
 	}
 	else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
