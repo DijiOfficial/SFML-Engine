@@ -11,6 +11,7 @@
 namespace sf
 {
     class Texture;
+    class Font;
 }
 
 namespace diji
@@ -20,16 +21,16 @@ namespace diji
     public:
         void Init(const std::string& dataPath);
         sf::Texture& LoadTexture(const std::string& file);
-        // Font* LoadFont(const std::string& file, unsigned int size);
+        sf::Font& LoadFont(const std::string& file);
         // SoundEffect* LoadSoundEffect(const std::string& file);
         // Music* LoadMusic(const std::string& file);
 
     private:
         std::string m_DataPath;
 
-        std::unordered_map<std::string, sf::Texture> m_TexturesUPtrUMap;
-        // std::unordered_multimap<std::string, std::pair<unsigned int, std::unique_ptr<Font>>> m_FontsUPtrUMap;
-        //
+        std::unordered_map<std::string, sf::Texture> m_TexturesUMap;
+        std::unordered_map<std::string, sf::Font> m_FontsUMap;
+        
         // std::unordered_map<std::string, std::unique_ptr<SoundEffect>> m_SoundEffectsUPtrUMap;
         // std::unordered_map<std::string, std::unique_ptr<Music>> m_MusicUPtrUMap;
     };
