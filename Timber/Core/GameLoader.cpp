@@ -32,38 +32,38 @@ void SceneLoader::Timber()
     const auto& timberScene = SceneManager::GetInstance().CreateScene(static_cast<int>(timber::GameState::LEVEL));
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(timber::GameState::LEVEL));
 
-    const auto background = timberScene->CreateGameObject("BackgroundLevel.png");
+    const auto background = timberScene->CreateGameObject("A_BackgroundLevel.png");
     background->AddComponents<TextureComp>("graphics/background.png");
     background->AddComponents<Transform>(0, 0);
     background->AddComponents<Render>();
 
-    const auto tree = timberScene->CreateGameObject("tree");
+    const auto tree = timberScene->CreateGameObject("D_tree");
     tree->AddComponents<TextureComp>("graphics/tree.png");
     tree->AddComponents<Transform>(810, 0);
     tree->AddComponents<Render>();
 
-    const auto bee = timberScene->CreateGameObject("bee");
+    const auto bee = timberScene->CreateGameObject("B_bee");
     bee->AddComponents<TextureComp>("graphics/bee.png");
     bee->AddComponents<Transform>(0, 800);
     bee->AddComponents<Render>();
     bee->AddComponents<timber::Beehaviour>();
 
-    const auto cloud = timberScene->CreateGameObject("cloud");
+    const auto cloud = timberScene->CreateGameObject("C_cloud");
     cloud->AddComponents<TextureComp>("graphics/cloud.png");
     cloud->AddComponents<Transform>(0, 0);
     cloud->AddComponents<Render>();
     cloud->AddComponents<timber::CloudBehaviour>(0.f, 150.f);
     
-    const auto cloud2 = timberScene->CreateGameObject("cloud2", cloud);
+    const auto cloud2 = timberScene->CreateGameObject("C_cloud2", cloud);
     cloud2->GetComponent<timber::CloudBehaviour>()->SetHeightVariables(-150, 150);
     
-    const auto cloud3 = timberScene->CreateGameObject("cloud3", cloud);
+    const auto cloud3 = timberScene->CreateGameObject("C_cloud3", cloud);
     cloud3->GetComponent<timber::CloudBehaviour>()->SetHeightVariables(-150, 350);
 
-    const auto HUD = timberScene->CreateGameObject("HUD");
+    const auto HUD = timberScene->CreateGameObject("Z_HUD");
     HUD->AddComponents<Transform>(0, 0);
 
-    const auto scoreCounter = timberScene->CreateGameObject("scoreCounterHUD");
+    const auto scoreCounter = timberScene->CreateGameObject("Z_scoreCounterHUD");
     // todo: if we want to decouple more we can inherit from TextComp and create a new comp that listens on ScoreCounter to update itself.
     scoreCounter->AddComponents<TextComp>("Score = 0", "fonts/KOMIKAP_.ttf", sf::Color::White);
     scoreCounter->GetComponent<TextComp>()->GetText().setCharacterSize(100);
@@ -72,7 +72,7 @@ void SceneLoader::Timber()
     scoreCounter->AddComponents<Render>();
     scoreCounter->SetParent(HUD, false);
 
-    const auto pauseText = timberScene->CreateGameObject("pauseTextHUD");
+    const auto pauseText = timberScene->CreateGameObject("Z_pauseTextHUD");
     pauseText->AddComponents<TextComp>("Press Enter to start!", "fonts/KOMIKAP_.ttf", sf::Color::White, true);
     pauseText->GetComponent<TextComp>()->GetText().setCharacterSize(75);
     pauseText->AddComponents<Transform>(960, 540); // use viewport width/height
