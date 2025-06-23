@@ -11,6 +11,7 @@ namespace sf
 	class Angle;
 	class RenderWindow;
 	class Texture;
+	class Text;
 }
 
 namespace diji
@@ -26,6 +27,9 @@ namespace diji
 		void RenderTexture(const sf::Texture& texture, float x, float y, float scaleX = 1, float scaleY = 1) const;
 		void RenderTexture(const sf::Texture& texture, float x, float y, float scale = 1) const;
 		void RenderTexture(const sf::Texture& texture, float x, float y, int width, int height) const;
+		void RenderText(sf::Text& text, float x, float y, float scaleX = 1, float scaleY = 1, bool isCentered = false) const;
+		void RenderText(sf::Text& text, float x, float y, float scale = 1, bool isCentered = false) const;
+		void RenderText(sf::Text& text, float x, float y, int width, int height, bool isCentered = false) const;
 		void RenderRotatedTexture(const sf::Texture& texture, float x, float y, sf::Angle angle, float scaleX = 1, float scaleY = 1) const;
 		void RenderRotatedTexture(const sf::Texture& texture, float x, float y, sf::Angle angle, float scale = 1) const;
 		void RenderRotatedTexture(const sf::Texture& texture, float x, float y, int width, int height, sf::Angle angle) const;

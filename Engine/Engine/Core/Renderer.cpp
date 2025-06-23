@@ -5,6 +5,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Angle.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 void diji::Renderer::Init(sf::RenderWindow* window)
 {
@@ -48,6 +49,34 @@ void diji::Renderer::RenderTexture(const sf::Texture& texture, const float x, co
 	const float scaleY = static_cast<float>(height) / texSize.y;
 
 	RenderTexture(texture, x, y, scaleX, scaleY);
+}
+
+void diji::Renderer::RenderText(sf::Text& text, const float x, const float y, const float scaleX, const float scaleY, bool isCentered) const
+{
+	if (isCentered)
+	{
+		const sf::FloatRect textRect = text.getLocalBounds();
+		text.setOrigin(sf::Vector2f { textRect.position.x + textRect.size.x * 0.5f, textRect.position.y + textRect.size.y * 0.5f });
+	}
+
+	text.setPosition(sf::Vector2f{ x, y });
+	text.setScale(sf::Vector2f{ scaleX, scaleY });
+
+	m_WindowPtr->draw(text);
+}
+
+void diji::Renderer::RenderText(sf::Text& text, const float x, const float y, const float scale, const bool isCentered) const
+{
+	RenderText(text , x, y, scale, scale, isCentered);
+}
+
+void diji::Renderer::RenderText(sf::Text& text, const float x, const float y, const int width, const int height, const bool isCentered) const
+{
+	const sf::FloatRect texSize = text.getLocalBounds();
+	const float scaleX = static_cast<float>(width) / texSize.size.x;
+	const float scaleY = static_cast<float>(height) / texSize.size.y;
+
+	RenderText(text , x, y, scaleX, scaleY, isCentered);
 }
 
 void diji::Renderer::RenderRotatedTexture(const sf::Texture& texture, const float x, const float y, const sf::Angle angle, const float scaleX, const float scaleY) const

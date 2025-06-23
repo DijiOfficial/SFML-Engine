@@ -1,4 +1,7 @@
 ﻿#include "GameLoader.h"
+
+#include <SFML/Graphics/Color.hpp>
+
 #include "GameStates.h"
 #include "../Components/Beehaviour.h"
 #include "../Components/CloudBehaviour.h"
@@ -7,6 +10,7 @@
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Components/Transform.h"
 #include "Engine/Components/Render.h"
+#include "Engine/Components/TextComp.h"
 
 using namespace diji;
 
@@ -52,6 +56,22 @@ void SceneLoader::Timber()
     const auto cloud3 = timberScene->CreateGameObject("cloud3", cloud);
     cloud3->GetComponent<timber::CloudBehaviour>()->SetHeightVariables(-150, 350);
 
+    const auto HUD = timberScene->CreateGameObject("HUD");
+    HUD->AddComponents<Transform>(0, 0);
+
+    const auto scoreCounter = timberScene->CreateGameObject("scoreCounterHUD");
+    scoreCounter->AddComponents<TextComp>("Score = 0", "fonts/KOMIKAP_.ttf", sf::Color::White);
+    scoreCounter->GetComponent<TextComp>()->GetText().setCharacterSize(100);
+    scoreCounter->AddComponents<Transform>(20, 20);
+    scoreCounter->AddComponents<Render>();
+    scoreCounter->SetParent(HUD, false);
+
+    const auto pauseText = timberScene->CreateGameObject("pauseTextHUD");
+    pauseText->AddComponents<TextComp>("Press Enter to start!", "fonts/KOMIKAP_.ttf", sf::Color::White);
+    pauseText->GetComponent<TextComp>()->GetText().setCharacterSize(75);
+    pauseText->AddComponents<Transform>(960, 540); // use viewport width/height
+    pauseText->AddComponents<Render>();
+    pauseText->SetParent(HUD, false);
     
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(timber::GameState::LEVEL));
 }

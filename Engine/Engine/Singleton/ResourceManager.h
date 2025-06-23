@@ -4,8 +4,8 @@
 // #include "SoundEffect.h"
 // #include "Music.h"
 
+#include <SFML/Graphics/Font.hpp>
 #include <string>
-// #include <memory>
 #include <unordered_map>
 
 namespace sf
@@ -20,8 +20,8 @@ namespace diji
     {
     public:
         void Init(const std::string& dataPath);
-        sf::Texture& LoadTexture(const std::string& file);
-        sf::Font& LoadFont(const std::string& file);
+        [[nodiscard]] sf::Texture& LoadTexture(const std::string& file);
+        [[nodiscard]] sf::Font& LoadFont(const std::string& file);
         // SoundEffect* LoadSoundEffect(const std::string& file);
         // Music* LoadMusic(const std::string& file);
 

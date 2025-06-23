@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\Components\Render.h" />
+    <ClInclude Include="Engine\Components\TextComp.h" />
     <ClInclude Include="Engine\Components\TextureComp.h" />
     <ClInclude Include="Engine\Components\Transform.h" />
     <ClInclude Include="Engine\Core\Engine.h" />
@@ -39,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Components\Render.cpp" />
+    <ClCompile Include="Engine\Components\TextComp.cpp" />
     <ClCompile Include="Engine\Components\TextureComp.cpp" />
     <ClCompile Include="Engine\Core\Engine.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
