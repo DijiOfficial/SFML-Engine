@@ -181,16 +181,20 @@
   <ItemGroup>
     <ClCompile Include="Components\Beehaviour.cpp" />
     <ClCompile Include="Components\CloudBehaviour.cpp" />
+    <ClCompile Include="Components\PauseBehaviourText.cpp" />
     <ClCompile Include="Components\ScoreCounter.cpp" />
     <ClCompile Include="Core\GameLoader.cpp" />
+    <ClCompile Include="Interfaces\Observers.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Beehaviour.h" />
     <ClInclude Include="Components\CloudBehaviour.h" />
+    <ClInclude Include="Components\PauseBehaviourText.h" />
     <ClInclude Include="Components\ScoreCounter.h" />
     <ClInclude Include="Core\GameLoader.h" />
     <ClInclude Include="Core\GameStates.h" />
+    <ClInclude Include="Interfaces\Observers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

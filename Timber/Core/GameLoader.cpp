@@ -5,12 +5,15 @@
 #include "GameStates.h"
 #include "../Components/Beehaviour.h"
 #include "../Components/CloudBehaviour.h"
+#include "../Components/PauseBehaviourText.h"
+#include "../Components/ScoreCounter.h"
 
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Components/Transform.h"
 #include "Engine/Components/Render.h"
 #include "Engine/Components/TextComp.h"
+#include "Engine/Input/InputManager.h"
 
 using namespace diji;
 
@@ -27,6 +30,7 @@ void SceneLoader::Load()
 void SceneLoader::Timber()
 {
     const auto& timberScene = SceneManager::GetInstance().CreateScene(static_cast<int>(timber::GameState::LEVEL));
+    SceneManager::GetInstance().SetActiveScene(static_cast<int>(timber::GameState::LEVEL));
 
     const auto background = timberScene->CreateGameObject("BackgroundLevel.png");
     background->AddComponents<TextureComp>("graphics/background.png");
@@ -60,18 +64,26 @@ void SceneLoader::Timber()
     HUD->AddComponents<Transform>(0, 0);
 
     const auto scoreCounter = timberScene->CreateGameObject("scoreCounterHUD");
+    // todo: if we want to decouple more we can inherit from TextComp and create a new comp that listens on ScoreCounter to update itself.
     scoreCounter->AddComponents<TextComp>("Score = 0", "fonts/KOMIKAP_.ttf", sf::Color::White);
     scoreCounter->GetComponent<TextComp>()->GetText().setCharacterSize(100);
+    scoreCounter->AddComponents<timber::ScoreCounter>(0);
     scoreCounter->AddComponents<Transform>(20, 20);
     scoreCounter->AddComponents<Render>();
     scoreCounter->SetParent(HUD, false);
 
     const auto pauseText = timberScene->CreateGameObject("pauseTextHUD");
-    pauseText->AddComponents<TextComp>("Press Enter to start!", "fonts/KOMIKAP_.ttf", sf::Color::White);
+    pauseText->AddComponents<TextComp>("Press Enter to start!", "fonts/KOMIKAP_.ttf", sf::Color::White, true);
     pauseText->GetComponent<TextComp>()->GetText().setCharacterSize(75);
     pauseText->AddComponents<Transform>(960, 540); // use viewport width/height
+    pauseText->AddComponents<timber::PauseBehaviourText>();
     pauseText->AddComponents<Render>();
+    pauseText->GetComponent<Render>()->DisableRender();
     pauseText->SetParent(HUD, false);
+
     
-    SceneManager::GetInstance().SetActiveScene(static_cast<int>(timber::GameState::LEVEL));
+#pragma region Observers
+    InputManager::GetInstance().AddObserver(MessageTypes::GamePaused, pauseText->GetComponent<timber::PauseBehaviourText>());
+#pragma endregion
+    
 }

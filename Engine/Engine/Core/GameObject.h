@@ -11,7 +11,8 @@ namespace diji
 {
 	class Render;
 	class Transform;
-	
+
+	// todo: Give GameObjects a default component to write custom code in. (equivalent of the Blueprint of an actor).
 	class GameObject final
 	{
 	public:

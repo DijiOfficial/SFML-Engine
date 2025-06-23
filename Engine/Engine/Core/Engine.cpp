@@ -68,8 +68,11 @@ void diji::Engine::Run(const std::function<void()>& load) const
 		}
 
 		if (isPaused)
+		{
+			renderer.Render();
 			continue;
-		
+		}
+
 		while (lag >= FIXED_TIME_STEP)
 		{
 			sceneManager.FixedUpdate();

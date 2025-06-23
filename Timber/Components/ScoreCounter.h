@@ -1,14 +1,17 @@
 ﻿#pragma once
-// #include "Subject.h"
 #include "Engine/Components/Component.h"
+
+namespace diji
+{
+    class TextComp;
+}
 
 namespace timber
 {
-    // class ScoreCounter final : public diji::Component, public diji::Subject
     class ScoreCounter final : public diji::Component
     {
     public:
-        explicit ScoreCounter(diji::GameObject* ownerPtr, int score);
+        explicit ScoreCounter(diji::GameObject* ownerPtr, int score = 0);
         ~ScoreCounter() noexcept override = default;
 
         ScoreCounter(const ScoreCounter& other) = delete;
@@ -16,7 +19,7 @@ namespace timber
         ScoreCounter& operator=(const ScoreCounter& other) = delete;
         ScoreCounter& operator=(ScoreCounter&& other) = delete;
 
-        void Init() override {}
+        void Init() override;
         void OnEnable() override {}
         void Start() override {}
         
@@ -32,6 +35,7 @@ namespace timber
 
     private:
         int m_Score;
+        diji::TextComp* m_TextCompPtr;
     };
 }
 

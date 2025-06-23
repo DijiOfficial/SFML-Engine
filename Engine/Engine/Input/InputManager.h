@@ -12,6 +12,8 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <unordered_map>
 
+#include "../Interfaces/Subject.h"
+
 namespace sf
 {
     class Event;
@@ -58,7 +60,7 @@ namespace diji
         InputType m_Input;
     };
 
-    class InputManager final : public Singleton<InputManager>
+    class InputManager final : public Singleton<InputManager>, public Subject
     {
     public:
         bool ProcessInput(const std::optional<sf::Event>& event, bool& isPaused);
