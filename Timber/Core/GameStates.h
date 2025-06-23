@@ -3,7 +3,8 @@ namespace timber
 {
     enum class GameState
     {
-        INVALID = -1,
-        LEVEL,
+        Invalid = -1,
+        Level,
+        GameOver,
     };
 }

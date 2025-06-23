@@ -183,6 +183,7 @@
     <ClCompile Include="Components\CloudBehaviour.cpp" />
     <ClCompile Include="Components\PauseBehaviourText.cpp" />
     <ClCompile Include="Components\ScoreCounter.cpp" />
+    <ClCompile Include="Components\TimeBar.cpp" />
     <ClCompile Include="Core\GameLoader.cpp" />
     <ClCompile Include="Interfaces\Observers.cpp" />
     <ClCompile Include="main.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Components\CloudBehaviour.h" />
     <ClInclude Include="Components\PauseBehaviourText.h" />
     <ClInclude Include="Components\ScoreCounter.h" />
+    <ClInclude Include="Components\TimeBar.h" />
     <ClInclude Include="Core\GameLoader.h" />
     <ClInclude Include="Core\GameStates.h" />
     <ClInclude Include="Interfaces\Observers.h" />

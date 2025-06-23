@@ -63,7 +63,7 @@ namespace diji
     class InputManager final : public Singleton<InputManager>, public Subject
     {
     public:
-        bool ProcessInput(const std::optional<sf::Event>& event, bool& isPaused);
+        bool ProcessInput(const std::optional<sf::Event>& event);
         template<typename T, typename... Args>
             requires std::derived_from<T, GameActorCommands>
         void BindCommand(const PlayerIdx playerIdx, KeyState state, const Input::InputType input, GameObject* actor, Args... args)

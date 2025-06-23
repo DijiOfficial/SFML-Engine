@@ -11,7 +11,7 @@ namespace timber
     class Beehaviour : public diji::Component
     {
     public:
-        Beehaviour(diji::GameObject* ownerPtr) : Component(ownerPtr) {}
+        explicit Beehaviour(diji::GameObject* ownerPtr) : Component(ownerPtr) {}
         ~Beehaviour() noexcept override = default;
 
         void Init() override;

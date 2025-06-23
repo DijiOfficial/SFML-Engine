@@ -35,12 +35,12 @@ sf::Font& diji::ResourceManager::LoadFont(const std::string& file)
 {
 	// check if texture is already loaded
 	const auto fullPath = m_DataPath + file;
-	const auto [name, font] = m_FontsUMap.equal_range(fullPath);
-	for (auto it = name; it != font; ++it)
+	const auto it = m_FontsUMap.find(fullPath);
+	if (it != m_FontsUMap.cend())
 	{
 		return it->second;
 	}
-
+	
 	// Store it if it's not already loaded
 	sf::Font tempFont;
 	if (!tempFont.openFromFile(fullPath.c_str()))

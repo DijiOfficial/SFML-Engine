@@ -6,6 +6,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Angle.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 void diji::Renderer::Init(sf::RenderWindow* window)
 {
@@ -105,6 +106,26 @@ void diji::Renderer::RenderRotatedTexture(const sf::Texture& texture, const floa
 	const float scaleY = static_cast<float>(height) / texSize.y;
 
 	RenderRotatedTexture(texture, x, y, angle, scaleX, scaleY);
+}
+
+void diji::Renderer::DrawRect(const sf::RectangleShape& shape, const sf::Color& outline, const sf::Color& fill, const float outlineWidth) const
+{
+	sf::RectangleShape rect = shape;
+	rect.setFillColor(fill);
+	rect.setOutlineColor(outline);
+	rect.setOutlineThickness(outlineWidth);
+
+	m_WindowPtr->draw(rect);
+}
+
+void diji::Renderer::DrawRect(const sf::RectangleShape& shape) const
+{
+	DrawRect(shape, sf::Color::White ,sf::Color::Transparent);
+}
+
+void diji::Renderer::DrawFilledRect(const sf::RectangleShape& shape, const sf::Color& color) const
+{
+	DrawRect(shape, color, color, 0);
 }
 
 void diji::Renderer::SetBackgroundColor(const sf::Color& color)

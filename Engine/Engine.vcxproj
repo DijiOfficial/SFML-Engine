@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Components\Component.h" />
+    <ClInclude Include="Engine\Components\RectRender.h" />
     <ClInclude Include="Engine\Components\Render.h" />
     <ClInclude Include="Engine\Components\TextComp.h" />
     <ClInclude Include="Engine\Components\TextureComp.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="Engine\Input\InputManager.h" />
     <ClInclude Include="Engine\Interfaces\IObserver.h" />
     <ClInclude Include="Engine\Interfaces\Subject.h" />
+    <ClInclude Include="Engine\Singleton\PauseSingleton.h" />
     <ClInclude Include="Engine\Singleton\RandNumber.h" />
     <ClInclude Include="Engine\Singleton\ResourceManager.h" />
     <ClInclude Include="Engine\Singleton\SceneManager.h" />
@@ -41,6 +43,7 @@
     <ClInclude Include="Engine\Singleton\TimeSingleton.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Components\RectRender.cpp" />
     <ClCompile Include="Engine\Components\Render.cpp" />
     <ClCompile Include="Engine\Components\TextComp.cpp" />
     <ClCompile Include="Engine\Components\TextureComp.cpp" />

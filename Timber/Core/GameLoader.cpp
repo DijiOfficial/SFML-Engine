@@ -7,6 +7,9 @@
 #include "../Components/CloudBehaviour.h"
 #include "../Components/PauseBehaviourText.h"
 #include "../Components/ScoreCounter.h"
+#include "../Components/TimeBar.h"
+#include "../Interfaces/Observers.h"
+#include "Engine/Components/RectRender.h"
 
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Components/TextureComp.h"
@@ -17,20 +20,10 @@
 
 using namespace diji;
 
-void SceneLoader::DefaultCircle()
-{
-    
-}
-
-void SceneLoader::Load()
-{
-    
-}
-
 void SceneLoader::Timber()
 {
-    const auto& timberScene = SceneManager::GetInstance().CreateScene(static_cast<int>(timber::GameState::LEVEL));
-    SceneManager::GetInstance().SetActiveScene(static_cast<int>(timber::GameState::LEVEL));
+    const auto& timberScene = SceneManager::GetInstance().CreateScene(static_cast<int>(timber::GameState::Level));
+    SceneManager::GetInstance().SetActiveScene(static_cast<int>(timber::GameState::Level));
 
     const auto background = timberScene->CreateGameObject("A_BackgroundLevel.png");
     background->AddComponents<TextureComp>("graphics/background.png");
@@ -81,9 +74,26 @@ void SceneLoader::Timber()
     pauseText->GetComponent<Render>()->DisableRender();
     pauseText->SetParent(HUD, false);
 
+    const auto timeBar = timberScene->CreateGameObject("Z_timeBarHUD");
+    timeBar->AddComponents<Transform>(760, 540); // This is useless but I have not tested if it works without
+    timeBar->AddComponents<RectRender>();
+    
+    sf::RectangleShape rect;
+    rect.setSize(sf::Vector2f{400 , 80});
+    rect.setPosition(sf::Vector2f{760, 980});
+
+    timeBar->GetComponent<RectRender>()->SetRectangle(rect);
+    timeBar->GetComponent<RectRender>()->SetFillColor(sf::Color::Red);
+    timeBar->GetComponent<RectRender>()->SetLineWidth(0.f);
+    timeBar->AddComponents<timber::TimeBar>();
+    timeBar->SetParent(HUD, false);
+
     
 #pragma region Observers
     InputManager::GetInstance().AddObserver(MessageTypes::GamePaused, pauseText->GetComponent<timber::PauseBehaviourText>());
+    timeBar->GetComponent<timber::TimeBar>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::GameOver), pauseText->GetComponent<timber::PauseBehaviourText>());
+
+    
 #pragma endregion
     
 }

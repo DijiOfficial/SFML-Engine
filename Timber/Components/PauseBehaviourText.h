@@ -8,6 +8,7 @@ namespace diji
 
 namespace timber
 {
+    // todo: what is this name?
     class PauseBehaviourText final : public diji::Component
     {
     public:
@@ -29,7 +30,7 @@ namespace timber
 
         void OnDisable() override {}
         void OnDestroy() override {}
-
+        
         void OnNotify(diji::MessageTypes message) override;
         
     private:

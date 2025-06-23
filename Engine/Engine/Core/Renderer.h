@@ -7,6 +7,7 @@
 
 namespace sf
 {
+	class RectangleShape;
 	class Color;
 	class Angle;
 	class RenderWindow;
@@ -49,28 +50,13 @@ namespace diji
 		// 		}
 		// 	}
 		// }
-		//
-		// void DrawRect(const Rectf& rect) const
-		// {
-		// 	SDL_Rect rect2 = { static_cast<int>(rect.left), static_cast<int>(rect.bottom), static_cast<int>(rect.width), static_cast<int>(rect.height )}; // (x, y, width, height)
-		// 	SDL_SetRenderDrawColor(m_RendererPtr, 255, 0, 0, 255); // Set color to green
-		// 	SDL_RenderDrawRect(m_RendererPtr, &rect2);
-		// }
-		//
-		// void DrawRect(const Rectf& rect, const SDL_Color& color) const
-		// {
-		// 	SDL_Rect rect2 = { static_cast<int>(rect.left), static_cast<int>(rect.bottom), static_cast<int>(rect.width), static_cast<int>(rect.height) }; // (x, y, width, height)
-		// 	SDL_SetRenderDrawColor(m_RendererPtr, color.r, color.g, color.b, color.a); // Set color to green
-		// 	SDL_RenderDrawRect(m_RendererPtr, &rect2);
-		// }
-		//
-		// void DrawRect(const SDL_Rect& rect) const
-		// {
-		// 	//SDL_Rect rect2 = { rect.left, rect.bottom, rect.width, rect.height }; // (x, y, width, height)
-		// 	SDL_SetRenderDrawColor(m_RendererPtr, 0, 255, 0, 255); // Set color to green
-		// 	SDL_RenderDrawRect(m_RendererPtr, &rect);
-		// }
-		//
+
+		// todo: overload this (the cpp versions)
+		void DrawRect(const sf::RectangleShape& shape, const sf::Color& outline, const sf::Color& fill, float outlineWidth = 1.f) const;
+		void DrawRect(const sf::RectangleShape& shape) const;
+		void DrawFilledRect(const sf::RectangleShape& shape, const sf::Color& color) const;
+		
+		
 		// void DrawLine(const glm::vec2& p1, const glm::vec2& p2, const SDL_Color& color = { 255, 255, 255, 255 }) const
 		// {
 		// 	SDL_SetRenderDrawColor(m_RendererPtr, color.r, color.g, color.b, color.a);

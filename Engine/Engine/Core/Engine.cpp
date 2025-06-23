@@ -8,6 +8,7 @@
 #include "../Singleton/ResourceManager.h"
 #include "../Singleton/Singleton.h"
 #include "../Singleton/TimeSingleton.h"
+#include "../Singleton/PauseSingleton.h"
 
 //#include <thread>
 #include <SFML/Graphics.hpp>
@@ -41,6 +42,7 @@ void diji::Engine::Run(const std::function<void()>& load) const
 	const auto& renderer = Renderer::GetInstance();
 	const auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
+	const auto& pause = PauseSingleton::GetInstance();
 
 	auto lastFrameTime{ std::chrono::high_resolution_clock::now() };
 	float lag = 0.0f;
@@ -48,8 +50,6 @@ void diji::Engine::Run(const std::function<void()>& load) const
 	sceneManager.Init();
 	sceneManager.Start();
 
-	bool isPaused = false;
-	
 	while (g_window_ptr->isOpen())
 	{
 		const auto currentTime{ std::chrono::high_resolution_clock::now() };
@@ -60,14 +60,14 @@ void diji::Engine::Run(const std::function<void()>& load) const
 		TimeSingleton::GetInstance().SetDeltaTime(deltaTime);
 		while (const std::optional event = g_window_ptr->pollEvent())
 		{
-			if (event->is<sf::Event::Closed>() || not input.ProcessInput(event, isPaused))
+			if (event->is<sf::Event::Closed>() || not input.ProcessInput(event))
 			{
 				g_window_ptr->close();
 				goto gameLoopEnd;
 			}
 		}
-
-		if (isPaused)
+		
+		if (pause.GetIsPaused())
 		{
 			renderer.Render();
 			continue;

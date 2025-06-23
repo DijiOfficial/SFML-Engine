@@ -4,8 +4,9 @@
 #include <SFML/Window/Event.hpp>
 
 #include "../Interfaces/IObserver.h"
+#include "../Singleton/PauseSingleton.h"
 
-bool diji::InputManager::ProcessInput(const std::optional<sf::Event>& event, bool& isPaused)
+bool diji::InputManager::ProcessInput(const std::optional<sf::Event>& event)
 {
 	if (!event) return m_Continue; // this should never trigger
 
@@ -15,7 +16,7 @@ bool diji::InputManager::ProcessInput(const std::optional<sf::Event>& event, boo
 		if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) return false;
 		if (keyPressed->scancode == sf::Keyboard::Scancode::Enter)
 		{
-			isPaused = !isPaused;
+			PauseSingleton::GetInstance().TogglePause();
 			Notify(MessageTypes::GamePaused);
 		}
 		ProcessKeyboardInput(keyPressed);
