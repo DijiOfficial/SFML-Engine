@@ -24,7 +24,7 @@ diji::Engine::Engine(const std::string& dataPath)
 
 	if (g_window_ptr == nullptr)
 	{
-		throw std::runtime_error(std::string("SDL_CreateWindow Error"));
+		throw std::runtime_error(std::string("Create Window Error"));
 	}
 
 	Renderer::GetInstance().Init(g_window_ptr.get());

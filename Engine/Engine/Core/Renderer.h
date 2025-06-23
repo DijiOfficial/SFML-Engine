@@ -22,8 +22,7 @@ namespace diji
 		void Init(sf::RenderWindow* window);
 		void Render() const;
 		void Destroy();
-
-		// todo: Find a way to force drawing, adding sprite vector or? 
+		
 		void RenderTexture(const sf::Texture& texture, float x, float y, float scaleX = 1, float scaleY = 1) const;
 		void RenderTexture(const sf::Texture& texture, float x, float y, float scale = 1) const;
 		void RenderTexture(const sf::Texture& texture, float x, float y, int width, int height) const;
