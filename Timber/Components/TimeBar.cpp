@@ -7,8 +7,6 @@
 #include "Engine/Singleton/PauseSingleton.h"
 
 
-#include <iostream>
-
 void timber::TimeBar::Init()
 {
     m_RectRenderCompPtr = GetOwner()->GetComponent<diji::RectRender>();
@@ -29,7 +27,6 @@ void timber::TimeBar::Update()
 
 void timber::TimeBar::OnNotify(const diji::MessageTypes message)
 {
-    std::cout << "TimeBar::OnNotify: " << static_cast<int>(message) << std::endl;
     if (message == static_cast<diji::MessageTypes>(MessageTypesDerived::Restart))
     {
         m_RemainingTime = 6.f;
