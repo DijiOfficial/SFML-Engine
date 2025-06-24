@@ -22,11 +22,7 @@ void timber::ScoreCounter::IncreaseScore(const int score)
     m_Score += score;
     // Notify(static_cast<diji::MessageTypes>(MessageTypesDerived::ScoreChange));
 
-    const int numDigits = m_Score > 0 ? static_cast<int>(std::log10(m_Score)) + 1 : 1;
-    const int numSpaces = std::max(0, 7 - numDigits);
-    // todo: remove the extra zeroes.
-    const std::string formattedScore = std::format("Score = {:>{}}", m_Score, numSpaces + numDigits);
-
+    const std::string formattedScore = std::format("Score = {}", m_Score);
     m_TextCompPtr->GetText().setString(formattedScore);
 }
 
