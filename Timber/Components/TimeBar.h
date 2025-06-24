@@ -24,6 +24,8 @@ namespace timber
 
         void OnDisable() override {}
         void OnDestroy() override {}
+
+        void OnNotify(diji::MessageTypes message) override;
         
     private:
         diji::RectRender* m_RectRenderCompPtr = nullptr;

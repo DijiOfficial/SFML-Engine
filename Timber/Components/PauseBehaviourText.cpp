@@ -3,6 +3,7 @@
 #include "Engine/Components/Render.h"
 #include "../Interfaces/Observers.h"
 #include "Engine/Components/TextComp.h"
+#include "Engine/Singleton/PauseSingleton.h"
 
 timber::PauseBehaviourText::PauseBehaviourText(diji::GameObject* ownerPtr)
     : Component(ownerPtr)
@@ -26,11 +27,15 @@ void timber::PauseBehaviourText::OnNotify(const diji::MessageTypes message)
         break;
     case MessageTypesDerived::ScoreChange:
         break;
+    case MessageTypesDerived::Restart:
+        GetOwner()->GetComponent<diji::TextComp>()->GetText().setString("Press Enter to start!");
+        diji::PauseSingleton::GetInstance().SetIsPaused(false);
+        break;
     }
 
 
     
-    m_IsPaused = !m_IsPaused;
+    m_IsPaused = diji::PauseSingleton::GetInstance().GetIsPaused();
     
     if (m_IsPaused)
         m_RenderCompPtr->EnableRender();

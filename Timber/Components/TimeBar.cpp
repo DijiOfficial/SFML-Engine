@@ -6,6 +6,9 @@
 #include "Engine/Components/RectRender.h"
 #include "Engine/Singleton/PauseSingleton.h"
 
+
+#include <iostream>
+
 void timber::TimeBar::Init()
 {
     m_RectRenderCompPtr = GetOwner()->GetComponent<diji::RectRender>();
@@ -21,5 +24,15 @@ void timber::TimeBar::Update()
     {
         diji::PauseSingleton::GetInstance().SetIsPaused(true);
         Notify(static_cast<diji::MessageTypes>(MessageTypesDerived::GameOver));
+    }
+}
+
+void timber::TimeBar::OnNotify(const diji::MessageTypes message)
+{
+    std::cout << "TimeBar::OnNotify: " << static_cast<int>(message) << std::endl;
+    if (message == static_cast<diji::MessageTypes>(MessageTypesDerived::Restart))
+    {
+        m_RemainingTime = 6.f;
+        m_RectRenderCompPtr->GetRectangle().setSize(sf::Vector2f{ 200.f, m_RectRenderCompPtr->GetRectangle().getSize().y });
     }
 }

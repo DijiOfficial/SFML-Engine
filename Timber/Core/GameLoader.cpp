@@ -6,8 +6,10 @@
 #include "../Components/Beehaviour.h"
 #include "../Components/CloudBehaviour.h"
 #include "../Components/PauseBehaviourText.h"
+#include "../Components/PlayerBehaviour.h"
 #include "../Components/ScoreCounter.h"
 #include "../Components/TimeBar.h"
+#include "../Inputs/CustomCommands.h"
 #include "../Interfaces/Observers.h"
 #include "Engine/Components/RectRender.h"
 
@@ -88,12 +90,24 @@ void SceneLoader::Timber()
     timeBar->AddComponents<timber::TimeBar>();
     timeBar->SetParent(HUD, false);
 
-    
+
+    const auto player = timberScene->CreateGameObject("Z_player");
+    player->AddComponents<timber::PlayerBehaviour>();
+
 #pragma region Observers
     InputManager::GetInstance().AddObserver(MessageTypes::GamePaused, pauseText->GetComponent<timber::PauseBehaviourText>());
     timeBar->GetComponent<timber::TimeBar>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::GameOver), pauseText->GetComponent<timber::PauseBehaviourText>());
 
-    
+    player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::Restart), timeBar->GetComponent<timber::TimeBar>());
+    player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::Restart), scoreCounter->GetComponent<timber::ScoreCounter>());
+    player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::Restart), pauseText->GetComponent<timber::PauseBehaviourText>());
+#pragma endregion
+
+#pragma region Commands
+    auto& input = InputManager::GetInstance();
+
+    // todo: fix the input manager.
+    input.BindCommand<timber::Restart>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::R, player);
 #pragma endregion
     
 }

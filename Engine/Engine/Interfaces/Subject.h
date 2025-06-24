@@ -13,8 +13,8 @@ namespace diji
         Subject() = default;
         virtual ~Subject() noexcept = default;
 
-        Subject(const Subject& other) = default;
-        Subject(Subject&& other) = default;
+        Subject(const Subject& other) = delete;
+        Subject(Subject&& other) = delete;
         Subject& operator=(const Subject& other) = delete;
         Subject& operator=(Subject&& other) = delete;
 
