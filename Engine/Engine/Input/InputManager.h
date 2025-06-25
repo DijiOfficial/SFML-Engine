@@ -116,8 +116,8 @@ namespace diji
 
         
         // void ProcessControllerInput();
-        void ProcessKeyboardInput();
         [[nodiscard]] bool PollKeyboardEvents();
+        void ProcessKeyboardInput();
         // void BindController(int controllerIdx);
     };
 }

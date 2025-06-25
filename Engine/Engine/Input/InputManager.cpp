@@ -16,16 +16,15 @@ bool diji::InputManager::ProcessInput()
 	return m_Continue;
 }
 
-void diji::InputManager::ProcessKeyboardInput()
+void diji::InputManager::OnKeyEvent(KeyState state, sf::Keyboard::Scan scancode)
 {
-	// std::views::filter([](const auto& pair){ return pair.second; }) filters the map to only include entries where the second element (the boolean value) is true using a predicate lambda.
-	for (const auto& [scancode, pressed] : m_KeyPressedState | std::views::filter([](const auto& pair){ return pair.second; }))
+	const auto& it = m_CommandUMap.find({state, scancode});
+	if (it != m_CommandUMap.end())
 	{
-		OnKeyEvent(KeyState::PRESSED, scancode);
-	}
-	for (const auto& [scancode, held] : m_KeyHeldState | std::views::filter([](const auto& pair){ return pair.second; }))
-	{
-		OnKeyEvent(KeyState::HELD, scancode);
+		for (const auto& [playerIdx, commandUPtr] : it->second)
+		{
+			commandUPtr->Execute();
+		}
 	}
 }
 
@@ -48,18 +47,6 @@ void diji::InputManager::ProcessKeyboardStates(const std::optional<sf::Event>& e
 		const auto& scancode = keyReleasedEvent->scancode;
 		m_KeyPressedState[scancode] = false;
 		m_KeyHeldState[scancode] = false;
-	}
-}
-
-void diji::InputManager::OnKeyEvent(KeyState state, sf::Keyboard::Scan scancode)
-{
-	const auto& it = m_CommandUMap.find({state, scancode});
-	if (it != m_CommandUMap.end())
-	{
-		for (const auto& [playerIdx, commandUPtr] : it->second)
-		{
-			commandUPtr->Execute();
-		}
 	}
 }
 
@@ -101,4 +88,17 @@ bool diji::InputManager::PollKeyboardEvents()
 	}
 	
 	return true;
+}
+
+void diji::InputManager::ProcessKeyboardInput()
+{
+	// std::views::filter([](const auto& pair){ return pair.second; }) filters the map to only include entries where the second element (the boolean value) is true using a predicate lambda.
+	for (const auto& [scancode, pressed] : m_KeyPressedState | std::views::filter([](const auto& pair){ return pair.second; }))
+	{
+		OnKeyEvent(KeyState::PRESSED, scancode);
+	}
+	for (const auto& [scancode, held] : m_KeyHeldState | std::views::filter([](const auto& pair){ return pair.second; }))
+	{
+		OnKeyEvent(KeyState::HELD, scancode);
+	}
 }
