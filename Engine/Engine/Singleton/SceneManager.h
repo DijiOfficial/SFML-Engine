@@ -28,6 +28,8 @@ namespace diji
         void SetNextSceneToActivate(const int id) { m_NextScene = id; m_IsSceneChange = true; }
         int GetActiveSceneId() const { return m_ActiveSceneId; }
         void SetPendingDestroy(GameObject* gameObject);
+
+        GameObject* GetGameObject(const std::string& name) const;
 		
     private:
         std::map<int, std::unique_ptr<Scene>> m_ScenesUPtrMap;

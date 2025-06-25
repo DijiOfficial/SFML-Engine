@@ -72,6 +72,11 @@ void diji::SceneManager::SetPendingDestroy(GameObject* gameObject)
     m_PendingDestroyVec.push_back(gameObject);
 }
 
+diji::GameObject* diji::SceneManager::GetGameObject(const std::string& name) const
+{
+    return m_ScenesUPtrMap.at(m_ActiveSceneId)->GetGameObject(name);
+}
+
 diji::Scene* diji::SceneManager::CreateScene(const int id)
 {
     // Check if the scene already exists in the map
