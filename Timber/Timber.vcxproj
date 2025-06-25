@@ -179,6 +179,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\AxeBehaviour.cpp" />
     <ClCompile Include="Components\Beehaviour.cpp" />
     <ClCompile Include="Components\BranchBehaviour.cpp" />
     <ClCompile Include="Components\CloudBehaviour.cpp" />
@@ -192,6 +193,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\AxeBehaviour.h" />
     <ClInclude Include="Components\Beehaviour.h" />
     <ClInclude Include="Components\BranchBehaviour.h" />
     <ClInclude Include="Components\CloudBehaviour.h" />
@@ -203,6 +205,7 @@
     <ClInclude Include="Core\GameLoader.h" />
     <ClInclude Include="Core\GameStates.h" />
     <ClInclude Include="Inputs\CustomCommands.h" />
+    <ClInclude Include="Singleton\GameManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -31,7 +31,7 @@ namespace timber
         void OnEnable() override {}
         void Start() override {}
         
-        void Update() override;
+        void Update() override {}
         void FixedUpdate() override {}
         void LateUpdate() override {}
 
@@ -46,8 +46,11 @@ namespace timber
         BranchSide m_BranchSide = BranchSide::None;
 
         float m_Height = 0.f;
+        float m_OriginHeight = 0.f;
 
         void ChooseRandomSide();
+        void MoveBranch([[maybe_unused]] bool isLeft = false);
+        void Reset();
     };
 }
 

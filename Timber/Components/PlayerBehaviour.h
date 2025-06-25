@@ -1,6 +1,11 @@
 ﻿#pragma once
 #include "Engine/Components/Component.h"
 
+namespace diji
+{
+    class Transform;
+}
+
 namespace timber 
 {
     enum class BranchSide;
@@ -11,7 +16,7 @@ namespace timber
         explicit PlayerBehaviour(diji::GameObject* ownerPtr);
         ~PlayerBehaviour() noexcept override = default;
 
-        void Init() override {}
+        void Init() override;
         void OnEnable() override {}
         void Start() override {}
 		
@@ -27,11 +32,12 @@ namespace timber
         void PauseGame();
 
         diji::Event<> OnRestartEvent;
-        diji::Event<> OnPlayerMovedEvent;
+        diji::Event<bool> OnPlayerMovedEvent;
         diji::Event<> OnPauseEvent;
 
     private:
         BranchSide m_PlayerSide;
+        diji::Transform* m_TransformCompPtr = nullptr;
         
     };
 }

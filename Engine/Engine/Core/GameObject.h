@@ -13,6 +13,7 @@ namespace diji
 	class Transform;
 
 	// todo: Give GameObjects a default component to write custom code in. (equivalent of the Blueprint of an actor).
+	// todo: Every GameObject should have a Transform component and should have a Getter here in the parent.
 	class GameObject final
 	{
 	public:

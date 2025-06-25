@@ -3,16 +3,16 @@
 
 namespace diji
 {
-    class TextComp;
+    class Transform;
 }
 
 namespace timber
-{
-    class ScoreCounter final : public diji::Component
+{    
+    class AxeBehaviour final : public diji::Component
     {
     public:
-        explicit ScoreCounter(diji::GameObject* ownerPtr, int score = 0);
-        ~ScoreCounter() noexcept override = default;
+        explicit AxeBehaviour(diji::GameObject* ownerPtr) : Component(ownerPtr) {}
+        ~AxeBehaviour() noexcept override = default;
 
         void Init() override;
         void OnEnable() override {}
@@ -24,17 +24,16 @@ namespace timber
 
         void OnDisable() override {}
         void OnDestroy() override {}
-        
-        void IncreaseScore([[maybe_unused]] bool isLeft = false);
-        [[nodiscard]] int GetScore() const { return m_Score; }
 
+        void SetPosition(bool isLeft);
         void Reset();
 
-        diji::Event<int> OnScoreIncreasedEvent;
-
     private:
-        int m_Score;
-        diji::TextComp* m_TextCompPtr;
+        const float AXE_POSITION_LEFT = 700;
+        const float AXE_POSITION_RIGHT = 1075;
+
+        diji::Transform* m_Transform = nullptr;
     };
 }
+
 

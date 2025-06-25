@@ -33,6 +33,7 @@ namespace diji
 		void SetPosition(const float x, const float y) { m_Position.x = x; m_Position.y = y; }
 		void SetPosition(const sf::Vector2f pos) { m_Position = pos; }
 		void AddOffset(const float  x, const float y) { m_Position.x += x; m_Position.y += y; }
+		void AddOffset(const sf::Vector2f& offset) { m_Position.x += offset.x; m_Position.y += offset.y; }
 		
 	private:
 		sf::Vector2f m_Position;

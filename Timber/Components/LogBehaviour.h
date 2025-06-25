@@ -2,10 +2,9 @@
 #include "Engine/Components/Component.h"
 #include <SFML/System/Vector2.hpp>
 
-namespace sf
+namespace diji
 {
-    template <typename T> class Vector2;
-    using Vector2f = Vector2<float>;
+    class Transform;
 }
 
 namespace timber
@@ -16,18 +15,21 @@ namespace timber
         explicit LogBehaviour(diji::GameObject* ownerPtr) : Component(ownerPtr) {}
         ~LogBehaviour() noexcept override = default;
 
-        void Init() override {}
+        void Init() override;
         void OnEnable() override {}
         void Start() override {}
         
-        void Update() override {}
+        void Update() override;
         void FixedUpdate() override {}
         void LateUpdate() override {}
 
         void OnDisable() override {}
         void OnDestroy() override {}
 
+        void Activate(bool isLeft = false);
+
     private:
+        diji::Transform* m_TransformCompPtr = nullptr;
         sf::Vector2f m_Speed = { 0.f, 0.f };
         bool m_IsActive = false;
     };

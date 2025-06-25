@@ -1,5 +1,6 @@
 ﻿#include "TimeBar.h"
 
+#include "../Singleton/GameManager.h"
 #include "Engine/Core/GameObject.h"
 #include "Engine/Singleton/TimeSingleton.h"
 #include "Engine/Components/RectRender.h"
@@ -21,6 +22,7 @@ void timber::TimeBar::Update()
     {
         diji::PauseSingleton::GetInstance().SetIsPaused(true);
         OnGameOverEvent.Broadcast();
+        GameManager::GetInstance().SetNewGameState(GameState::GameOver);
     }
 }
 

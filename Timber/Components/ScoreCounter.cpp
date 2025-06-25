@@ -15,7 +15,7 @@ void timber::ScoreCounter::Init()
     m_TextCompPtr = GetOwner()->GetComponent<diji::TextComp>();
 }
 
-void timber::ScoreCounter::IncreaseScore()
+void timber::ScoreCounter::IncreaseScore(bool)
 {
     ++m_Score;
 

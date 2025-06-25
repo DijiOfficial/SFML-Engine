@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Color.hpp>
 
 #include "GameStates.h"
+#include "../Components/AxeBehaviour.h"
 #include "../Components/Beehaviour.h"
 #include "../Components/BranchBehaviour.h"
 #include "../Components/CloudBehaviour.h"
@@ -12,6 +13,7 @@
 #include "../Components/ScoreCounter.h"
 #include "../Components/TimeBar.h"
 #include "../Inputs/CustomCommands.h"
+#include "../Singleton/GameManager.h"
 #include "Engine/Components/RectRender.h"
 
 #include "Engine/Singleton/SceneManager.h"
@@ -27,6 +29,8 @@ void SceneLoader::Timber()
 {
     const auto& timberScene = SceneManager::GetInstance().CreateScene(static_cast<int>(timber::GameState::Level));
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(timber::GameState::Level));
+
+    timber::GameManager::GetInstance().SetNewGameState(timber::GameState::Level);
 
     const auto background = timberScene->CreateGameObject("A_BackgroundLevel.png");
     background->AddComponents<TextureComp>("graphics/background.png");
@@ -93,33 +97,40 @@ void SceneLoader::Timber()
     
     const auto firstBranch = timberScene->CreateGameObject("D_firstBranch");
     firstBranch->AddComponents<TextureComp>("graphics/branch.png");
+    firstBranch->GetComponent<TextureComp>()->SetOrigin(220, 20);
     firstBranch->AddComponents<Transform>(-2000, -2000);
     firstBranch->AddComponents<Render>();
     firstBranch->AddComponents<timber::BranchBehaviour>();
+    firstBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(0);
 
     const auto secondBranch = timberScene->CreateGameObject("D_secondBranch", firstBranch);
     secondBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(150);
+    secondBranch->GetComponent<TextureComp>()->SetOrigin(220, 20);
 
     const auto thirdBranch = timberScene->CreateGameObject("D_thirdBranch", firstBranch);
     thirdBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(300);
+    thirdBranch->GetComponent<TextureComp>()->SetOrigin(220, 20);
 
     const auto fourthBranch = timberScene->CreateGameObject("D_fourthBranch", firstBranch);
     fourthBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(450);
+    fourthBranch->GetComponent<TextureComp>()->SetOrigin(220, 20);
 
     const auto fifthBranch = timberScene->CreateGameObject("D_fifthBranch", firstBranch);
     fifthBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(600);
+    fifthBranch->GetComponent<TextureComp>()->SetOrigin(220, 20);
 
     const auto sixthBranch = timberScene->CreateGameObject("D_sixthBranch", firstBranch);
     sixthBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(750);
+    sixthBranch->GetComponent<TextureComp>()->SetOrigin(220, 20);
 
     
-    const auto player = timberScene->CreateGameObject("Z_player");
+    const auto player = timberScene->CreateGameObject("X_player");
     player->AddComponents<Transform>(580, 720);
     player->AddComponents<TextureComp>("graphics/player.png");
     player->AddComponents<Render>();
     player->AddComponents<timber::PlayerBehaviour>();
 
-    const auto gravestone = timberScene->CreateGameObject("Z_gravestone");
+    const auto gravestone = timberScene->CreateGameObject("X_gravestone");
     gravestone->AddComponents<Transform>(600, 860);
     gravestone->AddComponents<TextureComp>("graphics/rip.png");
     gravestone->AddComponents<Render>();
@@ -129,9 +140,10 @@ void SceneLoader::Timber()
     axe->AddComponents<Transform>(700, 830);
     axe->AddComponents<TextureComp>("graphics/axe.png");
     axe->AddComponents<Render>();
+    axe->AddComponents<timber::AxeBehaviour>();
     axe->SetParent(player, true);
 
-    const auto flyingLog = timberScene->CreateGameObject("Z_flyingLog");
+    const auto flyingLog = timberScene->CreateGameObject("W_flyingLog");
     flyingLog->AddComponents<Transform>(810, 720);
     flyingLog->AddComponents<TextureComp>("graphics/log.png");
     flyingLog->AddComponents<Render>();
@@ -144,10 +156,13 @@ void SceneLoader::Timber()
     player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(timeBar->GetComponent<timber::TimeBar>(), &timber::TimeBar::Reset);
     player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(scoreCounter->GetComponent<timber::ScoreCounter>(), &timber::ScoreCounter::Reset);
     player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(pauseText->GetComponent<timber::PauseBehaviourText>(), &timber::PauseBehaviourText::Reset);
+    player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(axe->GetComponent<timber::AxeBehaviour>(), &timber::AxeBehaviour::Reset);
+    // add reset for (gravestone, axe and gravestone)?
 
     player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(scoreCounter->GetComponent<timber::ScoreCounter>(), &timber::ScoreCounter::IncreaseScore);
     scoreCounter->GetComponent<timber::ScoreCounter>()->OnScoreIncreasedEvent.AddListener(timeBar->GetComponent<timber::TimeBar>(), &timber::TimeBar::AddTime);
-
+    player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(axe->GetComponent<timber::AxeBehaviour>(), &timber::AxeBehaviour::SetPosition);
+    player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(flyingLog->GetComponent<timber::LogBehaviour>(), &timber::LogBehaviour::Activate);
 #pragma endregion
 
 #pragma region Commands
@@ -157,7 +172,6 @@ void SceneLoader::Timber()
     input.BindCommand<timber::MovePlayer>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Right, player, timber::MovePlayer::Direction::Right);
     input.BindCommand<timber::MovePlayer>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Left, player, timber::MovePlayer::Direction::Left);
     input.BindCommand<timber::Pause>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Enter, player);
-    
 #pragma endregion
     
 }

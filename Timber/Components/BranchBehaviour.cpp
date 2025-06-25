@@ -1,20 +1,38 @@
 ﻿#include "BranchBehaviour.h"
 
+#include "PlayerBehaviour.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Core/GameObject.h"
 #include "Engine/Components/Transform.h"
 #include "Engine/Singleton/RandNumber.h"
+#include "Engine/Singleton/SceneManager.h"
 
 void timber::BranchBehaviour::Init()
 {
     m_TextureCompPtr = GetOwner()->GetComponent<diji::TextureComp>();
     m_TextureCompPtr->SetOrigin(sf::Vector2f{ 220, 20 });
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
-    ChooseRandomSide();
+    
+
+    const auto player = diji::SceneManager::GetInstance().GetGameObject("X_player");
+    player->GetComponent<PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(this, &BranchBehaviour::MoveBranch);
+    player->GetComponent<PlayerBehaviour>()->OnRestartEvent.AddListener(this, &BranchBehaviour::Reset);
+    m_Height += 50;
+    m_OriginHeight = m_Height;
+
+    Reset();
 }
 
-void timber::BranchBehaviour::Update()
+void timber::BranchBehaviour::MoveBranch(bool)
 {
+    m_Height += 150;
+
+    if (m_Height > 850)
+    {
+        m_Height = 50;
+        ChooseRandomSide();
+    }
+
     switch (m_BranchSide)
     {
     case BranchSide::Left:
@@ -33,5 +51,16 @@ void timber::BranchBehaviour::Update()
 
 void timber::BranchBehaviour::ChooseRandomSide()
 {
-    m_BranchSide = static_cast<BranchSide>(diji::RandNumber::GetInstance().GetRandomRangeInt(0, 2));
+    m_BranchSide = static_cast<BranchSide>(std::min(diji::RandNumber::GetInstance().GetRandomRangeInt(0, 4), 2));
+}
+
+void timber::BranchBehaviour::Reset()
+{
+    m_Height = m_OriginHeight;
+    ChooseRandomSide();
+
+    if (m_Height > 350)
+        m_BranchSide = BranchSide::None;
+
+    MoveBranch();
 }
