@@ -25,7 +25,10 @@ namespace timber
         void OnDisable() override {}
         void OnDestroy() override {}
 
-        void OnNotify(diji::MessageTypes message) override;
+        diji::Event<> OnGameOverEvent;
+
+        void Reset();
+        void AddTime(int score);
         
     private:
         diji::RectRender* m_RectRenderCompPtr = nullptr;

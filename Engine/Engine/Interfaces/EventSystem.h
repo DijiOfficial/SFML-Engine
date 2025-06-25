@@ -1,0 +1,53 @@
+﻿#pragma once
+#include <unordered_map>
+#include <functional>
+
+namespace diji
+{
+    template<typename... Args>
+    class Event final
+    {
+    public:
+        using Callback = std::function<void(Args...)>;
+        // todo: Constructor and destructor should be private. Look into pImpl.)
+        Event() = default;
+        ~Event() = default;
+        
+        Event(const Event&) = delete;
+        Event& operator=(const Event&) = delete;
+        Event(Event&&) noexcept = delete;
+        Event& operator=(Event&&) noexcept = delete;
+        
+        void AddListener(Callback cb)
+        {
+            m_Listeners.push_back(std::move(cb));
+        }
+
+        // todo : huh?
+        template<typename T>
+        void AddListener(T* obj, void (T::*func)(Args...))
+        {
+            m_Listeners.push_back([obj, func](Args... args)
+            {
+                (obj->*func)(args...);
+            });
+        }
+
+        // Remove a listener (optional, if you want removal support)
+        // void RemoveListener(const Callback& callback) { ... }
+
+        void Broadcast(Args... args)
+        {
+            for (auto& callback : m_Listeners)
+            {
+                callback(args...);
+            }
+        }
+
+    private:
+        
+        std::vector<Callback> m_Listeners;
+    };
+}
+
+

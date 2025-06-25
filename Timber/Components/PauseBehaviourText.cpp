@@ -1,7 +1,6 @@
 ﻿#include "PauseBehaviourText.h"
 #include "Engine/Core/GameObject.h"
 #include "Engine/Components/Render.h"
-#include "../Interfaces/Observers.h"
 #include "Engine/Components/TextComp.h"
 #include "Engine/Singleton/PauseSingleton.h"
 
@@ -17,31 +16,26 @@ void timber::PauseBehaviourText::Init()
     m_RenderCompPtr = GetOwner()->GetComponent<diji::Render>();
 }
 
-void timber::PauseBehaviourText::OnNotify(const diji::MessageTypes message)
+void timber::PauseBehaviourText::OnGameOver()
 {
-    switch (static_cast<MessageTypesDerived>(message))
-    {
-    case MessageTypesDerived::GameOver:
-        GetOwner()->GetComponent<diji::TextComp>()->GetText().setString("Out of time!!");
+    GetOwner()->GetComponent<diji::TextComp>()->GetText().setString("Out of time!!");
+    RefreshDisplay();
+}
 
-        break;
-    case MessageTypesDerived::ScoreChange:
-        break;
-    case MessageTypesDerived::Restart:
-        GetOwner()->GetComponent<diji::TextComp>()->GetText().setString("Press Enter to start!");
-        diji::PauseSingleton::GetInstance().SetIsPaused(false);
-        break;
-    default:
-        break;
-    }
+void timber::PauseBehaviourText::Reset()
+{
+    GetOwner()->GetComponent<diji::TextComp>()->GetText().setString("Press Enter to start!");
+    diji::PauseSingleton::GetInstance().SetIsPaused(false);
 
+    RefreshDisplay();
+}
 
-    
+void timber::PauseBehaviourText::RefreshDisplay()
+{
     m_IsPaused = diji::PauseSingleton::GetInstance().GetIsPaused();
     
     if (m_IsPaused)
         m_RenderCompPtr->EnableRender();
     else
         m_RenderCompPtr->DisableRender();
-
 }

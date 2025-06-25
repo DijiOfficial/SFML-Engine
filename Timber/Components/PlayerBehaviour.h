@@ -23,8 +23,12 @@ namespace timber
         void OnDestroy() override {}
 
         void Restart();
-
         void MovePlayer(BranchSide side);
+        void PauseGame();
+
+        diji::Event<> OnRestartEvent;
+        diji::Event<> OnPlayerMovedEvent;
+        diji::Event<> OnPauseEvent;
 
     private:
         BranchSide m_PlayerSide;

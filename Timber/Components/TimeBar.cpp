@@ -1,11 +1,9 @@
 ﻿#include "TimeBar.h"
 
-#include "../Interfaces/Observers.h"
 #include "Engine/Core/GameObject.h"
 #include "Engine/Singleton/TimeSingleton.h"
 #include "Engine/Components/RectRender.h"
 #include "Engine/Singleton/PauseSingleton.h"
-
 
 void timber::TimeBar::Init()
 {
@@ -14,6 +12,7 @@ void timber::TimeBar::Init()
 
 void timber::TimeBar::Update()
 {
+    // std::cout << m_RemainingTime << std::endl;
     m_RemainingTime -= diji::TimeSingleton::GetInstance().GetDeltaTime(); // optimize this call?
 
     m_RectRenderCompPtr->GetRectangle().setSize(sf::Vector2f{ m_WidthPerSecond * m_RemainingTime, m_RectRenderCompPtr->GetRectangle().getSize().y});
@@ -21,24 +20,18 @@ void timber::TimeBar::Update()
     if (m_RemainingTime <= 0.0f)
     {
         diji::PauseSingleton::GetInstance().SetIsPaused(true);
-        Notify(static_cast<diji::MessageTypes>(MessageTypesDerived::GameOver));
+        OnGameOverEvent.Broadcast();
     }
 }
 
-void timber::TimeBar::OnNotify(const diji::MessageTypes message)
+void timber::TimeBar::Reset()
 {
-    switch (static_cast<MessageTypesDerived>(message))
-    {
-    case MessageTypesDerived::Restart:
-        m_RemainingTime = 6.f;
-        m_RectRenderCompPtr->GetRectangle().setSize(sf::Vector2f{ 200.f, m_RectRenderCompPtr->GetRectangle().getSize().y });
-        
-        break;
-    case MessageTypesDerived::PlayerMoved:
-        // m_RemainingTime += 2 / score + 0.15f;
-        
-        break;
-    default:
-        break;
-    }
+    m_RemainingTime = 6.f;
+    m_RectRenderCompPtr->GetRectangle().setSize(sf::Vector2f{ 200.f, m_RectRenderCompPtr->GetRectangle().getSize().y });
+}
+
+void timber::TimeBar::AddTime(const int score)
+{
+    if (score)
+        m_RemainingTime += 2.f / score + 0.15f;
 }

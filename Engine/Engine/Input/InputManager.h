@@ -12,8 +12,6 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <unordered_map>
 
-#include "../Interfaces/Subject.h"
-
 namespace sf
 {
     class Event;
@@ -61,7 +59,7 @@ namespace diji
         InputType m_Input;
     };
 
-    class InputManager final : public Singleton<InputManager>, public Subject
+    class InputManager final : public Singleton<InputManager>
     {
     public:
         void Init(sf::RenderWindow* window) { m_WindowPtr = window; }

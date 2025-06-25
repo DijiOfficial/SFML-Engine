@@ -1,8 +1,5 @@
 ﻿#include "InputManager.h"
-#include "../Interfaces/IObserver.h"
-#include "../Singleton/PauseSingleton.h"
 
-// #include <format>
 #include <ranges>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
@@ -83,22 +80,16 @@ bool diji::InputManager::PollKeyboardEvents()
 		if (event->is<sf::Event::Closed>())
 			return false;
 		
-		// Set KeyPressed and KeyHeld states
-		ProcessKeyboardStates(event);
-		
-		if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+		if (const auto keyPressed = event->getIf<sf::Event::KeyPressed>())
 		{
 			if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
 				return false;
-
-			// todo: wtf is engine coded pause?
-			if (keyPressed->scancode == sf::Keyboard::Scancode::Enter)
-			{
-				PauseSingleton::GetInstance().TogglePause();
-				Notify(MessageTypes::GamePaused);
-			}
 		}
-		else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
+		
+		// Set KeyPressed and KeyHeld states
+		ProcessKeyboardStates(event);
+
+		if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
 		{
 			OnKeyEvent(KeyState::RELEASED, keyReleased->scancode);
 		}

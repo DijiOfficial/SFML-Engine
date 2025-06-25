@@ -25,10 +25,12 @@ namespace timber
         void OnDisable() override {}
         void OnDestroy() override {}
         
-        void IncreaseScore(int score);
+        void IncreaseScore();
         [[nodiscard]] int GetScore() const { return m_Score; }
 
-        void OnNotify(diji::MessageTypes message) override;
+        void Reset();
+
+        diji::Event<int> OnScoreIncreasedEvent;
 
     private:
         int m_Score;

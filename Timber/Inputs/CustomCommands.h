@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "../../3rdParty/SFML_x64/include/SFML/Window/Context.hpp"
 #include "Engine/Input/GameActorCommand.h"
 
 namespace timber
@@ -29,6 +28,15 @@ namespace timber
         
     private:
         Direction m_Direction;
+    };
+
+    class Pause final : public diji::GameActorCommands
+    {
+    public:
+        explicit Pause(diji::GameObject* actor) : GameActorCommands{ actor } {}
+        ~Pause() noexcept override = default;
+
+        void Execute() override;
     };
 
 }

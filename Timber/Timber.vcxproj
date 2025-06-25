@@ -189,7 +189,6 @@
     <ClCompile Include="Components\TimeBar.cpp" />
     <ClCompile Include="Core\GameLoader.cpp" />
     <ClCompile Include="Inputs\CustomCommands.cpp" />
-    <ClCompile Include="Interfaces\Observers.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -204,7 +203,6 @@
     <ClInclude Include="Core\GameLoader.h" />
     <ClInclude Include="Core\GameStates.h" />
     <ClInclude Include="Inputs\CustomCommands.h" />
-    <ClInclude Include="Interfaces\Observers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

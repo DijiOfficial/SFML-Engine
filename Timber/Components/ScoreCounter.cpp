@@ -1,8 +1,6 @@
 ﻿#include "ScoreCounter.h"
 #include "Engine/Core/GameObject.h"
-#include "../Interfaces/Observers.h"
 #include "Engine/Components/TextComp.h"
-
 
 timber::ScoreCounter::ScoreCounter(diji::GameObject* ownerPtr, const int score)
     : Component(ownerPtr)
@@ -17,30 +15,18 @@ void timber::ScoreCounter::Init()
     m_TextCompPtr = GetOwner()->GetComponent<diji::TextComp>();
 }
 
-void timber::ScoreCounter::IncreaseScore(const int score)
+void timber::ScoreCounter::IncreaseScore()
 {
-    m_Score += score;
-    // Notify(static_cast<diji::MessageTypes>(MessageTypesDerived::ScoreChange));
+    ++m_Score;
 
+    OnScoreIncreasedEvent.Broadcast(m_Score);
+    
     const std::string formattedScore = std::format("Score = {}", m_Score);
     m_TextCompPtr->GetText().setString(formattedScore);
 }
 
-void timber::ScoreCounter::OnNotify(const diji::MessageTypes message)
+void timber::ScoreCounter::Reset()
 {
-    switch (static_cast<MessageTypesDerived>(message))
-    {
-    case MessageTypesDerived::Restart:
-        m_Score = 0;
-        IncreaseScore(0);
-        
-        break;
-    case MessageTypesDerived::PlayerMoved:
-        IncreaseScore(1);
-        break;
-    default:
-        break;
-    }
-
+    m_Score = -1;
+    IncreaseScore();
 }
-

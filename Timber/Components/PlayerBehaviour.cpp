@@ -1,7 +1,7 @@
 ﻿#include "PlayerBehaviour.h"
 
-#include "../Interfaces/Observers.h"
 #include "BranchBehaviour.h"
+#include "engine/Singleton/PauseSingleton.h"
 
 timber::PlayerBehaviour::PlayerBehaviour(diji::GameObject* ownerPtr)
     : Component(ownerPtr)
@@ -11,12 +11,17 @@ timber::PlayerBehaviour::PlayerBehaviour(diji::GameObject* ownerPtr)
 
 void timber::PlayerBehaviour::Restart()
 {
-    Notify(static_cast<diji::MessageTypes>(MessageTypesDerived::Restart));
+    OnRestartEvent.Broadcast();
 }
 
 void timber::PlayerBehaviour::MovePlayer(const BranchSide side)
 {
     m_PlayerSide = side;
+    OnPlayerMovedEvent.Broadcast();
+}
 
-    Notify(static_cast<diji::MessageTypes>(MessageTypesDerived::PlayerMoved));
+void timber::PlayerBehaviour::PauseGame()
+{
+    diji::PauseSingleton::GetInstance().TogglePause();
+    OnPauseEvent.Broadcast();
 }

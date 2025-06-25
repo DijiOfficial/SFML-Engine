@@ -20,4 +20,9 @@ void timber::MovePlayer::Execute()
     GetGameActor()->GetComponent<PlayerBehaviour>()->MovePlayer(side);
 }
 
+void timber::Pause::Execute()
+{
+    GetGameActor()->GetComponent<PlayerBehaviour>()->PauseGame();
+}
+
     

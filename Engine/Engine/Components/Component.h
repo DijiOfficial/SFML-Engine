@@ -1,16 +1,15 @@
 ﻿#pragma once
-#include "../Interfaces/IObserver.h"
-#include "../Interfaces/Subject.h"
+#include "../Interfaces/EventSystem.h" // Included for all inherited classes
 
 namespace diji 
 {
     class GameObject;
 
     // todo: should be interface?
-    class Component : public Subject, public IObserver
+    class Component
     {
     public:
-        ~Component() noexcept override = default;
+        virtual ~Component() noexcept = default;
 
         Component(const Component& other) = delete;
         Component(Component&& other) = delete;
@@ -29,7 +28,6 @@ namespace diji
         virtual void OnDisable() = 0;
         virtual void OnDestroy() = 0;
 
-        void OnNotify(MessageTypes) override {}
     protected:
         explicit Component(GameObject* ownerPtr) : m_OwnerPtr{ ownerPtr } {}
         const GameObject* GetOwner() const { return m_OwnerPtr; }

@@ -25,9 +25,11 @@ namespace timber
 
         void OnDisable() override {}
         void OnDestroy() override {}
-        
-        void OnNotify(diji::MessageTypes message) override;
-        
+
+        void OnGameOver();
+        void Reset();
+        void RefreshDisplay();
+
     private:
         diji::Render* m_RenderCompPtr;
         bool m_IsPaused = false;

@@ -12,7 +12,6 @@
 #include "../Components/ScoreCounter.h"
 #include "../Components/TimeBar.h"
 #include "../Inputs/CustomCommands.h"
-#include "../Interfaces/Observers.h"
 #include "Engine/Components/RectRender.h"
 
 #include "Engine/Singleton/SceneManager.h"
@@ -139,23 +138,25 @@ void SceneLoader::Timber()
     flyingLog->AddComponents<timber::LogBehaviour>();
 
 #pragma region Observers
-    InputManager::GetInstance().AddObserver(MessageTypes::GamePaused, pauseText->GetComponent<timber::PauseBehaviourText>());
-    timeBar->GetComponent<timber::TimeBar>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::GameOver), pauseText->GetComponent<timber::PauseBehaviourText>());
+    player->GetComponent<timber::PlayerBehaviour>()->OnPauseEvent.AddListener(pauseText->GetComponent<timber::PauseBehaviourText>(), &timber::PauseBehaviourText::RefreshDisplay);
+    timeBar->GetComponent<timber::TimeBar>()->OnGameOverEvent.AddListener(pauseText->GetComponent<timber::PauseBehaviourText>(), &timber::PauseBehaviourText::OnGameOver);
 
-    player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::Restart), timeBar->GetComponent<timber::TimeBar>());
-    player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::Restart), scoreCounter->GetComponent<timber::ScoreCounter>());
-    player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::Restart), pauseText->GetComponent<timber::PauseBehaviourText>());
+    player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(timeBar->GetComponent<timber::TimeBar>(), &timber::TimeBar::Reset);
+    player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(scoreCounter->GetComponent<timber::ScoreCounter>(), &timber::ScoreCounter::Reset);
+    player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(pauseText->GetComponent<timber::PauseBehaviourText>(), &timber::PauseBehaviourText::Reset);
 
-    player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::PlayerMoved), scoreCounter->GetComponent<timber::ScoreCounter>());
-    player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::PlayerMoved), timeBar->GetComponent<timber::TimeBar>());
-    
+    player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(scoreCounter->GetComponent<timber::ScoreCounter>(), &timber::ScoreCounter::IncreaseScore);
+    scoreCounter->GetComponent<timber::ScoreCounter>()->OnScoreIncreasedEvent.AddListener(timeBar->GetComponent<timber::TimeBar>(), &timber::TimeBar::AddTime);
+
 #pragma endregion
 
 #pragma region Commands
     auto& input = InputManager::GetInstance();
 
-    // todo: fix the input manager.
     input.BindCommand<timber::Restart>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::R, player);
+    input.BindCommand<timber::MovePlayer>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Right, player, timber::MovePlayer::Direction::Right);
+    input.BindCommand<timber::MovePlayer>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Left, player, timber::MovePlayer::Direction::Left);
+    input.BindCommand<timber::Pause>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Enter, player);
     
 #pragma endregion
     
