@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "Engine/Components/Component.h"
 
-
 namespace timber 
 {
     enum class BranchSide;
@@ -24,7 +23,9 @@ namespace timber
         void OnDestroy() override {}
 
         void Restart();
-        
+
+        void MovePlayer(BranchSide side);
+
     private:
         BranchSide m_PlayerSide;
         

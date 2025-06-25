@@ -7,5 +7,6 @@ namespace timber
         ScoreChange,
         GameOver,
         Restart,
+        PlayerMoved,
     };
 }

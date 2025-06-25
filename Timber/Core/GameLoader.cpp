@@ -145,6 +145,10 @@ void SceneLoader::Timber()
     player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::Restart), timeBar->GetComponent<timber::TimeBar>());
     player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::Restart), scoreCounter->GetComponent<timber::ScoreCounter>());
     player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::Restart), pauseText->GetComponent<timber::PauseBehaviourText>());
+
+    player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::PlayerMoved), scoreCounter->GetComponent<timber::ScoreCounter>());
+    player->GetComponent<timber::PlayerBehaviour>()->AddObserver(static_cast<MessageTypes>(timber::MessageTypesDerived::PlayerMoved), timeBar->GetComponent<timber::TimeBar>());
+    
 #pragma endregion
 
 #pragma region Commands
@@ -152,6 +156,7 @@ void SceneLoader::Timber()
 
     // todo: fix the input manager.
     input.BindCommand<timber::Restart>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::R, player);
+    
 #pragma endregion
     
 }

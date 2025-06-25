@@ -28,10 +28,19 @@ void timber::ScoreCounter::IncreaseScore(const int score)
 
 void timber::ScoreCounter::OnNotify(const diji::MessageTypes message)
 {
-    if (message == static_cast<diji::MessageTypes>(MessageTypesDerived::Restart))
+    switch (static_cast<MessageTypesDerived>(message))
     {
+    case MessageTypesDerived::Restart:
         m_Score = 0;
         IncreaseScore(0);
+        
+        break;
+    case MessageTypesDerived::PlayerMoved:
+        IncreaseScore(1);
+        break;
+    default:
+        break;
     }
+
 }
 

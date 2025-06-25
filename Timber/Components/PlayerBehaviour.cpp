@@ -13,3 +13,10 @@ void timber::PlayerBehaviour::Restart()
 {
     Notify(static_cast<diji::MessageTypes>(MessageTypesDerived::Restart));
 }
+
+void timber::PlayerBehaviour::MovePlayer(const BranchSide side)
+{
+    m_PlayerSide = side;
+
+    Notify(static_cast<diji::MessageTypes>(MessageTypesDerived::PlayerMoved));
+}

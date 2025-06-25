@@ -27,9 +27,18 @@ void timber::TimeBar::Update()
 
 void timber::TimeBar::OnNotify(const diji::MessageTypes message)
 {
-    if (message == static_cast<diji::MessageTypes>(MessageTypesDerived::Restart))
+    switch (static_cast<MessageTypesDerived>(message))
     {
+    case MessageTypesDerived::Restart:
         m_RemainingTime = 6.f;
         m_RectRenderCompPtr->GetRectangle().setSize(sf::Vector2f{ 200.f, m_RectRenderCompPtr->GetRectangle().getSize().y });
+        
+        break;
+    case MessageTypesDerived::PlayerMoved:
+        // m_RemainingTime += 2 / score + 0.15f;
+        
+        break;
+    default:
+        break;
     }
 }

@@ -31,6 +31,8 @@ void timber::PauseBehaviourText::OnNotify(const diji::MessageTypes message)
         GetOwner()->GetComponent<diji::TextComp>()->GetText().setString("Press Enter to start!");
         diji::PauseSingleton::GetInstance().SetIsPaused(false);
         break;
+    default:
+        break;
     }
 
 
