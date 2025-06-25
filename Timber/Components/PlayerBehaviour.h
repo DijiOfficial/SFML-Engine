@@ -1,12 +1,15 @@
 ﻿#pragma once
 #include "Engine/Components/Component.h"
 
+
 namespace timber 
 {
+    enum class BranchSide;
+
     class PlayerBehaviour final : public diji::Component
     {
     public:
-        explicit PlayerBehaviour(diji::GameObject* ownerPtr) : Component(ownerPtr) {}
+        explicit PlayerBehaviour(diji::GameObject* ownerPtr);
         ~PlayerBehaviour() noexcept override = default;
 
         void Init() override {}
@@ -23,6 +26,7 @@ namespace timber
         void Restart();
         
     private:
+        BranchSide m_PlayerSide;
         
     };
 }

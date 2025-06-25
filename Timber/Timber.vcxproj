@@ -182,6 +182,7 @@
     <ClCompile Include="Components\Beehaviour.cpp" />
     <ClCompile Include="Components\BranchBehaviour.cpp" />
     <ClCompile Include="Components\CloudBehaviour.cpp" />
+    <ClCompile Include="Components\LogBehaviour.cpp" />
     <ClCompile Include="Components\PauseBehaviourText.cpp" />
     <ClCompile Include="Components\PlayerBehaviour.cpp" />
     <ClCompile Include="Components\ScoreCounter.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Components\Beehaviour.h" />
     <ClInclude Include="Components\BranchBehaviour.h" />
     <ClInclude Include="Components\CloudBehaviour.h" />
+    <ClInclude Include="Components\LogBehaviour.h" />
     <ClInclude Include="Components\PauseBehaviourText.h" />
     <ClInclude Include="Components\PlayerBehaviour.h" />
     <ClInclude Include="Components\ScoreCounter.h" />

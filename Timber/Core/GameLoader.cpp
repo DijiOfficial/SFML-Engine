@@ -6,6 +6,7 @@
 #include "../Components/Beehaviour.h"
 #include "../Components/BranchBehaviour.h"
 #include "../Components/CloudBehaviour.h"
+#include "../Components/LogBehaviour.h"
 #include "../Components/PauseBehaviourText.h"
 #include "../Components/PlayerBehaviour.h"
 #include "../Components/ScoreCounter.h"
@@ -91,9 +92,6 @@ void SceneLoader::Timber()
     timeBar->AddComponents<timber::TimeBar>();
     timeBar->SetParent(HUD, false);
     
-    const auto player = timberScene->CreateGameObject("Z_player");
-    player->AddComponents<timber::PlayerBehaviour>();
-
     const auto firstBranch = timberScene->CreateGameObject("D_firstBranch");
     firstBranch->AddComponents<TextureComp>("graphics/branch.png");
     firstBranch->AddComponents<Transform>(-2000, -2000);
@@ -114,7 +112,31 @@ void SceneLoader::Timber()
 
     const auto sixthBranch = timberScene->CreateGameObject("D_sixthBranch", firstBranch);
     sixthBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(750);
+
     
+    const auto player = timberScene->CreateGameObject("Z_player");
+    player->AddComponents<Transform>(580, 720);
+    player->AddComponents<TextureComp>("graphics/player.png");
+    player->AddComponents<Render>();
+    player->AddComponents<timber::PlayerBehaviour>();
+
+    const auto gravestone = timberScene->CreateGameObject("Z_gravestone");
+    gravestone->AddComponents<Transform>(600, 860);
+    gravestone->AddComponents<TextureComp>("graphics/rip.png");
+    gravestone->AddComponents<Render>();
+    gravestone->GetComponent<Render>()->DisableRender();
+
+    const auto axe = timberScene->CreateGameObject("Z_axe");
+    axe->AddComponents<Transform>(700, 830);
+    axe->AddComponents<TextureComp>("graphics/axe.png");
+    axe->AddComponents<Render>();
+    axe->SetParent(player, true);
+
+    const auto flyingLog = timberScene->CreateGameObject("Z_flyingLog");
+    flyingLog->AddComponents<Transform>(810, 720);
+    flyingLog->AddComponents<TextureComp>("graphics/log.png");
+    flyingLog->AddComponents<Render>();
+    flyingLog->AddComponents<timber::LogBehaviour>();
 
 #pragma region Observers
     InputManager::GetInstance().AddObserver(MessageTypes::GamePaused, pauseText->GetComponent<timber::PauseBehaviourText>());
