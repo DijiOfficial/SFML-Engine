@@ -22,14 +22,13 @@ namespace diji
         {
             m_Listeners.push_back(std::move(cb));
         }
-
-        // todo : huh?
+        
         template<typename T>
-        void AddListener(T* obj, void (T::*func)(Args...))
+        void AddListener(T* observer, void (T::*func)(Args...))
         {
-            m_Listeners.push_back([obj, func](Args... args)
+            m_Listeners.push_back([observer, func](Args... args)
             {
-                (obj->*func)(args...);
+                (observer->*func)(args...);
             });
         }
 
