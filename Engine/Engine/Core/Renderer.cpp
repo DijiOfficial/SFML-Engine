@@ -28,28 +28,30 @@ void diji::Renderer::Destroy()
 	m_WindowPtr = nullptr;
 }
 
-void diji::Renderer::RenderTexture(const sf::Texture& texture, const float x, const float y, const float scaleX, const float scaleY) const
+void diji::Renderer::RenderTexture(const sf::Texture& texture, const sf::Vector2f& origin, const sf::Angle& rotation, const float x, const float y, const float scaleX, const float scaleY) const
 {
 	sf::Sprite sprite(texture);
-	
+
+	sprite.setOrigin(origin);
 	sprite.setPosition(sf::Vector2f{ x, y });
 	sprite.setScale(sf::Vector2f{ scaleX, scaleY });
+	sprite.setRotation(rotation);
 
 	m_WindowPtr->draw(sprite);
 }
 
-void diji::Renderer::RenderTexture(const sf::Texture& texture, const float x, const float y, const float scale) const
+void diji::Renderer::RenderTexture(const sf::Texture& texture, const sf::Vector2f& origin, const sf::Angle& rotation, const float x, const float y, const float scale) const
 {
-	RenderTexture(texture, x, y, scale, scale);
+	RenderTexture(texture, origin, rotation, x, y, scale, scale);
 }
 
-void diji::Renderer::RenderTexture(const sf::Texture& texture, const float x, const float y, const int width, const int height) const
+void diji::Renderer::RenderTexture(const sf::Texture& texture, const sf::Vector2f& origin, const sf::Angle& rotation, const float x, const float y, const int width, const int height) const
 {
 	const sf::Vector2u texSize = texture.getSize();
 	const float scaleX = static_cast<float>(width) / texSize.x;
 	const float scaleY = static_cast<float>(height) / texSize.y;
 
-	RenderTexture(texture, x, y, scaleX, scaleY);
+	RenderTexture(texture, origin, rotation, x, y, scaleX, scaleY);
 }
 
 void diji::Renderer::RenderText(sf::Text& text, const float x, const float y, const float scaleX, const float scaleY, bool isCentered) const

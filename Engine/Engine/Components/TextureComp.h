@@ -47,24 +47,26 @@ namespace diji
 		void SetScale(float scale);
 		void SetWidth(int width);
 		void SetHeight(int height);
-		void SetCanRotate(const bool canRotate) { m_CanRotate = canRotate; }
+		void SetRotationAngle(const float angle) { m_RotationAngle = sf::degrees(angle); }
 		void SetRotationAngle(const sf::Angle angle) { m_RotationAngle = angle; }
+		void SetOrigin(const sf::Vector2f& origin) { m_Origin = origin; }
+		void SetOrigin(float x, float y) { m_Origin = { x, y }; }
 
 		int GetWidth() const;
 		int GetHeight() const;
 		float GetScaleX() const { return m_ScaleX; }
 		float GetScaleY() const { return m_ScaleY; }
 		sf::Angle GetRotationAngle() const { return m_RotationAngle; }
-		bool CanRotate() const { return  m_CanRotate; }
+		sf::Vector2f GetOrigin() const { return m_Origin; }
 
 	private:
 		sf::Texture m_SFMLTexture;
 		std::string m_FilePath;
+		sf::Vector2f m_Origin = { 0.f, 0.f };
 		
-		sf::Angle m_RotationAngle;
+		sf::Angle m_RotationAngle = sf::Angle::Zero;
 		float m_ScaleX = 1;
 		float m_ScaleY = 1;
-		bool m_CanRotate = false;
 	};
 }
 

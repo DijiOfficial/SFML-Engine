@@ -180,6 +180,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Components\Beehaviour.cpp" />
+    <ClCompile Include="Components\BranchBehaviour.cpp" />
     <ClCompile Include="Components\CloudBehaviour.cpp" />
     <ClCompile Include="Components\PauseBehaviourText.cpp" />
     <ClCompile Include="Components\PlayerBehaviour.cpp" />
@@ -192,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Beehaviour.h" />
+    <ClInclude Include="Components\BranchBehaviour.h" />
     <ClInclude Include="Components\CloudBehaviour.h" />
     <ClInclude Include="Components\PauseBehaviourText.h" />
     <ClInclude Include="Components\PlayerBehaviour.h" />

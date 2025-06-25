@@ -4,6 +4,7 @@
 
 #include "GameStates.h"
 #include "../Components/Beehaviour.h"
+#include "../Components/BranchBehaviour.h"
 #include "../Components/CloudBehaviour.h"
 #include "../Components/PauseBehaviourText.h"
 #include "../Components/PlayerBehaviour.h"
@@ -89,10 +90,31 @@ void SceneLoader::Timber()
     timeBar->GetComponent<RectRender>()->SetLineWidth(0.f);
     timeBar->AddComponents<timber::TimeBar>();
     timeBar->SetParent(HUD, false);
-
-
+    
     const auto player = timberScene->CreateGameObject("Z_player");
     player->AddComponents<timber::PlayerBehaviour>();
+
+    const auto firstBranch = timberScene->CreateGameObject("D_firstBranch");
+    firstBranch->AddComponents<TextureComp>("graphics/branch.png");
+    firstBranch->AddComponents<Transform>(-2000, -2000);
+    firstBranch->AddComponents<Render>();
+    firstBranch->AddComponents<timber::BranchBehaviour>();
+
+    const auto secondBranch = timberScene->CreateGameObject("D_secondBranch", firstBranch);
+    secondBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(150);
+
+    const auto thirdBranch = timberScene->CreateGameObject("D_thirdBranch", firstBranch);
+    thirdBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(300);
+
+    const auto fourthBranch = timberScene->CreateGameObject("D_fourthBranch", firstBranch);
+    fourthBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(450);
+
+    const auto fifthBranch = timberScene->CreateGameObject("D_fifthBranch", firstBranch);
+    fifthBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(600);
+
+    const auto sixthBranch = timberScene->CreateGameObject("D_sixthBranch", firstBranch);
+    sixthBranch->GetComponent<timber::BranchBehaviour>()->SetHeight(750);
+    
 
 #pragma region Observers
     InputManager::GetInstance().AddObserver(MessageTypes::GamePaused, pauseText->GetComponent<timber::PauseBehaviourText>());

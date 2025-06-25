@@ -2,6 +2,7 @@
 
 
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vector2.hpp>
 
 #include "../Singleton/Singleton.h"
 
@@ -24,9 +25,10 @@ namespace diji
 		void Render() const;
 		void Destroy();
 		
-		void RenderTexture(const sf::Texture& texture, float x, float y, float scaleX = 1, float scaleY = 1) const;
-		void RenderTexture(const sf::Texture& texture, float x, float y, float scale = 1) const;
-		void RenderTexture(const sf::Texture& texture, float x, float y, int width, int height) const;
+		void RenderTexture(const sf::Texture& texture, const sf::Vector2f& origin, const sf::Angle& rotation, float x, float y, float scaleX = 1, float scaleY = 1) const;
+		void RenderTexture(const sf::Texture& texture, const sf::Vector2f& origin, const sf::Angle& rotation, float x, float y, float scale = 1) const;
+		void RenderTexture(const sf::Texture& texture, const sf::Vector2f& origin, const sf::Angle& rotation, float x, float y, int width, int height) const;
+		
 		void RenderText(sf::Text& text, float x, float y, float scaleX = 1, float scaleY = 1, bool isCentered = false) const;
 		void RenderText(sf::Text& text, float x, float y, float scale = 1, bool isCentered = false) const;
 		void RenderText(sf::Text& text, float x, float y, int width, int height, bool isCentered = false) const;

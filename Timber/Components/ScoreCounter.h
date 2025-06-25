@@ -14,11 +14,6 @@ namespace timber
         explicit ScoreCounter(diji::GameObject* ownerPtr, int score = 0);
         ~ScoreCounter() noexcept override = default;
 
-        ScoreCounter(const ScoreCounter& other) = delete;
-        ScoreCounter(ScoreCounter&& other) = delete;
-        ScoreCounter& operator=(const ScoreCounter& other) = delete;
-        ScoreCounter& operator=(ScoreCounter&& other) = delete;
-
         void Init() override;
         void OnEnable() override {}
         void Start() override {}

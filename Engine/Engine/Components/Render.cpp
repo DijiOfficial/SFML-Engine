@@ -40,6 +40,7 @@ void diji::Render::RenderFrame() const
     if (not m_Render)
         return;
 
+    // every object should have a transform so this is redundant
     const sf::Vector2f pos = [this]()
     {
         if (m_TransformCompPtr)
@@ -48,13 +49,9 @@ void diji::Render::RenderFrame() const
         return sf::Vector2f{ 0, 0 };
     }();
 
+    // todo: for future reference it would be better to pass the textureComp as a parameter at this point.
     if (m_TextureCompPtr)
-    {
-        if (m_TextureCompPtr->CanRotate())
-            Renderer::GetInstance().RenderRotatedTexture(m_SFMLTexture, pos.x, pos.y, m_TextureCompPtr->GetRotationAngle(), m_TextureCompPtr->GetScaleX(), m_TextureCompPtr->GetScaleY());
-        else
-            Renderer::GetInstance().RenderTexture(m_SFMLTexture, pos.x, pos.y, m_TextureCompPtr->GetScaleX(), m_TextureCompPtr->GetScaleY());
-    }
+        Renderer::GetInstance().RenderTexture(m_SFMLTexture, m_TextureCompPtr->GetOrigin(), m_TextureCompPtr->GetRotationAngle(), pos.x, pos.y, m_TextureCompPtr->GetScaleX(), m_TextureCompPtr->GetScaleY());
     else if (m_TextCompPtr)
         Renderer::GetInstance().RenderText(m_TextCompPtr->GetText(), pos.x, pos.y, 1.f, m_TextCompPtr->GetIsCentered());
 }
