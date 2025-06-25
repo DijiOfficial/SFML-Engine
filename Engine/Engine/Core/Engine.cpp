@@ -29,6 +29,7 @@ diji::Engine::Engine(const std::string& dataPath)
 	}
 
 	Renderer::GetInstance().Init(g_window_ptr.get());
+	InputManager::GetInstance().Init(g_window_ptr.get());
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
@@ -58,14 +59,8 @@ void diji::Engine::Run(const std::function<void()>& load) const
 		lag += deltaTime;
 
 		TimeSingleton::GetInstance().SetDeltaTime(deltaTime);
-		while (const std::optional event = g_window_ptr->pollEvent())
-		{
-			if (event->is<sf::Event::Closed>() || not input.ProcessInput(event))
-			{
-				g_window_ptr->close();
-				goto gameLoopEnd;
-			}
-		}
+		if (!input.ProcessInput())
+			break;
 		
 		if (pause.GetIsPaused())
 		{
@@ -85,6 +80,7 @@ void diji::Engine::Run(const std::function<void()>& load) const
 		renderer.Render();
 	}
 	
-gameLoopEnd:	
+	g_window_ptr->close();
+	
 	sceneManager.OnDestroy();
 }

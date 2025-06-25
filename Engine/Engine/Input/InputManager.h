@@ -17,6 +17,7 @@
 namespace sf
 {
     class Event;
+    class RenderWindow;
 }
 
 namespace diji
@@ -63,7 +64,9 @@ namespace diji
     class InputManager final : public Singleton<InputManager>, public Subject
     {
     public:
-        bool ProcessInput(const std::optional<sf::Event>& event);
+        void Init(sf::RenderWindow* window) { m_WindowPtr = window; }
+        bool ProcessInput();
+        
         template<typename T, typename... Args>
             requires std::derived_from<T, GameActorCommands>
         void BindCommand(const PlayerIdx playerIdx, KeyState state, const Input::InputType input, GameObject* actor, Args... args)
@@ -72,9 +75,14 @@ namespace diji
             // {
             //     BindController(static_cast<int>(playerIdx));
             // }
-            m_CommandsUPtrMap.emplace(state, std::make_pair(Input(input), PlayerCommand{ playerIdx, std::make_unique<T>(actor, std::forward<Args>(args)...) }));
+
+            
+            const auto key = std::make_pair(state, std::get<sf::Keyboard::Scan>(input));
+    
+            m_CommandUMap[key].emplace_back(PlayerCommand{ playerIdx, std::make_unique<T>(actor, std::forward<Args>(args)...)});
         }
-        void ResetCommands() { m_CommandsUPtrMap.clear(); }
+        
+        void ResetCommands() { m_CommandUMap.clear(); }
         void Quit() { m_Continue = false; }
         
     private:
@@ -84,15 +92,34 @@ namespace diji
             PlayerIdx playerIndex;
             std::unique_ptr<GameActorCommands> commandUPtr;
         };
-        std::unordered_multimap<KeyState, std::pair<Input, PlayerCommand>> m_CommandsUPtrMap;
 		
         std::map<int, std::unique_ptr<Controller>> m_PlayersMap;
         std::vector<int> m_ControllersIdxs;
 
-        // void ProcessControllerInput();
-        // void ProcessKeyboardInput();
-        void ProcessKeyboardInput(const sf::Event::KeyPressed* keyPressed);
 
+        // O(1) lookup for commands
+        using CommandKey = std::pair<KeyState, sf::Keyboard::Scan>;
+        struct CommandKeyHash
+        {
+            std::size_t operator()(const CommandKey& k) const
+            {
+                return std::hash<int>()(static_cast<int>(k.first)) ^ (std::hash<int>()(static_cast<int>(k.second)) << 1);
+            }
+        };
+        std::unordered_map<CommandKey, std::vector<PlayerCommand>, CommandKeyHash> m_CommandUMap;
+        void OnKeyEvent(KeyState state, sf::Keyboard::Scan scancode);
+
+        // Keyboard state tracking
+        sf::RenderWindow* m_WindowPtr = nullptr;
+        std::unordered_map<sf::Keyboard::Scancode, bool> m_KeyPressedState;
+        std::unordered_map<sf::Keyboard::Scancode, bool> m_KeyHeldState;
+        void ProcessKeyboardStates(const std::optional<sf::Event>& event);
+        void ResetKeyboardPressedState();
+
+        
+        // void ProcessControllerInput();
+        void ProcessKeyboardInput();
+        [[nodiscard]] bool PollKeyboardEvents();
         // void BindController(int controllerIdx);
     };
 }

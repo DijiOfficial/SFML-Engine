@@ -151,7 +151,7 @@ void SceneLoader::Timber()
     auto& input = InputManager::GetInstance();
 
     // todo: fix the input manager.
-    input.BindCommand<timber::Restart>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::R, player);
+    input.BindCommand<timber::Restart>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::R, player);
 #pragma endregion
     
 }
