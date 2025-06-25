@@ -1,5 +1,20 @@
 ﻿#include "SceneManager.h"
 
+diji::Scene* diji::SceneManager::CreateScene(const int id)
+{
+    // Check if the scene already exists in the map
+    auto it = m_ScenesUPtrMap.find(id);
+    if (it != m_ScenesUPtrMap.end())
+    {
+        // Scene already exists, return the existing scene
+        return it->second.get();
+    }
+
+    // Scene does not exist, create a new one and store it in the map
+    m_ScenesUPtrMap[id] = std::make_unique<Scene>();
+    return m_ScenesUPtrMap[id].get();
+}
+
 void diji::SceneManager::Init() const
 {
     m_ScenesUPtrMap.at(m_ActiveSceneId)->Init();
@@ -77,17 +92,3 @@ diji::GameObject* diji::SceneManager::GetGameObject(const std::string& name) con
     return m_ScenesUPtrMap.at(m_ActiveSceneId)->GetGameObject(name);
 }
 
-diji::Scene* diji::SceneManager::CreateScene(const int id)
-{
-    // Check if the scene already exists in the map
-    auto it = m_ScenesUPtrMap.find(id);
-    if (it != m_ScenesUPtrMap.end())
-    {
-        // Scene already exists, return the existing scene
-        return it->second.get();
-    }
-
-    // Scene does not exist, create a new one and store it in the map
-    m_ScenesUPtrMap[id] = std::make_unique<Scene>();
-    return m_ScenesUPtrMap[id].get();
-}
