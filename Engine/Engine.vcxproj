@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Components\Component.h" />
+    <ClInclude Include="Engine\Components\FPSCounter.h" />
     <ClInclude Include="Engine\Components\RectRender.h" />
     <ClInclude Include="Engine\Components\Render.h" />
     <ClInclude Include="Engine\Components\TextComp.h" />
@@ -43,6 +44,7 @@
     <ClInclude Include="Engine\Singleton\TimeSingleton.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Components\FPSCounter.cpp" />
     <ClCompile Include="Engine\Components\RectRender.cpp" />
     <ClCompile Include="Engine\Components\Render.cpp" />
     <ClCompile Include="Engine\Components\TextComp.cpp" />

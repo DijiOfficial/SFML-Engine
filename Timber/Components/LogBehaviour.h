@@ -4,6 +4,11 @@
 
 namespace diji
 {
+    class TextureComp;
+}
+
+namespace diji
+{
     class Transform;
 }
 
@@ -30,8 +35,11 @@ namespace timber
 
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
+        diji::TextureComp* m_TextureCompPtr = nullptr;
         sf::Vector2f m_Speed = { 0.f, 0.f };
         bool m_IsActive = false;
+        float m_Origin = 0.f;
+        float m_RotationAngle = 0.f;
     };
 }
 

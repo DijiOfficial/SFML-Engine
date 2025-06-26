@@ -3,6 +3,11 @@
 
 namespace diji
 {
+    class TextureComp;
+}
+
+namespace diji
+{
     class Transform;
 }
 
@@ -24,16 +29,27 @@ namespace timber
 
         void OnDisable() override {}
         void OnDestroy() override {}
-        
+
     protected:
         float m_MinSpeed = 200.f;
         float m_MaxSpeed = 400.f;
-        float m_MinHeight = 500.f;
-        float m_MaxHeight = 1000.f;
+        float m_MinHeight = 350.f;
+        float m_MaxHeight = 850.f;
         float m_StartPosition = 2000.f;
+        float m_MinSize = 0.70f;
+
         int m_SpeedModifier = -1;
+
+        enum class ClassType
+        {
+            Bee,
+            Cloud
+        };
+
+        ClassType m_ClassType = ClassType::Bee;
         
     private:
+        diji::TextureComp* m_TextureCompPtr = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;
         float m_Speed = 0.f;
         
