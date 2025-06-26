@@ -5,6 +5,7 @@
 
 namespace diji 
 {
+	// todo: Add a way to load sounds using an enum class. instead of the string.
 	class ISoundSystem
 	{
 	public:

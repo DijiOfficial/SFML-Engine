@@ -23,11 +23,18 @@
 #include "Engine/Components/Render.h"
 #include "Engine/Components/TextComp.h"
 #include "Engine/Input/InputManager.h"
+#include "Engine/Interfaces/ISoundSystem.h"
 
 using namespace diji;
 
 void SceneLoader::Timber()
 {
+#ifndef NDEBUG
+    ServiceLocator::RegisterSoundSystem(std::make_unique<LoggingSoundSystem>(std::make_unique<SFMLISoundSystem>()));
+#else
+    ServiceLocator::RegisterSoundSystem(std::make_unique<SFMLISoundSystem>());
+#endif
+    
     const auto& timberScene = SceneManager::GetInstance().CreateScene(static_cast<int>(timber::GameState::Level));
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(timber::GameState::Level));
 
