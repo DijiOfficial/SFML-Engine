@@ -1,9 +1,7 @@
 ﻿#include "ResourceManager.h"
 
 #include <stdexcept>
-#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Texture.hpp>
-
 
 void diji::ResourceManager::Init(const std::string& dataPath)
 {
@@ -50,4 +48,25 @@ sf::Font& diji::ResourceManager::LoadFont(const std::string& file)
 	m_FontsUMap.emplace(fullPath, tempFont);
 
 	return m_FontsUMap[fullPath];
+}
+
+sf::SoundBuffer& diji::ResourceManager::LoadSoundEffect(const std::string& file)
+{
+	// check if sound is already loaded
+	const auto fullPath = m_DataPath + file;
+	const auto it = m_SoundEffectsUMap.find(fullPath);
+	if (it != m_SoundEffectsUMap.cend())
+	{
+		return it->second;
+	}
+
+	sf::SoundBuffer sound;
+	if (!sound.loadFromFile(fullPath.c_str()))
+	{
+		throw std::runtime_error("Failed to load sound: " + fullPath);
+	}
+
+	// Store it if it's not already loaded
+	m_SoundEffectsUMap[fullPath] = sound;
+	return m_SoundEffectsUMap[fullPath];
 }
