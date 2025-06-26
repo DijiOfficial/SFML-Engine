@@ -3,6 +3,11 @@
 
 namespace diji
 {
+    class Render;
+}
+
+namespace diji
+{
     class Transform;
 }
 
@@ -30,14 +35,16 @@ namespace timber
         void Restart();
         void MovePlayer(BranchSide side);
         void PauseGame();
+        void DeathHandle();
 
         diji::Event<> OnRestartEvent;
         diji::Event<bool> OnPlayerMovedEvent;
         diji::Event<> OnPauseEvent;
+        diji::Event<> OnDeathEvent;
 
     private:
         BranchSide m_PlayerSide;
         diji::Transform* m_TransformCompPtr = nullptr;
-        
+        diji::Render* m_RenderCompPtr = nullptr;
     };
 }

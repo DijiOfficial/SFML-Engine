@@ -7,6 +7,7 @@
 #include "../Components/Beehaviour.h"
 #include "../Components/BranchBehaviour.h"
 #include "../Components/CloudBehaviour.h"
+#include "../Components/GravestoneBehaviour.h"
 #include "../Components/LogBehaviour.h"
 #include "../Components/PauseBehaviourText.h"
 #include "../Components/PlayerBehaviour.h"
@@ -135,6 +136,7 @@ void SceneLoader::Timber()
     gravestone->AddComponents<TextureComp>("graphics/rip.png");
     gravestone->AddComponents<Render>();
     gravestone->GetComponent<Render>()->DisableRender();
+    gravestone->AddComponents<timber::GravestoneBehaviour>();
 
     const auto axe = timberScene->CreateGameObject("Z_axe");
     axe->AddComponents<Transform>(700, 830);
@@ -157,12 +159,16 @@ void SceneLoader::Timber()
     player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(scoreCounter->GetComponent<timber::ScoreCounter>(), &timber::ScoreCounter::Reset);
     player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(pauseText->GetComponent<timber::PauseBehaviourText>(), &timber::PauseBehaviourText::Reset);
     player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(axe->GetComponent<timber::AxeBehaviour>(), &timber::AxeBehaviour::Reset);
-    // add reset for (gravestone, axe and gravestone)?
+    player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(gravestone->GetComponent<timber::GravestoneBehaviour>(), &timber::GravestoneBehaviour::Reset);
 
     player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(scoreCounter->GetComponent<timber::ScoreCounter>(), &timber::ScoreCounter::IncreaseScore);
     scoreCounter->GetComponent<timber::ScoreCounter>()->OnScoreIncreasedEvent.AddListener(timeBar->GetComponent<timber::TimeBar>(), &timber::TimeBar::AddTime);
     player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(axe->GetComponent<timber::AxeBehaviour>(), &timber::AxeBehaviour::SetPosition);
     player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(flyingLog->GetComponent<timber::LogBehaviour>(), &timber::LogBehaviour::Activate);
+    player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(gravestone->GetComponent<timber::GravestoneBehaviour>(), &timber::GravestoneBehaviour::Move);
+
+    player->GetComponent<timber::PlayerBehaviour>()->OnDeathEvent.AddListener(gravestone->GetComponent<timber::GravestoneBehaviour>(), &timber::GravestoneBehaviour::Enable);
+    player->GetComponent<timber::PlayerBehaviour>()->OnDeathEvent.AddListener(pauseText->GetComponent<timber::PauseBehaviourText>(), &timber::PauseBehaviourText::OnSquished);
 #pragma endregion
 
 #pragma region Commands

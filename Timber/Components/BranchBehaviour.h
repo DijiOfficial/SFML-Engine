@@ -39,6 +39,8 @@ namespace timber
         void OnDestroy() override {}
 
         void SetHeight(const float height) { m_Height = height; }
+        
+        diji::Event<> OnDeathEvent;
 
     private:
         diji::TextureComp* m_TextureCompPtr = nullptr;
@@ -49,7 +51,7 @@ namespace timber
         float m_OriginHeight = 0.f;
 
         void ChooseRandomSide();
-        void MoveBranch([[maybe_unused]] bool isLeft = false);
+        void MoveBranch(bool isLeft = false);
         void Reset();
     };
 }

@@ -39,3 +39,9 @@ void timber::PauseBehaviourText::RefreshDisplay()
     else
         m_RenderCompPtr->DisableRender();
 }
+
+void timber::PauseBehaviourText::OnSquished()
+{
+    GetOwner()->GetComponent<diji::TextComp>()->GetText().setString("SQUISHED!!");
+    RefreshDisplay();
+}

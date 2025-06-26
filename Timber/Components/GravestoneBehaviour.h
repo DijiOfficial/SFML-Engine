@@ -4,16 +4,16 @@
 namespace diji
 {
     class Render;
+    class Transform;
 }
 
 namespace timber
 {
-    // todo: what is this name?
-    class PauseBehaviourText final : public diji::Component
+    class GravestoneBehaviour final : public diji::Component
     {
     public:
-        explicit PauseBehaviourText(diji::GameObject* ownerPtr);
-        ~PauseBehaviourText() noexcept override = default;
+        explicit GravestoneBehaviour(diji::GameObject* ownerPtr) : Component(ownerPtr) {}
+        ~GravestoneBehaviour() noexcept override = default;
 
         void Init() override;
         void OnEnable() override {}
@@ -26,14 +26,16 @@ namespace timber
         void OnDisable() override {}
         void OnDestroy() override {}
 
-        void OnGameOver();
+        void Move(bool isLeft = false);
+        void Enable();
         void Reset();
-        void RefreshDisplay();
-        void OnSquished();
 
     private:
-        diji::Render* m_RenderCompPtr;
-        bool m_IsPaused = false;
+        diji::Transform* m_TransformCompPtr = nullptr;
+        diji::Render* m_RenderCompPtr = nullptr;
+
+        float m_PosX = 0.f;
     };
 }
+
 

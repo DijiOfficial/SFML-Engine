@@ -17,13 +17,16 @@ void timber::BranchBehaviour::Init()
     const auto player = diji::SceneManager::GetInstance().GetGameObject("X_player");
     player->GetComponent<PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(this, &BranchBehaviour::MoveBranch);
     player->GetComponent<PlayerBehaviour>()->OnRestartEvent.AddListener(this, &BranchBehaviour::Reset);
+
+    OnDeathEvent.AddListener(player->GetComponent<PlayerBehaviour>(), &PlayerBehaviour::DeathHandle);
+    
     m_Height += 50;
     m_OriginHeight = m_Height;
 
     Reset();
 }
 
-void timber::BranchBehaviour::MoveBranch(bool)
+void timber::BranchBehaviour::MoveBranch(const bool isLeft)
 {
     m_Height += 150;
 
@@ -46,6 +49,15 @@ void timber::BranchBehaviour::MoveBranch(bool)
     case BranchSide::None:
         m_TransformCompPtr->SetPosition(3000, m_Height);
         break;
+    }
+
+    if (m_Height >= 800)
+    {
+        const BranchSide playerSide = isLeft ? BranchSide::Left : BranchSide::Right;
+        if (m_BranchSide == playerSide)
+        {
+            OnDeathEvent.Broadcast();
+        }
     }
 }
 
