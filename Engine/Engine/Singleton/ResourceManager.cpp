@@ -50,23 +50,26 @@ sf::Font& diji::ResourceManager::LoadFont(const std::string& file)
 	return m_FontsUMap[fullPath];
 }
 
-sf::SoundBuffer& diji::ResourceManager::LoadSoundEffect(const std::string& file)
+sf::Sound& diji::ResourceManager::LoadSoundEffect(const std::string& file)
 {
-	// check if sound is already loaded
+	// Check if sound already exists
 	const auto fullPath = m_DataPath + file;
-	const auto it = m_SoundEffectsUMap.find(fullPath);
-	if (it != m_SoundEffectsUMap.cend())
-	{
+	if (const auto it = m_SoundEffectsUMap.find(fullPath); it != m_SoundEffectsUMap.end())
 		return it->second;
-	}
 
-	sf::SoundBuffer sound;
-	if (!sound.loadFromFile(fullPath.c_str()))
+	// Ensure buffer is loaded
+	if (!m_SoundBuffersUMap.contains(fullPath))
 	{
-		throw std::runtime_error("Failed to load sound: " + fullPath);
+		sf::SoundBuffer buffer;
+		if (!buffer.loadFromFile(fullPath))
+			throw std::runtime_error("Failed to load sound: " + fullPath);
+		
+		m_SoundBuffersUMap.emplace(fullPath, std::move(buffer));
 	}
 
-	// Store it if it's not already loaded
-	m_SoundEffectsUMap[fullPath] = sound;
-	return m_SoundEffectsUMap[fullPath];
+	// Create sound using the stored buffer
+	sf::Sound sound {m_SoundBuffersUMap.at(fullPath)};
+    
+	// Store and return the sound
+	return m_SoundEffectsUMap.emplace(fullPath, std::move(sound)).first->second;
 }

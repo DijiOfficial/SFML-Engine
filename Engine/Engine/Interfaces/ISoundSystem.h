@@ -10,7 +10,7 @@ namespace diji
 	{
 	public:
 		virtual ~ISoundSystem() noexcept = default;
-		virtual void AddSoundRequest(const std::string& audio, bool isMusic, int volume = -1) = 0;
+		virtual void AddSoundRequest(const std::string& audio, bool isMusic, int volume = 100) = 0;
 		virtual void Pause() = 0;
 		virtual void Resume() = 0;
 	};
@@ -18,7 +18,7 @@ namespace diji
 	class NullSoundSystem final : public ISoundSystem
 	{
 	public:
-		void AddSoundRequest(const std::string& audio, bool isMusic, int volume = -1) override;
+		void AddSoundRequest(const std::string& audio, bool isMusic, int volume = 100) override;
 		void Pause() override {}
 		void Resume() override {}
 	};
@@ -40,11 +40,11 @@ namespace diji
 	public:
 		SFMLISoundSystem();
 		~SFMLISoundSystem() noexcept override;
-		void AddSoundRequest(const std::string& audio, bool isMusic, int volume = -1) override;
+		void AddSoundRequest(const std::string& audio, bool isMusic, int volume = 100) override;
 		void Pause() override;
 		void Resume() override;
 	private:
-		void PlayAudio(const std::string& audio, bool isMusic, const int volume) const;
+		void PlayAudio(const std::string& audio, bool isMusic, int volume) const;
 		std::pair<std::pair<bool, int>, std::string>  GetNextSoundRequest();
 	
 		void ProcessSounds();
@@ -66,7 +66,7 @@ namespace diji
 		explicit LoggingSoundSystem(std::unique_ptr<ISoundSystem>&& ss) : _real_ss{ std::move(ss) } {}
 		~LoggingSoundSystem() noexcept override = default;
 
-		void AddSoundRequest(const std::string& audio, bool isMusic, int volume = -1) override;
+		void AddSoundRequest(const std::string& audio, bool isMusic, int volume = 100) override;
 		void Pause() override;
 		void Resume() override;
 	private:

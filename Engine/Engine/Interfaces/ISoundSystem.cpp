@@ -28,7 +28,7 @@ namespace diji
 			return;
 		}
 
-        auto soundEffect = sf::Sound{ ResourceManager::GetInstance().LoadSoundEffect(audio) };
+        auto& soundEffect = ResourceManager::GetInstance().LoadSoundEffect(audio);
 		
         soundEffect.setVolume(static_cast<float>(volume));
         soundEffect.play();
