@@ -17,11 +17,12 @@
 namespace
 {
 	std::unique_ptr<sf::RenderWindow> g_window_ptr{};
+	constexpr static sf::Vector2u VIEWPORT{ 1920, 1080 };
 }
 
 diji::Engine::Engine(const std::string& dataPath)
 {
-	g_window_ptr = std::make_unique<sf::RenderWindow>(sf::VideoMode({ 1920, 1080 }), "Timber!!!", sf::Style::Default, sf::State::Fullscreen);
+	g_window_ptr = std::make_unique<sf::RenderWindow>(sf::VideoMode(VIEWPORT), "Timber!!!", sf::Style::Default, sf::State::Fullscreen);
 
 	if (g_window_ptr == nullptr)
 	{
