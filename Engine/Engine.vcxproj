@@ -44,6 +44,7 @@
     <ClInclude Include="Engine\Singleton\ResourceManager.h" />
     <ClInclude Include="Engine\Singleton\SceneManager.h" />
     <ClInclude Include="Engine\Singleton\Singleton.h" />
+    <ClInclude Include="Engine\Singleton\TimerManager.h" />
     <ClInclude Include="Engine\Singleton\TimeSingleton.h" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +67,7 @@
     <ClCompile Include="Engine\Singleton\RandNumber.cpp" />
     <ClCompile Include="Engine\Singleton\ResourceManager.cpp" />
     <ClCompile Include="Engine\Singleton\SceneManager.cpp" />
+    <ClCompile Include="Engine\Singleton\TimerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Engine\RAII_Wrappers\" />

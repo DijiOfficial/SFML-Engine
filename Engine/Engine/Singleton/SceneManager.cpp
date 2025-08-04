@@ -1,5 +1,7 @@
 ﻿#include "SceneManager.h"
 
+#include "TimerManager.h"
+
 diji::Scene* diji::SceneManager::CreateScene(const int id)
 {
     // Check if the scene already exists in the map
@@ -17,6 +19,7 @@ diji::Scene* diji::SceneManager::CreateScene(const int id)
 
 void diji::SceneManager::Init() const
 {
+    TimerManager::GetInstance().Init();
     m_ScenesUPtrMap.at(m_ActiveSceneId)->Init();
 }
 
@@ -33,6 +36,7 @@ void diji::SceneManager::FixedUpdate() const
 void diji::SceneManager::Update() const
 {
     m_ScenesUPtrMap.at(m_ActiveSceneId)->Update();
+    TimerManager::GetInstance().Update(); // I'm not sure if it matters where/when this is updated. (before/after comps, late update?)
 }
 
 void diji::SceneManager::LateUpdate() const
