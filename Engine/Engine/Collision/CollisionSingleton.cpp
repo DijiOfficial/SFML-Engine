@@ -113,7 +113,7 @@ bool diji::CollisionSingleton::Raycast(const sf::Vector2f* vertices, const size_
 	for (size_t idx{ 0 }; idx <= nrVertices; ++idx)
 	{
 		// Consider line segment between 2 consecutive vertices
-		// (modulo to allow closed polygon, last - first vertice)
+		// (modulo to allow closed polygon, last - first vertices)
 		const sf::Vector2f q1 = vertices[(idx + 0) % nrVertices];
 		const sf::Vector2f q2 = vertices[(idx + 1) % nrVertices];
 
@@ -149,10 +149,10 @@ bool diji::CollisionSingleton::IntersectLineSegments(const sf::Vector2f& p1, con
 	//const sf::Vector2f q1q2{ q1, q2 };
 
 	// Cross product to determine if parallel
-	const float denom = CrossProduct(p1p2, q1q2);
+	const float denominator = CrossProduct(p1p2, q1q2);
 
 	// Don't divide by zero
-	if (std::abs(denom) > epsilon)
+	if (std::abs(denominator) > epsilon)
 	{
 		intersecting = true;
 
@@ -161,8 +161,8 @@ bool diji::CollisionSingleton::IntersectLineSegments(const sf::Vector2f& p1, con
 
 		const float num1 = CrossProduct(p1q1, q1q2);
 		const float num2 = CrossProduct(p1q1, p1p2);
-		outLambda1 = num1 / denom;
-		outLambda2 = num2 / denom;
+		outLambda1 = num1 / denominator;
+		outLambda2 = num2 / denominator;
 	}
 	else // are parallel
 	{
