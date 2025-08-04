@@ -1,9 +1,13 @@
 ﻿#include "Ball.h"
 
+#include "Engine/Collision/Collider.h"
+#include "Engine/Collision/CollisionSingleton.h"
 #include "Engine/Components/RectRender.h"
 #include "Engine/Core/GameObject.h"
 #include "Engine/Singleton/TimeSingleton.h"
 #include "Engine/Components/Transform.h"
+#include "engine/Singleton/SceneManager.h"
+#include "Engine/Singleton/TimerManager.h"
 
 namespace // todo: remove this and use the window singleton
 {
@@ -16,6 +20,11 @@ void pong::Ball::Init()
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
 
     m_Size = static_cast<int>(GetOwner()->GetComponent<diji::RectRender>()->GetRectangle().getSize().x);
+
+    m_ColliderCompPtr = GetOwner()->GetComponent<diji::Collider>();
+    m_PaddleColliderCompPtr = diji::SceneManager::GetInstance().GetGameObject("A_Paddle")->GetComponent<diji::Collider>();
+
+    m_CollisionSingleton = &diji::CollisionSingleton::GetInstance();
 }
 
 void pong::Ball::Update()
@@ -40,17 +49,22 @@ void pong::Ball::Update()
     if (pos.y < 0) // top of the screen bounce
     {
         m_Velocity.y = abs(m_Velocity.y);
-        OnIncreaseScoreEvent.Broadcast();
     }
 
     if (pos.x < 0 || pos.x + m_Size > VIEWPORT.x) // bouncing side of screen
         m_Velocity.x = -m_Velocity.x;
 
-    // if (GetOwner()->GetComponent<diji::RectRender>()->GetRectangle().getGlobalBounds().contains())
-    // {
-    //     // Hit detected so reverse the ball and score a point
-    //     ball.reboundBatOrTop();
-    // }
+    if (!m_DirtyFlagCollision and m_CollisionSingleton->AreColliding(m_ColliderCompPtr, m_PaddleColliderCompPtr))
+    {
+        m_DirtyFlagCollision = true;
+        m_Velocity.y = -abs(m_Velocity.y);
+        
+        OnIncreaseScoreEvent.Broadcast();
+        if (m_Speed < m_OriginalSpeed * 5.f)
+            m_Speed *= 1.1f;
+        
+        (void)TimerManager::GetInstance().SetTimer([this]() { m_DirtyFlagCollision = false; }, 0.05f, false);
+    }
 }
 
 void pong::Ball::ResetBall()
@@ -59,4 +73,3 @@ void pong::Ball::ResetBall()
     m_Velocity.y = abs(m_Velocity.y);
     m_DirtyFlagUpdate = false;
 }
-

@@ -4,6 +4,12 @@
 
 namespace diji
 {
+    class CollisionSingleton;
+}
+
+namespace diji
+{
+    class Collider;
     class Transform;
     class ScoreCounter;
 }
@@ -31,17 +37,19 @@ namespace pong
 
         diji::Event<> OnLifeLostEvent;
         diji::Event<> OnIncreaseScoreEvent;
-
-        // getpos
-        // getShape?
-        // GetVelocity
-        // 
+        
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
         bool m_DirtyFlagUpdate = false;
+        bool m_DirtyFlagCollision = false;
         int m_Size = 0;
+
+        diji::Collider* m_ColliderCompPtr = nullptr;
+        diji::Collider* m_PaddleColliderCompPtr = nullptr; // todo: change collision system to decouple this.
+        diji::CollisionSingleton* m_CollisionSingleton = nullptr;
         
-        float m_Speed = 3000.0f;
+        float m_Speed = 600.0f;
+        float m_OriginalSpeed = 600.f;
         sf::Vector2f m_Velocity = { 0.2f, 0.2f };
     };
 }

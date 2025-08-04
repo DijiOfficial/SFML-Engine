@@ -9,6 +9,7 @@
 #include "Engine/Components/Transform.h"
 #include "../Components/Paddle.h"
 #include "../Inputs/CustomCommands.h"
+#include "Engine/Collision/Collider.h"
 #include "Engine/Components/ScoreCounter.h"
 #include "Engine/Components/TextComp.h"
 
@@ -40,6 +41,7 @@ void SceneLoader::Pong()
     paddle->GetComponent<RectRender>()->SetFillColor(sf::Color::White);
     paddle->GetComponent<RectRender>()->SetLineWidth(0.f);
     paddle->AddComponents<pong::Paddle>();
+    paddle->AddComponents<Collider>(50, 5);
 
     const auto ball = scene->CreateGameObject("A_Ball");
     ball->AddComponents<Transform>(static_cast<float>(VIEWPORT.x) * 0.5f, 0.0f);
@@ -54,6 +56,7 @@ void SceneLoader::Pong()
     ball->GetComponent<RectRender>()->SetLineWidth(0.f);
 
     ball->AddComponents<pong::Ball>();
+    ball->AddComponents<Collider>(10, 10);
 
     const auto scoreCounter = scene->CreateGameObject("Z_scoreCounterHUD");
     scoreCounter->AddComponents<TextComp>("Score: 0", "fonts/digital-7.ttf", sf::Color::White);
@@ -67,8 +70,8 @@ void SceneLoader::Pong()
     livesCounter->AddComponents<TextComp>("Lives: 3", "fonts/digital-7.ttf", sf::Color::White);
     livesCounter->GetComponent<TextComp>()->GetText().setCharacterSize(75);
     livesCounter->AddComponents<ScoreCounter>(3);
-    scoreCounter->GetComponent<ScoreCounter>()->SetString("Lives:");
-    scoreCounter->GetComponent<ScoreCounter>()->SetGoalScore(0);
+    livesCounter->GetComponent<ScoreCounter>()->SetString("Lives:");
+    livesCounter->GetComponent<ScoreCounter>()->SetGoalScore(0);
     livesCounter->AddComponents<Transform>(350, 20);
     livesCounter->AddComponents<Render>();
 
