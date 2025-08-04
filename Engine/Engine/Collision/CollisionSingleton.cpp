@@ -41,6 +41,21 @@ std::vector<const diji::Collider*> diji::CollisionSingleton::IsColliding(const C
 	return collidingObjects;
 }
 
+bool diji::CollisionSingleton::AreColliding(const Collider* source, const Collider* target)
+{
+	if (!source || !target)
+		return false;
+
+	const auto sourceIt = m_Colliders.find(source);
+	const auto targetIt = m_Colliders.find(target);
+
+	if (sourceIt == m_Colliders.end() || targetIt == m_Colliders.end())
+		return false;
+
+	// Use your rect collision detection function
+	return AreRectsColliding(sourceIt->second, targetIt->second);
+}
+
 bool diji::CollisionSingleton::AreRectsColliding(const Rectf& rect1, const Rectf& rect2) const
 {
 	if ((rect1.left + rect1.width) < rect2.left || (rect2.left + rect2.width) < rect1.left)

@@ -6,8 +6,7 @@ diji::Collider::Collider(GameObject* ownerPtr, const int width, const int height
     : Component(ownerPtr)
 {
     m_TransformCompPtr = nullptr;
-    m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width * 2), .height = static_cast<float>(height * 2) };
-
+    m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width), .height = static_cast<float>(height) };
 }
 
 diji::Collider::Collider(GameObject* ownerPtr, const int width, const int height, const sf::Vector2f& offset)
@@ -16,14 +15,14 @@ diji::Collider::Collider(GameObject* ownerPtr, const int width, const int height
     , m_Offset{ offset }
 {
     m_TransformCompPtr = nullptr;
-    m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width * 2), .height = static_cast<float>(height * 2) };
+    m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width), .height = static_cast<float>(height) };
 }
 
 diji::Collider::Collider(GameObject* ownerPtr, const float width, const float height)
     : Component(ownerPtr)
 {
     m_TransformCompPtr = nullptr;
-    m_CollisionBox = { .left = 0, .bottom = 0, .width = width * 2, .height = height * 2 };
+    m_CollisionBox = { .left = 0, .bottom = 0, .width = width, .height = height };
 }
 
 void diji::Collider::Init()

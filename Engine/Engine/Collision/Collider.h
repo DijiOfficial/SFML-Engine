@@ -26,8 +26,8 @@ namespace diji
         void OnDisable() override {}
         void OnDestroy() override {}
 
-        [[no_discard]] Rectf GetCollisionBox() const { return m_CollisionBox; }
-        [[no_discard]] const GameObject* GetParent() const { return GetOwner(); }
+        [[nodiscard]] Rectf GetCollisionBox() const { return m_CollisionBox; } // todo: const ref?
+        [[nodiscard]] const GameObject* GetParent() const { return GetOwner(); }
 	
     private:
         bool m_IsOffsetSet = false;
