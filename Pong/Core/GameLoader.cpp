@@ -1,5 +1,6 @@
 ﻿#include "GameLoader.h"
 #include "GameState.h"
+#include "../Components/Ball.h"
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Input/InputManager.h"
 #include "Engine/Interfaces/ISoundSystem.h"
@@ -8,10 +9,12 @@
 #include "Engine/Components/Transform.h"
 #include "../Components/Paddle.h"
 #include "../Inputs/CustomCommands.h"
+#include "Engine/Components/ScoreCounter.h"
+#include "Engine/Components/TextComp.h"
 
 using namespace diji;
 
-namespace
+namespace // todo: remove this and use the singleton with the window
 {
     constexpr static sf::Vector2u VIEWPORT{ 1920, 1080 };
 }
@@ -27,7 +30,7 @@ void SceneLoader::Pong()
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(pong::GameState::Level));
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(pong::GameState::Level));
 
-    const auto paddle = scene->CreateGameObject("A_Paddle.png");
+    const auto paddle = scene->CreateGameObject("A_Paddle");
     paddle->AddComponents<Transform>(static_cast<float>(VIEWPORT.x) * 0.5f, static_cast<float>(VIEWPORT.y) - 20);
     paddle->AddComponents<RectRender>();
     sf::RectangleShape shape;
@@ -38,6 +41,37 @@ void SceneLoader::Pong()
     paddle->GetComponent<RectRender>()->SetLineWidth(0.f);
     paddle->AddComponents<pong::Paddle>();
 
+    const auto ball = scene->CreateGameObject("A_Ball");
+    ball->AddComponents<Transform>(static_cast<float>(VIEWPORT.x) * 0.5f, 0.0f);
+
+    // look into optimizing this redundant code
+    ball->AddComponents<RectRender>();
+    sf::RectangleShape ballShape;
+    ballShape.setSize(sf::Vector2f{10 , 10});
+    ballShape.setPosition(sf::Vector2f{static_cast<float>(VIEWPORT.x) * 0.5f, static_cast<float>(VIEWPORT.y) - 20});
+    ball->GetComponent<RectRender>()->SetRectangle(ballShape);
+    ball->GetComponent<RectRender>()->SetFillColor(sf::Color::White);
+    ball->GetComponent<RectRender>()->SetLineWidth(0.f);
+
+    ball->AddComponents<pong::Ball>();
+
+    const auto scoreCounter = scene->CreateGameObject("Z_scoreCounterHUD");
+    scoreCounter->AddComponents<TextComp>("Score: 0", "fonts/digital-7.ttf", sf::Color::White);
+    scoreCounter->GetComponent<TextComp>()->GetText().setCharacterSize(75);
+    scoreCounter->AddComponents<ScoreCounter>(0);
+    scoreCounter->GetComponent<ScoreCounter>()->SetString("Score:");
+    scoreCounter->AddComponents<Transform>(20, 20);
+    scoreCounter->AddComponents<Render>();
+
+    const auto livesCounter = scene->CreateGameObject("Z_livesCounterHUD");
+    livesCounter->AddComponents<TextComp>("Lives: 3", "fonts/digital-7.ttf", sf::Color::White);
+    livesCounter->GetComponent<TextComp>()->GetText().setCharacterSize(75);
+    livesCounter->AddComponents<ScoreCounter>(3);
+    scoreCounter->GetComponent<ScoreCounter>()->SetString("Lives:");
+    scoreCounter->GetComponent<ScoreCounter>()->SetGoalScore(0);
+    livesCounter->AddComponents<Transform>(350, 20);
+    livesCounter->AddComponents<Render>();
+
 #pragma region Commands
     auto& input = InputManager::GetInstance();
 
@@ -45,5 +79,18 @@ void SceneLoader::Pong()
     input.BindCommand<pong::MovePlayer>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::Left, paddle, pong::Movement::Left, false);
     input.BindCommand<pong::MovePlayer>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Right, paddle, pong::Movement::Right, true);
     input.BindCommand<pong::MovePlayer>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::Right, paddle, pong::Movement::Right, false);
+#pragma endregion
+
+#pragma region Observers
+    // scoreCounter->GetComponent<ScoreCounter>()->OnScoreIncreasedEvent.AddListener(timeBar->GetComponent<timber::TimeBar>(), &timber::TimeBar::AddTime);
+    // player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(axe->GetComponent<timber::AxeBehaviour>(), &timber::AxeBehaviour::SetPosition);
+    // player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(flyingLog->GetComponent<timber::LogBehaviour>(), &timber::LogBehaviour::Activate);
+    // player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(gravestone->GetComponent<timber::GravestoneBehaviour>(), &timber::GravestoneBehaviour::Move);
+
+    ball->GetComponent<pong::Ball>()->OnLifeLostEvent.AddListener(livesCounter->GetComponent<ScoreCounter>(), &ScoreCounter::DecreaseScore);
+    ball->GetComponent<pong::Ball>()->OnIncreaseScoreEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
+    
+    livesCounter->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(livesCounter->GetComponent<ScoreCounter>(), &ScoreCounter::Reset);
+    livesCounter->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::Reset);
 #pragma endregion
 }

@@ -163,12 +163,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\Ball.cpp" />
     <ClCompile Include="Components\Paddle.cpp" />
     <ClCompile Include="Core\GameLoader.cpp" />
     <ClCompile Include="Inputs\CustomCommands.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\Ball.h" />
     <ClInclude Include="Components\Paddle.h" />
     <ClInclude Include="Core\GameLoader.h" />
     <ClInclude Include="Core\GameState.h" />

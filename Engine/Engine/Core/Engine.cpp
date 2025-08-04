@@ -16,6 +16,7 @@
 
 namespace
 {
+	// todo: make the window ptr accessible in a singleton
 	std::unique_ptr<sf::RenderWindow> g_window_ptr{};
 	constexpr static sf::Vector2u VIEWPORT{ 1920, 1080 };
 }

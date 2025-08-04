@@ -7,10 +7,11 @@ namespace diji
 {
     class TextComp;
 
+    // todo: rename to more general counter display name
     class ScoreCounter final : public Component
     {
     public:
-        explicit ScoreCounter(GameObject* ownerPtr, int score = 0);
+        explicit ScoreCounter(GameObject* ownerPtr, int score = 0, bool shouldCallEvent = false);
         ~ScoreCounter() noexcept override = default;
 
         void Init() override;
@@ -24,18 +25,29 @@ namespace diji
         void OnDisable() override {}
         void OnDestroy() override {}
         
-        void IncreaseScore([[maybe_unused]] bool isLeft = false);
+        void IncreaseScore([[maybe_unused]] bool isLeft = false); // todo: why the bool?
+        void IncreaseScore(int score = 1);
+        void IncreaseScore();
+        void DecreaseScore(int score = 1);
+        void DecreaseScore();
         [[nodiscard]] int GetScore() const { return m_Score; }
         void SetString(const std::string& str) { m_StringScore = str; }
+        void SetGoalScore(const int goalScore) { m_GoalScore = goalScore; }
         void Reset();
 
         Event<int> OnScoreIncreasedEvent;
+        Event<int> OnScoreDecreasedEvent;
+        Event<> OnGivenScoreReachedEvent;
 
     private:
+        const int m_StartingScore = 0;
+        bool m_ShouldCallEvent = false;
         int m_Score;
+        int m_GoalScore = 0;
         std::string m_StringScore = "Score = ";
         
         TextComp* m_TextCompPtr;
+        void ScoreChangeCheck();
     };
 }
 

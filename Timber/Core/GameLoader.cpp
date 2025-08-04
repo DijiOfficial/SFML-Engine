@@ -108,7 +108,7 @@ void SceneLoader::Timber()
     // todo: if we want to decouple more we can inherit from TextComp and create a new comp that listens on ScoreCounter to update itself.
     scoreCounter->AddComponents<TextComp>("Score = 0", "fonts/KOMIKAP_.ttf", sf::Color::White);
     scoreCounter->GetComponent<TextComp>()->GetText().setCharacterSize(100);
-    scoreCounter->AddComponents<diji::ScoreCounter>(0);
+    scoreCounter->AddComponents<ScoreCounter>(0);
     scoreCounter->AddComponents<Transform>(20, 20);
     scoreCounter->AddComponents<Render>();
     scoreCounter->SetParent(HUD, false);
