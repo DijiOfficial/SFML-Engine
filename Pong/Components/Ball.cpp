@@ -53,16 +53,17 @@ void pong::Ball::Update()
 
     if (pos.x < 0 || pos.x + m_Size > VIEWPORT.x) // bouncing side of screen
         m_Velocity.x = -m_Velocity.x;
-
+    
     if (!m_DirtyFlagCollision and m_CollisionSingleton->AreColliding(m_ColliderCompPtr, m_PaddleColliderCompPtr))
     {
         m_DirtyFlagCollision = true;
-        m_Velocity.y = -abs(m_Velocity.y);
-        
+
+        CalculateNewVelocity();
+
         OnIncreaseScoreEvent.Broadcast();
         if (m_Speed < m_OriginalSpeed * 5.f)
             m_Speed *= 1.1f;
-        
+
         (void)TimerManager::GetInstance().SetTimer([this]() { m_DirtyFlagCollision = false; }, 0.05f, false);
     }
 }
@@ -72,4 +73,30 @@ void pong::Ball::ResetBall()
     m_TransformCompPtr->SetPosition(VIEWPORT.x * 0.5f, 0);
     m_Velocity.y = abs(m_Velocity.y);
     m_DirtyFlagUpdate = false;
+}
+
+void pong::Ball::CalculateNewVelocity()
+{
+    // Get the positions of the ball and paddle
+    const auto& ballPos = m_TransformCompPtr->GetPosition();
+    const auto& paddlePos = m_PaddleColliderCompPtr->GetParent()->GetComponent<diji::Transform>()->GetPosition();
+
+    // Calculate the direction vector from the paddle to the ball
+    sf::Vector2f direction = ballPos - paddlePos;
+
+    // Normalize the direction vector
+    const float magnitude = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+    if (magnitude > 0.0f)
+        direction /= magnitude;
+
+    // Clamp the x and y components of the direction vector
+    direction.x = std::clamp(direction.x, -0.9f, 0.9f);
+    direction.y = std::clamp(direction.y, -0.9f, -0.1f);
+
+    // Ensure values are not between -0.1 and 0.1
+    if (direction.x > -0.1f && direction.x < 0.1f)
+        direction.x = (direction.x < 0.0f) ? -0.1f : 0.1f;
+
+    // Apply the new velocity
+    m_Velocity = direction;
 }

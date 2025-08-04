@@ -51,5 +51,7 @@ namespace pong
         float m_Speed = 600.0f;
         float m_OriginalSpeed = 600.f;
         sf::Vector2f m_Velocity = { 0.2f, 0.2f };
+
+        void CalculateNewVelocity();
     };
 }
