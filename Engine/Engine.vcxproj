@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Collision\Collider.h" />
+    <ClInclude Include="Engine\Collision\CollisionSingleton.h" />
     <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\Components\FPSCounter.h" />
     <ClInclude Include="Engine\Components\RectRender.h" />
@@ -45,6 +47,8 @@
     <ClInclude Include="Engine\Singleton\TimeSingleton.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Collision\Collider.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionSingleton.cpp" />
     <ClCompile Include="Engine\Components\FPSCounter.cpp" />
     <ClCompile Include="Engine\Components\RectRender.cpp" />
     <ClCompile Include="Engine\Components\Render.cpp" />
