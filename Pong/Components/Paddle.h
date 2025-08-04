@@ -31,6 +31,9 @@ namespace pong
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
         float m_Speed = 1000.f;
+        float m_SizeX = 0.f;
+        const float m_LeftBound = 0.0f;
+        float m_RightBound = 1920.0f; // todo: use the window singleton to get the width
 
         bool m_IsMovingLeft = false;
         bool m_IsMovingRight = false;
