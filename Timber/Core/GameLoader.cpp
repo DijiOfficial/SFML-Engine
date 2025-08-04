@@ -11,7 +11,6 @@
 #include "../Components/LogBehaviour.h"
 #include "../Components/PauseBehaviourText.h"
 #include "../Components/PlayerBehaviour.h"
-#include "../Components/ScoreCounter.h"
 #include "../Components/TimeBar.h"
 #include "../Inputs/CustomCommands.h"
 #include "../Singleton/GameManager.h"
@@ -23,6 +22,7 @@
 #include "Engine/Components/Transform.h"
 #include "Engine/Components/Render.h"
 #include "Engine/Components/TextComp.h"
+#include "Engine/Components/ScoreCounter.h"
 #include "Engine/Input/InputManager.h"
 #include "Engine/Interfaces/ISoundSystem.h"
 
@@ -108,7 +108,7 @@ void SceneLoader::Timber()
     // todo: if we want to decouple more we can inherit from TextComp and create a new comp that listens on ScoreCounter to update itself.
     scoreCounter->AddComponents<TextComp>("Score = 0", "fonts/KOMIKAP_.ttf", sf::Color::White);
     scoreCounter->GetComponent<TextComp>()->GetText().setCharacterSize(100);
-    scoreCounter->AddComponents<timber::ScoreCounter>(0);
+    scoreCounter->AddComponents<diji::ScoreCounter>(0);
     scoreCounter->AddComponents<Transform>(20, 20);
     scoreCounter->AddComponents<Render>();
     scoreCounter->SetParent(HUD, false);
@@ -123,7 +123,7 @@ void SceneLoader::Timber()
     pauseText->SetParent(HUD, false);
 
     const auto timeBar = timberScene->CreateGameObject("Z_timeBarHUD");
-    timeBar->AddComponents<Transform>(760, 540); // This is useless but I have not tested if it works without
+    timeBar->AddComponents<Transform>(760, 940); // This is useless but I have not tested if it works without
     timeBar->AddComponents<RectRender>();
     
     sf::RectangleShape rect;
@@ -226,13 +226,13 @@ void SceneLoader::Timber()
     timeBar->GetComponent<timber::TimeBar>()->OnGameOverEvent.AddListener(pauseText->GetComponent<timber::PauseBehaviourText>(), &timber::PauseBehaviourText::OnGameOver);
 
     player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(timeBar->GetComponent<timber::TimeBar>(), &timber::TimeBar::Reset);
-    player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(scoreCounter->GetComponent<timber::ScoreCounter>(), &timber::ScoreCounter::Reset);
+    player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::Reset);
     player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(pauseText->GetComponent<timber::PauseBehaviourText>(), &timber::PauseBehaviourText::Reset);
     player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(axe->GetComponent<timber::AxeBehaviour>(), &timber::AxeBehaviour::Reset);
     player->GetComponent<timber::PlayerBehaviour>()->OnRestartEvent.AddListener(gravestone->GetComponent<timber::GravestoneBehaviour>(), &timber::GravestoneBehaviour::Reset);
 
-    player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(scoreCounter->GetComponent<timber::ScoreCounter>(), &timber::ScoreCounter::IncreaseScore);
-    scoreCounter->GetComponent<timber::ScoreCounter>()->OnScoreIncreasedEvent.AddListener(timeBar->GetComponent<timber::TimeBar>(), &timber::TimeBar::AddTime);
+    player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
+    scoreCounter->GetComponent<ScoreCounter>()->OnScoreIncreasedEvent.AddListener(timeBar->GetComponent<timber::TimeBar>(), &timber::TimeBar::AddTime);
     player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(axe->GetComponent<timber::AxeBehaviour>(), &timber::AxeBehaviour::SetPosition);
     player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(flyingLog->GetComponent<timber::LogBehaviour>(), &timber::LogBehaviour::Activate);
     player->GetComponent<timber::PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(gravestone->GetComponent<timber::GravestoneBehaviour>(), &timber::GravestoneBehaviour::Move);

@@ -187,7 +187,6 @@
     <ClCompile Include="Components\LogBehaviour.cpp" />
     <ClCompile Include="Components\PauseBehaviourText.cpp" />
     <ClCompile Include="Components\PlayerBehaviour.cpp" />
-    <ClCompile Include="Components\ScoreCounter.cpp" />
     <ClCompile Include="Components\TimeBar.cpp" />
     <ClCompile Include="Core\GameLoader.cpp" />
     <ClCompile Include="Inputs\CustomCommands.cpp" />
@@ -202,7 +201,6 @@
     <ClInclude Include="Components\LogBehaviour.h" />
     <ClInclude Include="Components\PauseBehaviourText.h" />
     <ClInclude Include="Components\PlayerBehaviour.h" />
-    <ClInclude Include="Components\ScoreCounter.h" />
     <ClInclude Include="Components\TimeBar.h" />
     <ClInclude Include="Core\GameLoader.h" />
     <ClInclude Include="Core\GameStates.h" />

@@ -1,17 +1,16 @@
 ﻿#pragma once
-#include "Engine/Components/Component.h"
+#include <string>
+
+#include "Component.h"
 
 namespace diji
 {
     class TextComp;
-}
 
-namespace timber
-{
-    class ScoreCounter final : public diji::Component
+    class ScoreCounter final : public Component
     {
     public:
-        explicit ScoreCounter(diji::GameObject* ownerPtr, int score = 0);
+        explicit ScoreCounter(GameObject* ownerPtr, int score = 0);
         ~ScoreCounter() noexcept override = default;
 
         void Init() override;
@@ -27,14 +26,16 @@ namespace timber
         
         void IncreaseScore([[maybe_unused]] bool isLeft = false);
         [[nodiscard]] int GetScore() const { return m_Score; }
-
+        void SetString(const std::string& str) { m_StringScore = str; }
         void Reset();
 
-        diji::Event<int> OnScoreIncreasedEvent;
+        Event<int> OnScoreIncreasedEvent;
 
     private:
         int m_Score;
-        diji::TextComp* m_TextCompPtr;
+        std::string m_StringScore = "Score = ";
+        
+        TextComp* m_TextCompPtr;
     };
 }
 
