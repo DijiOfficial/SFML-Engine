@@ -51,6 +51,7 @@ namespace diji
 		void SetRotationAngle(const sf::Angle angle) { m_RotationAngle = angle; }
 		void SetOrigin(const sf::Vector2f& origin) { m_Origin = origin; }
 		void SetOrigin(float x, float y) { m_Origin = { x, y }; }
+		void SetOriginToCenter();
 
 		int GetWidth() const;
 		int GetHeight() const;

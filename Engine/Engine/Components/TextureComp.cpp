@@ -71,6 +71,12 @@ void diji::TextureComp::SetHeight(const int height)
 	SetScaleY(static_cast<float>(height) / m_SFMLTexture.getSize().y);
 }
 
+void diji::TextureComp::SetOriginToCenter()
+{
+	const auto textureSize = m_SFMLTexture.getSize();
+	m_Origin = { textureSize.x * 0.5f, textureSize.y * 0.5f };
+}
+
 // todo: consider whether I should use float for sizes?
 int diji::TextureComp::GetWidth() const
 {
