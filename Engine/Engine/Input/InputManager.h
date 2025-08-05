@@ -59,6 +59,8 @@ namespace diji
         InputType m_Input;
     };
 
+    
+    // todo: Create Input Mappings and Input Actions with easily configurable bindings because it's really annoying to write them now
     class InputManager final : public Singleton<InputManager>
     {
     public:
