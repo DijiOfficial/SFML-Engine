@@ -171,16 +171,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\Player.cpp" />
     <ClCompile Include="Core\GameLoader.cpp" />
+    <ClCompile Include="Input\CustomCommands.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Components\" />
-    <Folder Include="Input\" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="Components\Player.h" />
     <ClInclude Include="Core\GameLoader.h" />
     <ClInclude Include="Core\GameState.h" />
+    <ClInclude Include="Input\CustomCommands.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

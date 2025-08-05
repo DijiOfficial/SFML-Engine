@@ -1,0 +1,31 @@
+﻿#pragma once
+#include <SFML/System/Vector2.hpp>
+
+#include "Engine/Input/GameActorCommand.h"
+
+namespace zombieArena
+{
+    class Player;
+
+    enum class Movement
+    {
+        Left,
+        Right,
+        Top,
+        Bottom,
+    };
+    
+    class MovePlayer final : public diji::GameActorCommands
+    {
+    public:
+        explicit MovePlayer(diji::GameObject* actor, Movement movement, bool isStart);
+        ~MovePlayer() noexcept override = default;
+        
+        void Execute() override;
+
+    private:
+        Player* m_PlayerCompPtr = nullptr;
+        sf::Vector2f m_Direction = {0, 0};
+        bool m_IsStart;
+    };
+}
