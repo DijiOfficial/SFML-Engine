@@ -64,7 +64,7 @@ void pong::Ball::Update()
         if (m_Speed < m_OriginalSpeed * 5.f)
             m_Speed *= 1.1f;
 
-        (void)TimerManager::GetInstance().SetTimer([this]() { m_DirtyFlagCollision = false; }, 0.05f, false);
+        (void)diji::TimerManager::GetInstance().SetTimer([this]() { m_DirtyFlagCollision = false; }, 0.05f, false);
     }
 }
 

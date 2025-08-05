@@ -1,12 +1,12 @@
 ﻿#include "TimerManager.h"
 #include "TimeSingleton.h"
 
-void TimerManager::Init()
+void diji::TimerManager::Init()
 {
     m_TimeSingleton = &diji::TimeSingleton::GetInstance();
 }
 
-void TimerManager::Update()
+void diji::TimerManager::Update()
 {
     const float deltaTime = m_TimeSingleton->GetDeltaTime();
     for (auto it = m_Timers.begin(); it != m_Timers.end();)
@@ -34,7 +34,7 @@ void TimerManager::Update()
     }
 }
 
-TimerManager::TimerHandle TimerManager::SetTimer(std::function<void()> callback, const float interval, const bool isLooping, const float initialDelay)
+diji::TimerManager::TimerHandle diji::TimerManager::SetTimer(std::function<void()> callback, const float interval, const bool isLooping, const float initialDelay)
 {
     Timer timer;
     timer.id = m_NextId++;
@@ -48,7 +48,7 @@ TimerManager::TimerHandle TimerManager::SetTimer(std::function<void()> callback,
     return TimerHandle{ timer.id };
 }
 
-void TimerManager::ClearTimer(const TimerHandle& handle) // Todo: consider using a map for efficiency (bigger number of timers) 
+void diji::TimerManager::ClearTimer(const TimerHandle& handle) // Todo: consider using a map for efficiency (bigger number of timers) 
 {
     const auto& it = std::ranges::find_if(m_Timers, [&](const Timer& timer)
     {

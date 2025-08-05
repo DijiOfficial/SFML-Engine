@@ -5,12 +5,12 @@
 #endif
 
 #include "Engine/Core/Engine.h"
-//#include "Core/GameLoader.h"
+#include "Core/GameLoader.h"
 
 int main(int, char* [])
 {
-    const diji::Engine engine("../Timber/Resources/");
-    engine.Run(Pong);
+    const diji::Engine engine("../Zombie Arena/Resources/");
+    engine.Run(SceneLoader::ZombieArena);
 
     return 0;
 }
