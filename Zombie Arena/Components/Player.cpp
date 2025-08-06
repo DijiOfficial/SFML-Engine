@@ -22,11 +22,14 @@ void zombieArena::Player::Update()
     m_TransformCompPtr->AddOffset(m_Direction * m_CurrentSpeed * diji::TimeSingleton::GetInstance().GetDeltaTime());
 
     // clamp the position to the arena bounds
-    // Handle player rotation
-    if (m_Direction == sf::Vector2f{0.f, 0.f}) return;
+
+    // Orient the player to mouse position
+    const sf::Vector2f playerPos = m_TransformCompPtr->GetPosition();
+    const sf::Vector2f direction = sf::Vector2f(m_LastMousePos) - playerPos;
 
     // todo: write helper functions for getting Angle from directions and turning radians into degrees
-    const float angleDeg = std::atan2(m_Direction.y, m_Direction.x) * 180.0f / std::numbers::pi_v<float>;
+    const float angleDeg = std::atan2(direction.y, direction.x) * 180.0f / std::numbers::pi_v<float>;
+    
     m_TextureCompPtr->SetRotationAngle(angleDeg);
 }
 
@@ -66,4 +69,9 @@ void zombieArena::Player::UpgradeHealth()
 void zombieArena::Player::Heal(const int amount)
 {
     m_CurrentHealth = std::min(m_CurrentHealth += amount, m_MaxHealth);
+}
+
+void zombieArena::Player::OrientPlayer(const sf::Vector2i& mousePos)
+{
+    m_LastMousePos = mousePos;
 }

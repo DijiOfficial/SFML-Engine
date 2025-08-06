@@ -41,13 +41,15 @@ namespace zombieArena
         void UpgradeHealth();
         void Heal(const int amount);
         // int GetCurrentHealth() const { return m_CurrentHealth; }
+        void OrientPlayer(const sf::Vector2i& mousePos);
         
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::TextureComp* m_TextureCompPtr = nullptr;
         sf::IntRect m_Arena = {};
         sf::Vector2f m_Direction = {0, 0};
-
+        sf::Vector2i m_LastMousePos = {0, 0};
+        
         const int START_HEALTH = 100;
         int m_CurrentHealth = START_HEALTH;
         int m_MaxHealth = START_HEALTH;
@@ -56,6 +58,5 @@ namespace zombieArena
         float m_CurrentSpeed = START_SPEED;
         const float INVINCIBILITY_TIME = 0.2f;
         bool m_IsHit = false;
-
     };
 }

@@ -41,3 +41,14 @@ void zombieArena::MovePlayer::Execute()
 
     m_PlayerCompPtr->SetDirection(playerDir);
 }
+
+zombieArena::Aim::Aim(diji::GameObject* actor)
+    : GameActorCommands(actor)
+{
+    m_PlayerCompPtr = actor->GetComponent<Player>();
+}
+
+void zombieArena::Aim::Execute(const sf::Vector2i& mousePos)
+{
+    m_PlayerCompPtr->OrientPlayer(mousePos);
+}

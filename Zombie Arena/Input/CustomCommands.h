@@ -28,4 +28,17 @@ namespace zombieArena
         sf::Vector2f m_Direction = {0, 0};
         bool m_IsStart;
     };
+
+    class Aim final : public diji::GameActorCommands
+    {
+    public:
+        Aim(diji::GameObject* actor);
+        ~Aim() noexcept override = default;
+
+        void Execute() override {}
+        void Execute(const sf::Vector2i& mousePos) override;
+
+    private:
+        Player* m_PlayerCompPtr = nullptr;
+    };
 }
