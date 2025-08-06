@@ -5,6 +5,7 @@
 
 namespace diji
 {
+    class Camera;
     class Transform;
     class TextureComp;
 }
@@ -47,6 +48,7 @@ namespace zombieArena
         diji::Event<> OnPauseEvent;
 
     private:
+        diji::Camera* m_CameraCompPtr = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::TextureComp* m_TextureCompPtr = nullptr;
         sf::IntRect m_Arena = {};

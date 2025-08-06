@@ -33,3 +33,8 @@ void diji::Camera::SetAsMainView() const
 {
     window::g_window_ptr->setView(m_CameraView);
 }
+
+sf::Vector2i diji::Camera::GetMouseWorldPosition(const sf::Vector2i& pos) const
+{
+    return static_cast<sf::Vector2i>(window::g_window_ptr->mapPixelToCoords(pos, m_CameraView));
+}

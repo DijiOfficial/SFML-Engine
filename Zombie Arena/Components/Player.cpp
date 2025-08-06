@@ -2,8 +2,10 @@
 
 #include <algorithm>
 #include <numbers>
+#include <SFML/Window/Mouse.hpp>
 
 #include "../Core/GameState.h"
+#include "Engine/Components/Camera.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Components/Transform.h"
 #include "Engine/Core/GameObject.h"
@@ -16,6 +18,7 @@ void zombieArena::Player::Init()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
     m_TextureCompPtr = GetOwner()->GetComponent<diji::TextureComp>();
+    m_CameraCompPtr = GetOwner()->GetComponent<diji::Camera>();
 
     m_TextureCompPtr->SetOriginToCenter();
 }
@@ -76,7 +79,7 @@ void zombieArena::Player::Heal(const int amount)
 
 void zombieArena::Player::OrientPlayer(const sf::Vector2i& mousePos)
 {
-    m_LastMousePos = mousePos;
+    m_LastMousePos = m_CameraCompPtr->GetMouseWorldPosition(mousePos);
 }
 
 void zombieArena::Player::PauseGame()
