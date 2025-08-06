@@ -19,7 +19,7 @@ namespace diji
         void OnEnable() override {}
         void Start() override {}
         
-        void Update() override {}
+        void Update() override;
         void FixedUpdate() override {}
         void LateUpdate() override {}
 
@@ -27,16 +27,15 @@ namespace diji
         void OnDestroy() override {}
         
         void SetLevelBoundaries(const sf::FloatRect& levelBoundaries) { m_LevelBoundaries = levelBoundaries; }
-        // void Transform(const Rectf& target) const;
         void UnlockCamera() { m_IsLocked = false; }
         void LockCamera() { m_IsLocked = true; }
-        void SetOffsetCamera(const int offset) { m_CameraOffset = offset; }
-        void ResetOffset() { m_CameraOffset = 0; }
+        void SetOffsetCamera(const sf::Vector2f& offset) { m_CameraOffset = offset; }
+        void ResetOffset() { m_CameraOffset = sf::Vector2f{ 0, 0 }; }
         void SetFollow(const GameObject* target);
         void SetFollowSelf();
         void SetAsMainView() const;
         
-        int GetCameraOffset() const { return m_CameraOffset; }
+        sf::Vector2f GetCameraOffset() const { return m_CameraOffset; }
         bool GetIsCameraLocked() const { return m_IsLocked; }
         sf::Vector2i GetMouseWorldPosition(const sf::Vector2i& pos) const;
         // Rectf GetCameraView(const Rectf& target) const {return }???
@@ -45,12 +44,11 @@ namespace diji
         Transform* m_TransformCompPtr = nullptr;
         sf::View m_CameraView;
         sf::FloatRect m_LevelBoundaries;
+        sf::Vector2f m_CameraOffset;
         float m_Width;
         float m_Height;
-        int m_CameraOffset;
         bool m_IsLocked;
 
-        // sf::Vector2f Track(const Rectf& target) const;
-        // void Clamp(sf::Vector2f& bottomLeftPos) const;
+        void Clamp(sf::Vector2f& pos) const;
     };
 }

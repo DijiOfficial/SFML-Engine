@@ -6,9 +6,9 @@
 diji::Camera::Camera(GameObject* ownerPtr, const float width, const float height)
     : Component(ownerPtr)
     , m_LevelBoundaries{ sf::Vector2f{ 0, 0 }, sf::Vector2f{ width, height } } 
+    , m_CameraOffset{ 0, 0 }
     , m_Width{ width }
     , m_Height{ height }
-    , m_CameraOffset{ 0 }
     , m_IsLocked{ false }
 {
     m_CameraView = sf::View(sf::Vector2f{ 0, 0 }, sf::Vector2f{ width, height });
@@ -20,13 +20,24 @@ void diji::Camera::Init()
     window::g_window_ptr->setView(m_CameraView);
 }
 
+void diji::Camera::Update()
+{
+    if (m_IsLocked) return;
+
+    sf::Vector2f cameraPos = m_TransformCompPtr->GetPosition() + m_CameraOffset;
+    Clamp(cameraPos);
+    m_CameraView.setCenter(cameraPos);
+    window::g_window_ptr->setView(m_CameraView); // big L from SFML imo
+}
+
 void diji::Camera::SetFollow(const GameObject* target)
 {
-    (void)target;
+    m_TransformCompPtr = target->GetComponent<Transform>();
 }
 
 void diji::Camera::SetFollowSelf()
 {
+    m_TransformCompPtr = GetOwner()->GetComponent<Transform>();
 }
 
 void diji::Camera::SetAsMainView() const
@@ -37,4 +48,23 @@ void diji::Camera::SetAsMainView() const
 sf::Vector2i diji::Camera::GetMouseWorldPosition(const sf::Vector2i& pos) const
 {
     return static_cast<sf::Vector2i>(window::g_window_ptr->mapPixelToCoords(pos, m_CameraView));
+}
+
+void diji::Camera::Clamp(sf::Vector2f& pos) const
+{
+    const float halfWidth = m_Width * 0.5f; // Could make this a member for small optimization
+    const float halfHeight = m_Height * 0.5f;
+
+    const float levelLeft   = m_LevelBoundaries.position.x;
+    const float levelTop    = m_LevelBoundaries.position.y;
+    const float levelRight  = levelLeft + m_LevelBoundaries.size.x;
+    const float levelBottom = levelTop + m_LevelBoundaries.size.y;
+
+    const float minX = levelLeft + halfWidth;
+    const float maxX = levelRight - halfWidth;
+    const float minY = levelTop + halfHeight;
+    const float maxY = levelBottom - halfHeight;
+
+    pos.x = std::clamp(pos.x, minX, maxX);
+    pos.y = std::clamp(pos.y, minY, maxY);
 }

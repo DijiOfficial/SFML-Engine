@@ -32,6 +32,7 @@ void SceneLoader::ZombieArena()
     player->AddComponents<Render>();
     player->AddComponents<zombieArena::Player>();
     player->AddComponents<Camera>(500.f, 500.f);
+    player->GetComponent<Camera>()->SetLevelBoundaries(sf::FloatRect{ sf::Vector2f{ 0, 0 }, sf::Vector2f{ 1920.f, 1080.f } });
     
     const auto tempBackground = scene->CreateGameObject("Background");
     tempBackground->AddComponents<TextureComp>("graphics/background.png");
