@@ -9,6 +9,7 @@
 #include "Engine/Interfaces/ISoundSystem.h"
 #include "Engine/Components/Transform.h"
 #include "Engine/Components/Render.h"
+#include "Engine/Components/Camera.h"
 #include "Engine/Singleton/GameStateManager.h"
 
 using namespace diji;
@@ -30,6 +31,12 @@ void SceneLoader::ZombieArena()
     player->AddComponents<TextureComp>("graphics/player.png");
     player->AddComponents<Render>();
     player->AddComponents<zombieArena::Player>();
+    player->AddComponents<Camera>(500.f, 500.f);
+    
+    const auto tempBackground = scene->CreateGameObject("Background");
+    tempBackground->AddComponents<TextureComp>("graphics/background.png");
+    tempBackground->AddComponents<Transform>(0, 0);
+    tempBackground->AddComponents<Render>();
 
 #pragma region Commands
     auto& input = InputManager::GetInstance();
