@@ -3,9 +3,12 @@
 #include <algorithm>
 #include <numbers>
 
+#include "../Core/GameState.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Components/Transform.h"
 #include "Engine/Core/GameObject.h"
+#include "Engine/Singleton/GameStateManager.h"
+#include "Engine/Singleton/PauseSingleton.h"
 #include "Engine/Singleton/TimerManager.h"
 #include "Engine/Singleton/TimeSingleton.h"
 
@@ -74,4 +77,13 @@ void zombieArena::Player::Heal(const int amount)
 void zombieArena::Player::OrientPlayer(const sf::Vector2i& mousePos)
 {
     m_LastMousePos = mousePos;
+}
+
+void zombieArena::Player::PauseGame()
+{
+    if (static_cast<ZombieGameState>(diji::GameStateManager::GetInstance().GetCurrentGameState()) != ZombieGameState::Level) // can only pause during the level change state?
+        return;
+    
+    diji::PauseSingleton::GetInstance().TogglePause();
+    OnPauseEvent.Broadcast();
 }

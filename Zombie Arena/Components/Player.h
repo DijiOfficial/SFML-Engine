@@ -42,7 +42,10 @@ namespace zombieArena
         void Heal(const int amount);
         // int GetCurrentHealth() const { return m_CurrentHealth; }
         void OrientPlayer(const sf::Vector2i& mousePos);
-        
+        void PauseGame();
+
+        diji::Event<> OnPauseEvent;
+
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::TextureComp* m_TextureCompPtr = nullptr;

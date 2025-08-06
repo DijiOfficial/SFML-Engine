@@ -52,3 +52,8 @@ void zombieArena::Aim::Execute(const sf::Vector2i& mousePos)
 {
     m_PlayerCompPtr->OrientPlayer(mousePos);
 }
+
+void zombieArena::Pause::Execute()
+{
+    GetGameActor()->GetComponent<Player>()->PauseGame();
+}

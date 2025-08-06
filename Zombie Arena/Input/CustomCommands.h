@@ -32,7 +32,7 @@ namespace zombieArena
     class Aim final : public diji::GameActorCommands
     {
     public:
-        Aim(diji::GameObject* actor);
+        explicit Aim(diji::GameObject* actor);
         ~Aim() noexcept override = default;
 
         void Execute() override {}
@@ -40,5 +40,14 @@ namespace zombieArena
 
     private:
         Player* m_PlayerCompPtr = nullptr;
+    };
+
+    class Pause final : public diji::GameActorCommands
+    {
+    public:
+        using GameActorCommands::GameActorCommands;
+        ~Pause() noexcept override = default;
+
+        void Execute() override;
     };
 }
