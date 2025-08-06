@@ -61,7 +61,6 @@
     <ClCompile Include="Engine\Core\Renderer.cpp" />
     <ClCompile Include="Engine\Core\Scene.cpp" />
     <ClCompile Include="Engine\Input\Controller.cpp" />
-    <ClCompile Include="Engine\Input\GameActorCommand.cpp" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\Interfaces\ISoundSystem.cpp" />
     <ClCompile Include="Engine\Singleton\RandNumber.cpp" />

@@ -8,7 +8,7 @@ namespace diji
     class GameActorCommands : public Command
     {
     public:
-        explicit GameActorCommands(GameObject* actor);
+        explicit GameActorCommands(GameObject* actor) : m_ActorPtr{ actor } {}
         ~GameActorCommands() noexcept override = default;
 
     protected:

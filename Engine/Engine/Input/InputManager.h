@@ -2,9 +2,9 @@
 #include "../Singleton/Singleton.h"
 #include "Controller.h"
 #include "GameActorCommand.h"
-// #include "GameObject.h"
-//
-#include <map>
+
+#include <ranges>
+// #include <map>
 #include <optional>
 #include <variant>
 #include <vector>
@@ -40,7 +40,7 @@ namespace diji
     class Input final
     {
     public:
-        typedef std::variant<sf::Keyboard::Scancode, Controller::Button> InputType;
+        typedef std::variant<sf::Keyboard::Scancode, sf::Mouse::Button, Controller::Button> InputType;
 
         explicit Input(const InputType input)
             : m_Input{ input }
@@ -69,19 +69,24 @@ namespace diji
         
         template<typename T, typename... Args>
             requires std::derived_from<T, GameActorCommands>
-        void BindCommand(const PlayerIdx playerIdx, KeyState state, const Input::InputType input, GameObject* actor, Args... args)
+        void BindCommand(const PlayerIdx playerIdx, const KeyState state, const Input::InputType input, GameObject* actor, Args... args)
         {
             // if (playerIdx != PlayerIdx::KEYBOARD)
             // {
             //     BindController(static_cast<int>(playerIdx));
             // }
 
-            
-            const auto key = std::make_pair(state, std::get<sf::Keyboard::Scan>(input));
-    
-            m_CommandUMap[key].emplace_back(PlayerCommand{ playerIdx, std::make_unique<T>(actor, std::forward<Args>(args)...)});
+            const auto key = CommandKey{ .state = state, .input = input};
+            m_CommandUMap[key].emplace_back(PlayerCommand{ playerIdx, std::make_unique<T>(actor, std::forward<Args>(args)...) });
         }
         
+        template<typename T, typename... Args>
+            requires std::derived_from<T, GameActorCommands>
+        void BindMouseMoveCommand(GameObject* actor, Args&&... args)
+        {
+            m_MouseMoveCommandsVec.emplace_back(std::make_unique<T>(actor, std::forward<Args>(args)...));
+        }
+
         void ResetCommands() { m_CommandUMap.clear(); }
         void Quit() { m_Continue = false; }
         
@@ -93,33 +98,106 @@ namespace diji
             std::unique_ptr<GameActorCommands> commandUPtr;
         };
 		
-        std::map<int, std::unique_ptr<Controller>> m_PlayersMap;
-        std::vector<int> m_ControllersIdxs;
+        // std::map<int, std::unique_ptr<Controller>> m_PlayersMap;
+        // std::vector<int> m_ControllersIdxs;
+        sf::RenderWindow* m_WindowPtr = nullptr;
+        
+        // Keyboard state tracking
+        std::unordered_map<sf::Keyboard::Scancode, bool> m_KeyPressedState;
+        std::unordered_map<sf::Keyboard::Scancode, bool> m_KeyHeldState;
 
-
+        // Mouse state tracking
+        std::unordered_map<sf::Mouse::Button, bool> m_MousePressedState;
+        std::unordered_map<sf::Mouse::Button, bool> m_MouseHeldState;
+        
         // O(1) lookup for commands
-        using CommandKey = std::pair<KeyState, sf::Keyboard::Scan>;
+        struct CommandKey
+        {
+            KeyState state;
+            Input::InputType input;
+
+            bool operator==(const CommandKey& other) const
+            {
+                return state == other.state && input == other.input;
+            }
+        };
+        
         struct CommandKeyHash
         {
             std::size_t operator()(const CommandKey& k) const
             {
-                return std::hash<int>()(static_cast<int>(k.first)) ^ (std::hash<int>()(static_cast<int>(k.second)) << 1);
+                const std::size_t h1 = std::hash<int>{}(static_cast<int>(k.state));
+                const std::size_t h2 = std::visit([]<typename T0>(T0&& arg) -> std::size_t
+                {
+                    return std::hash<std::underlying_type_t<std::decay_t<T0>>>{}(static_cast<std::underlying_type_t<std::decay_t<T0>>>(arg));
+                }, k.input);
+
+                return h1 ^ (h2 << 1);
             }
         };
         std::unordered_map<CommandKey, std::vector<PlayerCommand>, CommandKeyHash> m_CommandUMap;
-        void OnKeyEvent(KeyState state, sf::Keyboard::Scan scancode);
+        std::vector<std::unique_ptr<GameActorCommands>> m_MouseMoveCommandsVec; // using separate container for mouse movements as there's no need for O(1) lookup, playerIdx or State/InputType
 
-        // Keyboard state tracking
-        sf::RenderWindow* m_WindowPtr = nullptr;
-        std::unordered_map<sf::Keyboard::Scancode, bool> m_KeyPressedState;
-        std::unordered_map<sf::Keyboard::Scancode, bool> m_KeyHeldState;
-        void ProcessKeyboardStates(const std::optional<sf::Event>& event);
-        void ResetKeyboardPressedState();
+        // Functions
+        template <typename InputEnum>
+        void HandleInput(KeyState state, InputEnum input)
+        {
+            const CommandKey key{ state, input };
+            
+            const auto it = m_CommandUMap.find(key);
+            if (it == m_CommandUMap.end())
+                return;
 
+            for (auto& [playerIdx, commandUPtr] : it->second)
+            {
+                if (commandUPtr)
+                    commandUPtr->Execute();
+            }
+        }
+
+        // Alternatively use template traits to dictate the member from the event type. Makes it easier for users but more complex and less maintainable code.
+        template <typename CodeType, typename PressedEvent, typename ReleasedEvent>
+        void SetInputState(const std::optional<sf::Event>& event, std::unordered_map<CodeType, bool>& pressedMap, std::unordered_map<CodeType, bool>& heldMap, CodeType PressedEvent::*pressedMember, CodeType ReleasedEvent::*releasedMember)
+        {
+            if (!event) return;
+
+            if (const auto* pressedEvent = event->getIf<PressedEvent>())
+            {
+                const CodeType& code = pressedEvent->*pressedMember;
+
+                if (!heldMap[code])
+                    pressedMap[code] = true;
+
+                heldMap[code] = true;
+            }
+            else if (const auto* releasedEvent = event->getIf<ReleasedEvent>())
+            {
+                const CodeType& code = releasedEvent->*releasedMember;
+
+                pressedMap[code] = false;
+                heldMap[code] = false;
+            }
+        }
+
+        template <typename InputEnum>
+        void ProcessInputMap(const std::unordered_map<InputEnum, bool>& pressedInputMap, const std::unordered_map<InputEnum, bool>& heldInputMap)
+        {
+            // filtering for pressed and held inputs
+            for (const auto& [input, isPressed] : pressedInputMap | std::views::filter([](const auto& pair) { return pair.second; }))
+            {
+                HandleInput(KeyState::PRESSED, input);
+            }
+
+            for (const auto& [input, isHeld] : heldInputMap | std::views::filter([](const auto& pair) { return pair.second; }))
+            {
+                HandleInput(KeyState::HELD, input);
+            }
+        }
         
+        void ResetPressedStates();
+        [[nodiscard]] bool PollEvents();
+        void ProcessAllInputMaps();
         // void ProcessControllerInput();
-        [[nodiscard]] bool PollKeyboardEvents();
-        void ProcessKeyboardInput();
         // void BindController(int controllerIdx);
     };
 }

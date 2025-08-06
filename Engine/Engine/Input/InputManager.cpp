@@ -6,59 +6,30 @@
 
 bool diji::InputManager::ProcessInput()
 {
-	ResetKeyboardPressedState();
+	ResetPressedStates();
 
-	if (!PollKeyboardEvents())
+	if (!PollEvents())
 		return false;
 	
-	ProcessKeyboardInput();
-
+	ProcessAllInputMaps();
+	
 	return m_Continue;
 }
 
-void diji::InputManager::OnKeyEvent(KeyState state, sf::Keyboard::Scan scancode)
-{
-	const auto& it = m_CommandUMap.find({state, scancode});
-	if (it != m_CommandUMap.end())
-	{
-		for (const auto& [playerIdx, commandUPtr] : it->second)
-		{
-			commandUPtr->Execute();
-		}
-	}
-}
-
-void diji::InputManager::ProcessKeyboardStates(const std::optional<sf::Event>& event)
-{
-	if (!event) return;
-	
-	if (const auto* keyPressedEvent = event->getIf<sf::Event::KeyPressed>())
-	{
-		const auto& scancode = keyPressedEvent->scancode;
-        
-		// Check if the key is not already pressed
-		if (!m_KeyHeldState[scancode])
-			m_KeyPressedState[scancode] = true;
-            
-		m_KeyHeldState[scancode] = true;
-	}
-	else if (const auto* keyReleasedEvent = event->getIf<sf::Event::KeyReleased>())
-	{
-		const auto& scancode = keyReleasedEvent->scancode;
-		m_KeyPressedState[scancode] = false;
-		m_KeyHeldState[scancode] = false;
-	}
-}
-
-void diji::InputManager::ResetKeyboardPressedState()
+void diji::InputManager::ResetPressedStates()
 {
 	for (auto& pressed : m_KeyPressedState | std::views::values)
 	{
 		pressed = false;
 	}
+
+	for (auto& pressed : m_MousePressedState | std::views::values)
+	{
+		pressed = false;
+	}
 }
 
-bool diji::InputManager::PollKeyboardEvents()
+bool diji::InputManager::PollEvents()
 {
 	while (const std::optional event = m_WindowPtr->pollEvent())
 	{
@@ -72,14 +43,28 @@ bool diji::InputManager::PollKeyboardEvents()
 			if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
 				return false;
 		}
+
+		if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>())
+		{
+			for (auto& command : m_MouseMoveCommandsVec)
+			{
+				if (command)
+					command->Execute(mouseMoved->position);
+			}
+		}
 		
 		// Set KeyPressed and KeyHeld states
-		ProcessKeyboardStates(event);
+		SetInputState<sf::Mouse::Button, sf::Event::MouseButtonPressed, sf::Event::MouseButtonReleased>(event, m_MousePressedState, m_MouseHeldState,&sf::Event::MouseButtonPressed::button, &sf::Event::MouseButtonReleased::button);
+		SetInputState<sf::Keyboard::Scancode, sf::Event::KeyPressed, sf::Event::KeyReleased>(event, m_KeyPressedState, m_KeyHeldState, &sf::Event::KeyPressed::scancode, &sf::Event::KeyReleased::scancode);
 
-		if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
+		// Handle release input logic
+		auto HandleKeyReleaseEvent = [&](KeyState state, auto* inputEvent, auto eventType)
 		{
-			OnKeyEvent(KeyState::RELEASED, keyReleased->scancode);
-		}
+			if (inputEvent)
+				HandleInput(state, eventType(*inputEvent));
+		};
+		HandleKeyReleaseEvent(KeyState::RELEASED, event->getIf<sf::Event::KeyReleased>(), [](const auto& e) { return e.scancode; });
+		HandleKeyReleaseEvent(KeyState::RELEASED, event->getIf<sf::Event::MouseButtonReleased>(), [](const auto& e) { return e.button; });
 
 		// if (not m_ControllersIdxs.empty())
 		// {
@@ -90,15 +75,9 @@ bool diji::InputManager::PollKeyboardEvents()
 	return true;
 }
 
-void diji::InputManager::ProcessKeyboardInput()
+void diji::InputManager::ProcessAllInputMaps()
 {
-	// std::views::filter([](const auto& pair){ return pair.second; }) filters the map to only include entries where the second element (the boolean value) is true using a predicate lambda.
-	for (const auto& [scancode, pressed] : m_KeyPressedState | std::views::filter([](const auto& pair){ return pair.second; }))
-	{
-		OnKeyEvent(KeyState::PRESSED, scancode);
-	}
-	for (const auto& [scancode, held] : m_KeyHeldState | std::views::filter([](const auto& pair){ return pair.second; }))
-	{
-		OnKeyEvent(KeyState::HELD, scancode);
-	}
+	ProcessInputMap(m_KeyPressedState, m_KeyHeldState);
+	ProcessInputMap(m_MousePressedState, m_MouseHeldState);
+	// add controller
 }

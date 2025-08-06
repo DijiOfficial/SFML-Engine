@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <SFML/System/Vector2.hpp>
+
 namespace diji
 {
     class Command
@@ -13,5 +15,6 @@ namespace diji
         Command& operator=(Command&& other) = delete;
 
         virtual void Execute() = 0;
+        virtual void Execute(const sf::Vector2i& ) {}
     };
 }
