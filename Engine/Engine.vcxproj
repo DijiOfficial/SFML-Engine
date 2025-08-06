@@ -39,6 +39,7 @@
     <ClInclude Include="Engine\Input\InputManager.h" />
     <ClInclude Include="Engine\Interfaces\EventSystem.h" />
     <ClInclude Include="Engine\Interfaces\ISoundSystem.h" />
+    <ClInclude Include="Engine\Singleton\GameStateManager.h" />
     <ClInclude Include="Engine\Singleton\PauseSingleton.h" />
     <ClInclude Include="Engine\Singleton\RandNumber.h" />
     <ClInclude Include="Engine\Singleton\ResourceManager.h" />
