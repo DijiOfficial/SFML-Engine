@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "../Singleton/Singleton.h"
 #include <map>
-#include <string>
 #include <vector>
 #include <SFML/System/Vector2.hpp>
 
@@ -9,6 +8,7 @@ namespace diji
 {
 	class Collider;
 
+	// todo: put this in a utility header
 	struct Rectf
 	{
 		float left, bottom, width, height;
