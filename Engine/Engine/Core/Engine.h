@@ -6,7 +6,7 @@
 
 namespace window
 {
-	static std::unique_ptr<sf::RenderWindow> g_window_ptr{};
+	inline std::unique_ptr<sf::RenderWindow> g_window_ptr{};
 	inline sf::Vector2u VIEWPORT = sf::VideoMode::getDesktopMode().size;
 }
 
