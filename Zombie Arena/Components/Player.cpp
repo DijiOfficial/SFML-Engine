@@ -31,7 +31,7 @@ void zombieArena::Player::Update()
 
     // Orient the player to mouse position
     const sf::Vector2f playerPos = m_TransformCompPtr->GetPosition();
-    const sf::Vector2f direction = sf::Vector2f(m_LastMousePos) - playerPos;
+    const sf::Vector2f direction = static_cast<sf::Vector2f>(m_CameraCompPtr->GetMouseWorldPosition(m_LastMousePos)) - playerPos;
 
     // todo: write helper functions for getting Angle from directions and turning radians into degrees
     const float angleDeg = std::atan2(direction.y, direction.x) * 180.0f / std::numbers::pi_v<float>;
@@ -79,7 +79,7 @@ void zombieArena::Player::Heal(const int amount)
 
 void zombieArena::Player::OrientPlayer(const sf::Vector2i& mousePos)
 {
-    m_LastMousePos = m_CameraCompPtr->GetMouseWorldPosition(mousePos);
+    m_LastMousePos = mousePos;
 }
 
 void zombieArena::Player::PauseGame()
