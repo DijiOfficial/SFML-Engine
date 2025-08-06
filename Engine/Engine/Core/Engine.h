@@ -1,13 +1,21 @@
 #pragma once
 #include <string>
 #include <functional>
+#include <memory>
+#include <SFML/Graphics/RenderWindow.hpp>
+
+namespace window
+{
+	static std::unique_ptr<sf::RenderWindow> g_window_ptr{};
+	inline sf::Vector2u VIEWPORT = sf::VideoMode::getDesktopMode().size;
+}
 
 namespace diji
 {
 	class Engine final
 	{
 	public:
-		explicit Engine(const std::string& dataPath);
+		explicit Engine(const std::string& dataPath, const std::string& title, bool useScreenResolution = true);
 		~Engine() noexcept = default;
 
 		Engine(const Engine& other) = delete;

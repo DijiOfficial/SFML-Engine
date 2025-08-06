@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Engine/Components/Component.h"
+#include "Engine/Core/Engine.h"
 
 namespace diji
 {
@@ -33,7 +34,7 @@ namespace pong
         float m_Speed = 1000.f;
         float m_SizeX = 0.f;
         const float m_LeftBound = 0.0f;
-        float m_RightBound = 1920.0f; // todo: use the window singleton to get the width
+        float m_RightBound = static_cast<float>(window::VIEWPORT.x);
 
         bool m_IsMovingLeft = false;
         bool m_IsMovingRight = false;

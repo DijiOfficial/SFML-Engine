@@ -12,13 +12,9 @@
 #include "Engine/Collision/Collider.h"
 #include "Engine/Components/ScoreCounter.h"
 #include "Engine/Components/TextComp.h"
+#include "Engine/Core/Engine.h"
 
 using namespace diji;
-
-namespace // todo: remove this and use the singleton with the window
-{
-    constexpr static sf::Vector2u VIEWPORT{ 1920, 1080 };
-}
 
 void SceneLoader::Pong()
 {
@@ -27,16 +23,16 @@ void SceneLoader::Pong()
 #else
     ServiceLocator::RegisterSoundSystem(std::make_unique<SFMLISoundSystem>());
 #endif
-    
+
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(pong::GameState::Level));
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(pong::GameState::Level));
 
     const auto paddle = scene->CreateGameObject("A_Paddle");
-    paddle->AddComponents<Transform>(static_cast<float>(VIEWPORT.x) * 0.5f, static_cast<float>(VIEWPORT.y) - 20);
+    paddle->AddComponents<Transform>(static_cast<float>(window::VIEWPORT.x) * 0.5f, static_cast<float>(window::VIEWPORT.y) - 20);
     paddle->AddComponents<RectRender>();
     sf::RectangleShape shape;
     shape.setSize(sf::Vector2f{50 , 5});
-    shape.setPosition(sf::Vector2f{static_cast<float>(VIEWPORT.x) * 0.5f, static_cast<float>(VIEWPORT.y) - 20});
+    shape.setPosition(sf::Vector2f{static_cast<float>(window::VIEWPORT.x) * 0.5f, static_cast<float>(window::VIEWPORT.y) - 20});
     paddle->GetComponent<RectRender>()->SetRectangle(shape);
     paddle->GetComponent<RectRender>()->SetFillColor(sf::Color::White);
     paddle->GetComponent<RectRender>()->SetLineWidth(0.f);
@@ -44,13 +40,13 @@ void SceneLoader::Pong()
     paddle->AddComponents<Collider>(50, 5);
 
     const auto ball = scene->CreateGameObject("A_Ball");
-    ball->AddComponents<Transform>(static_cast<float>(VIEWPORT.x) * 0.5f, 0.0f);
+    ball->AddComponents<Transform>(static_cast<float>(window::VIEWPORT.x) * 0.5f, 0.0f);
 
     // look into optimizing this redundant code
     ball->AddComponents<RectRender>();
     sf::RectangleShape ballShape;
     ballShape.setSize(sf::Vector2f{10 , 10});
-    ballShape.setPosition(sf::Vector2f{static_cast<float>(VIEWPORT.x) * 0.5f, static_cast<float>(VIEWPORT.y) - 20});
+    ballShape.setPosition(sf::Vector2f{static_cast<float>(window::VIEWPORT.x) * 0.5f, static_cast<float>(window::VIEWPORT.y) - 20});
     ball->GetComponent<RectRender>()->SetRectangle(ballShape);
     ball->GetComponent<RectRender>()->SetFillColor(sf::Color::White);
     ball->GetComponent<RectRender>()->SetLineWidth(0.f);

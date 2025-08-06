@@ -6,14 +6,9 @@
 #include "Engine/Core/GameObject.h"
 #include "Engine/Singleton/TimeSingleton.h"
 #include "Engine/Components/Transform.h"
+#include "Engine/Core/Engine.h"
 #include "engine/Singleton/SceneManager.h"
 #include "Engine/Singleton/TimerManager.h"
-
-namespace // todo: remove this and use the window singleton
-{
-    constexpr static sf::Vector2u VIEWPORT{ 1920, 1080 };
-}
-
 
 void pong::Ball::Init()
 {
@@ -34,7 +29,7 @@ void pong::Ball::Update()
     m_TransformCompPtr->AddOffset(m_Velocity * dt * m_Speed);
 
     const auto& pos = m_TransformCompPtr->GetPosition();
-    if (pos.y > VIEWPORT.y)
+    if (pos.y > window::VIEWPORT.y)
     {
         ResetBall();
 
@@ -51,7 +46,7 @@ void pong::Ball::Update()
         m_Velocity.y = abs(m_Velocity.y);
     }
 
-    if (pos.x < 0 || pos.x + m_Size > VIEWPORT.x) // bouncing side of screen
+    if (pos.x < 0 || pos.x + m_Size > window::VIEWPORT.x) // bouncing side of screen
         m_Velocity.x = -m_Velocity.x;
     
     if (!m_DirtyFlagCollision and m_CollisionSingleton->AreColliding(m_ColliderCompPtr, m_PaddleColliderCompPtr))
@@ -70,7 +65,7 @@ void pong::Ball::Update()
 
 void pong::Ball::ResetBall()
 {
-    m_TransformCompPtr->SetPosition(VIEWPORT.x * 0.5f, 0);
+    m_TransformCompPtr->SetPosition(window::VIEWPORT.x * 0.5f, 0);
     m_Velocity.y = abs(m_Velocity.y);
     m_DirtyFlagUpdate = false;
 }

@@ -28,6 +28,7 @@
 
 using namespace diji;
 
+// todo: game is made for 1920x1080 resolution based on the book, Not ideal and not scalable. Magic numbers based on window size can be replaced by getting viewport from window::g_window_ptr
 void SceneLoader::Timber()
 {
 #ifndef NDEBUG
@@ -123,7 +124,7 @@ void SceneLoader::Timber()
     pauseText->SetParent(HUD, false);
 
     const auto timeBar = timberScene->CreateGameObject("Z_timeBarHUD");
-    timeBar->AddComponents<Transform>(760, 940); // This is useless but I have not tested if it works without
+    timeBar->AddComponents<Transform>(760, 940);
     timeBar->AddComponents<RectRender>();
     
     sf::RectangleShape rect;
@@ -192,7 +193,7 @@ void SceneLoader::Timber()
     flyingLog->AddComponents<timber::LogBehaviour>();
     
     const auto backgroundUI = timberScene->CreateGameObject("Z_backgroundUIHUD");
-    backgroundUI->AddComponents<Transform>(20, 20); // This is useless but I have not tested if it works without
+    backgroundUI->AddComponents<Transform>(20, 20);
     backgroundUI->AddComponents<RectRender>();
     
     sf::RectangleShape rect2;
@@ -211,7 +212,7 @@ void SceneLoader::Timber()
     fpsCounter->AddComponents<Render>();
 
     const auto backgroundUI2 = timberScene->CreateGameObject("Z_backgroundUI2HUD");
-    backgroundUI2->AddComponents<Transform>(20, 20); // This is useless but I have not tested if it works without
+    backgroundUI2->AddComponents<Transform>(20, 20);
     backgroundUI2->AddComponents<RectRender>();
     
     sf::RectangleShape rect3;

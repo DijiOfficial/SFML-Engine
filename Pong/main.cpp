@@ -9,7 +9,7 @@
 
 int main(int, char* [])
 {
-    const diji::Engine engine("../Pong/Resources/");
+    const diji::Engine engine("../Pong/Resources/", "Pong");
     engine.Run(SceneLoader::Pong);
     
     return 0;

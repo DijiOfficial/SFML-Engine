@@ -14,24 +14,18 @@
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
 
-namespace
+diji::Engine::Engine(const std::string& dataPath, const std::string& title, const bool useScreenResolution)
 {
-	// todo: make the window ptr accessible in a singleton
-	std::unique_ptr<sf::RenderWindow> g_window_ptr{};
-	constexpr static sf::Vector2u VIEWPORT{ 1920, 1080 };
-}
+	window::VIEWPORT = useScreenResolution ? sf::VideoMode::getDesktopMode().size : sf::Vector2u{ 1920, 1080 };
+	window::g_window_ptr = std::make_unique<sf::RenderWindow>(sf::VideoMode(window::VIEWPORT), title, sf::Style::Default, sf::State::Fullscreen);
 
-diji::Engine::Engine(const std::string& dataPath)
-{
-	g_window_ptr = std::make_unique<sf::RenderWindow>(sf::VideoMode(VIEWPORT), "Timber!!!", sf::Style::Default, sf::State::Fullscreen);
-
-	if (g_window_ptr == nullptr)
+	if (window::g_window_ptr == nullptr)
 	{
 		throw std::runtime_error(std::string("Create Window Error"));
 	}
 
-	Renderer::GetInstance().Init(g_window_ptr.get());
-	InputManager::GetInstance().Init(g_window_ptr.get());
+	Renderer::GetInstance().Init(window::g_window_ptr.get());
+	InputManager::GetInstance().Init(window::g_window_ptr.get());
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
@@ -40,7 +34,7 @@ void diji::Engine::Run(const std::function<void()>& load) const
 	load();
 	
 	//Enable vSync
-	g_window_ptr->setVerticalSyncEnabled(true);
+	window::g_window_ptr->setVerticalSyncEnabled(true);
 
 	const auto& renderer = Renderer::GetInstance();
 	const auto& sceneManager = SceneManager::GetInstance();
@@ -53,7 +47,7 @@ void diji::Engine::Run(const std::function<void()>& load) const
 	sceneManager.Init();
 	sceneManager.Start();
 
-	while (g_window_ptr->isOpen())
+	while (window::g_window_ptr->isOpen())
 	{
 		const auto currentTime{ std::chrono::high_resolution_clock::now() };
 		const float deltaTime{ std::chrono::duration<float>(currentTime - lastFrameTime).count() };
@@ -82,7 +76,7 @@ void diji::Engine::Run(const std::function<void()>& load) const
 		renderer.Render();
 	}
 	
-	g_window_ptr->close();
+	window::g_window_ptr->close();
 	
 	sceneManager.OnDestroy();
 }

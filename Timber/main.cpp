@@ -9,7 +9,7 @@
 
 int main(int, char* [])
 {
-    const diji::Engine engine("../Timber/Resources/");
+    const diji::Engine engine("../Timber/Resources/", "Timber!!!", false);
     engine.Run(SceneLoader::Timber);
     
     return 0;

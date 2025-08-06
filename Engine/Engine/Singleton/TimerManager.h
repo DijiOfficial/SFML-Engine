@@ -7,7 +7,8 @@ namespace diji
 {
     class TimeSingleton;
 
-    class TimerManager final : public diji::Singleton<TimerManager>
+    // todo: add a delay until next tick
+    class TimerManager final : public Singleton<TimerManager>
     {
     public:
         void Init();

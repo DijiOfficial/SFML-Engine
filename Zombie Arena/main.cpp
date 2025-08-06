@@ -9,7 +9,7 @@
 
 int main(int, char* [])
 {
-    const diji::Engine engine("../Zombie Arena/Resources/");
+    const diji::Engine engine("../Zombie Arena/Resources/", "Zombie Arena");
     engine.Run(SceneLoader::ZombieArena);
 
     return 0;

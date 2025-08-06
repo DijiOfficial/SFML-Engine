@@ -1,4 +1,5 @@
 ﻿#include "GameLoader.h"
+
 #include "GameState.h"
 #include "../Components/Player.h"
 #include "../Input/CustomCommands.h"
@@ -11,11 +12,6 @@
 
 using namespace diji;
 
-// namespace global // todo: remove this and use the singleton with the window
-// {
-//     constexpr static sf::Vector2u VIEWPORT{ 1920, 1080 };
-// }
-
 void SceneLoader::ZombieArena() 
 {
 #ifndef NDEBUG
@@ -24,8 +20,8 @@ void SceneLoader::ZombieArena()
     ServiceLocator::RegisterSoundSystem(std::make_unique<SFMLISoundSystem>());
 #endif
     
-    const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::GameState::Level));
-    SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::GameState::Level));
+    const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::GameState::GameOver));
+    SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::GameState::GameOver));
 
     const auto player = scene->CreateGameObject("X_Player");
     player->AddComponents<Transform>(25,25);

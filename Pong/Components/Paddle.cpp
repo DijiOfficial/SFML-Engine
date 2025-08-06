@@ -4,11 +4,12 @@
 #include "Engine/Core/GameObject.h"
 #include "Engine/Singleton/TimeSingleton.h"
 #include "Engine/Components/Transform.h"
+#include "Engine/Core/Engine.h"
 
 void pong::Paddle::Init()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
-    m_RightBound = 1920 - GetOwner()->GetComponent<diji::RectRender>()->GetRectangle().getSize().x;
+    m_RightBound = window::VIEWPORT.x - GetOwner()->GetComponent<diji::RectRender>()->GetRectangle().getSize().x;
 }
 
 void pong::Paddle::Update()
