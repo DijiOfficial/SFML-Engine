@@ -27,6 +27,7 @@
     <ClInclude Include="Engine\Components\RectRender.h" />
     <ClInclude Include="Engine\Components\Render.h" />
     <ClInclude Include="Engine\Components\ScoreCounter.h" />
+    <ClInclude Include="Engine\Components\Sprite.h" />
     <ClInclude Include="Engine\Components\TextComp.h" />
     <ClInclude Include="Engine\Components\TextureComp.h" />
     <ClInclude Include="Engine\Components\Transform.h" />
@@ -57,6 +58,7 @@
     <ClCompile Include="Engine\Components\RectRender.cpp" />
     <ClCompile Include="Engine\Components\Render.cpp" />
     <ClCompile Include="Engine\Components\ScoreCounter.cpp" />
+    <ClCompile Include="Engine\Components\Sprite.cpp" />
     <ClCompile Include="Engine\Components\TextComp.cpp" />
     <ClCompile Include="Engine\Components\TextureComp.cpp" />
     <ClCompile Include="Engine\Core\Engine.cpp" />
@@ -66,7 +68,6 @@
     <ClCompile Include="Engine\Input\Controller.cpp" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\Interfaces\ISoundSystem.cpp" />
-    <ClCompile Include="Engine\Singleton\RandNumber.cpp" />
     <ClCompile Include="Engine\Singleton\ResourceManager.cpp" />
     <ClCompile Include="Engine\Singleton\SceneManager.cpp" />
     <ClCompile Include="Engine\Singleton\TimerManager.cpp" />

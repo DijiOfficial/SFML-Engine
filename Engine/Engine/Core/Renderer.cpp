@@ -54,6 +54,11 @@ void diji::Renderer::RenderTexture(const sf::Texture& texture, const sf::Vector2
 	RenderTexture(texture, origin, rotation, x, y, scaleX, scaleY);
 }
 
+void diji::Renderer::RenderVertexArray(const sf::Texture& texture, const sf::VertexArray& vertexArray) const
+{
+	m_WindowPtr->draw(vertexArray, &texture);
+}
+
 void diji::Renderer::RenderText(sf::Text& text, const float x, const float y, const float scaleX, const float scaleY, bool isCentered) const
 {
 	if (isCentered)

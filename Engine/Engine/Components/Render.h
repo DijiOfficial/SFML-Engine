@@ -5,6 +5,7 @@
 
 namespace diji
 {
+    class Sprite;
     class TextureComp;
     class Transform;
     class TextComp;
@@ -46,7 +47,7 @@ namespace diji
         Transform* m_TransformCompPtr;
         sf::Texture m_SFMLTexture;
         TextureComp* m_TextureCompPtr;
-        // Texture* m_TextureCompPtr; // This should be renamed SpriteSheet and should be separate thing from sf:Texture which is the equivalent of my Texture Wrapper
+        Sprite* m_SpriteCompPtr;
         TextComp* m_TextCompPtr;
     };
 }

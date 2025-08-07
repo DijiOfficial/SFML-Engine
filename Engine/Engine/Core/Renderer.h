@@ -6,6 +6,7 @@
 
 namespace sf
 {
+	class VertexArray;
 	class RectangleShape;
 	class Color;
 	class Angle;
@@ -26,6 +27,7 @@ namespace diji
 		void RenderTexture(const sf::Texture& texture, const sf::Vector2f& origin, const sf::Angle& rotation, float x, float y, float scaleX = 1, float scaleY = 1) const;
 		void RenderTexture(const sf::Texture& texture, const sf::Vector2f& origin, const sf::Angle& rotation, float x, float y, float scale = 1) const;
 		void RenderTexture(const sf::Texture& texture, const sf::Vector2f& origin, const sf::Angle& rotation, float x, float y, int width, int height) const;
+		void RenderVertexArray(const sf::Texture& texture, const sf::VertexArray& vertexArray) const;
 		
 		void RenderText(sf::Text& text, float x, float y, float scaleX = 1, float scaleY = 1, bool isCentered = false) const;
 		void RenderText(sf::Text& text, float x, float y, float scale = 1, bool isCentered = false) const;
