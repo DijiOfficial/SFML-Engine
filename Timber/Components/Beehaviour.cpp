@@ -30,21 +30,20 @@ void timber::Beehaviour::Update()
 
 void timber::Beehaviour::Randomize()
 {
-    const auto& rand = diji::RandNumber::GetInstance();
-    m_Speed = rand.GetRandomRangeFloat(m_MinSpeed, m_MaxSpeed);
+    m_Speed = diji::RandNumber::GetRandomRangeFloat(m_MinSpeed, m_MaxSpeed);
 
     if (m_ClassType == ClassType::Bee)
     {
-        const bool isLeft = rand.GetRandomRangeInt(0, 1);
+        const bool isLeft = diji::RandNumber::GetRandomRangeInt(0, 1);
         m_SpeedModifier = isLeft ? -1 : 1;
         m_StartPosition = isLeft ? 2000.f : -200.f;
-        const float size = rand.GetRandomRangeFloat(m_MinSize, 1.f);
+        const float size = diji::RandNumber::GetRandomRangeFloat(m_MinSize, 1.f);
         m_TextureCompPtr->SetScale(size);
         m_TextureCompPtr->SetScaleX(isLeft ? size : -1.f * size);
     }
     
-    m_TransformCompPtr->SetPosition(m_StartPosition, rand.GetRandomRangeFloat(m_MinHeight, m_MaxHeight));
+    m_TransformCompPtr->SetPosition(m_StartPosition, diji::RandNumber::GetRandomRangeFloat(m_MinHeight, m_MaxHeight));
 
     if (m_ClassType != ClassType::Bee)
-        m_TextureCompPtr->SetScale(rand.GetRandomRangeFloat(m_MinSize, 1.f));
+        m_TextureCompPtr->SetScale(diji::RandNumber::GetRandomRangeFloat(m_MinSize, 1.f));
 }

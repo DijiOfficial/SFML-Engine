@@ -63,7 +63,7 @@ void timber::BranchBehaviour::MoveBranch(const bool isLeft)
 
 void timber::BranchBehaviour::ChooseRandomSide()
 {
-    m_BranchSide = static_cast<BranchSide>(std::min(diji::RandNumber::GetInstance().GetRandomRangeInt(0, 4), 2));
+    m_BranchSide = static_cast<BranchSide>(std::min(diji::RandNumber::GetRandomRangeInt(0, 4), 2));
 }
 
 void timber::BranchBehaviour::Reset()
