@@ -30,6 +30,8 @@ void zombieArena::Player::Update()
     // clamp the position to the arena bounds
 
     // Orient the player to mouse position
+    if (!m_CameraCompPtr) return;
+    
     const sf::Vector2f playerPos = m_TransformCompPtr->GetPosition();
     const sf::Vector2f direction = static_cast<sf::Vector2f>(m_CameraCompPtr->GetMouseWorldPosition(m_LastMousePos)) - playerPos;
 
