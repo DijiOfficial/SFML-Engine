@@ -10,7 +10,9 @@
 #include "Engine/Components/Transform.h"
 #include "Engine/Components/Render.h"
 #include "Engine/Components/Camera.h"
+#include "Engine/Components/FPSCounter.h"
 #include "Engine/Components/Sprite.h"
+#include "Engine/Components/TextComp.h"
 #include "Engine/Singleton/GameStateManager.h"
 
 using namespace diji;
@@ -42,6 +44,13 @@ void SceneLoader::ZombieArena()
     tempBackground->GetComponent<Sprite>()->SetTileCount(1, 4);
     tempBackground->GetComponent<Sprite>()->SetWallSpritePosition(sf::FloatRect{ sf::Vector2f{ 0, 150 }, sf::Vector2f{ 50, 50 } });
     tempBackground->AddComponents<Render>();
+
+    const auto fpsCounter = scene->CreateGameObject("fpsCounter");
+    fpsCounter->AddComponents<TextComp>("0 FPS", "fonts/digital-7.ttf", sf::Color::White, true);
+    fpsCounter->GetComponent<TextComp>()->GetText().setCharacterSize(33);
+    fpsCounter->AddComponents<FPSCounter>();
+    fpsCounter->AddComponents<Transform>(static_cast<int>(1920 - 100.f), 40);
+    fpsCounter->AddComponents<Render>();
 
 #pragma region Commands
     auto& input = InputManager::GetInstance();
