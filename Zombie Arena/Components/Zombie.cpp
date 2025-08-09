@@ -6,17 +6,8 @@
 
 #include <numbers>
 
-zombieArena::Zombie::Zombie(diji::GameObject* ownerPtr, const diji::GameObject* target, const ZombieType type, const float x, const float y)
+zombieArena::Zombie::Zombie(diji::GameObject* ownerPtr, const diji::GameObject* target, const ZombieType type)
     : Component(ownerPtr)
-    , m_Spawn{ static_cast<float>(x), static_cast<float>(y) }
-    , m_Type{ type }
-{
-    m_PendingTarget = target;
-}
-
-zombieArena::Zombie::Zombie(diji::GameObject* ownerPtr, const diji::GameObject* target, const ZombieType type, const sf::Vector2f& spawn)
-    : Component(ownerPtr)
-    , m_Spawn{ spawn }
     , m_Type{ type }
 {
     m_PendingTarget = target;
@@ -55,7 +46,6 @@ void zombieArena::Zombie::Init()
     const float modifier = diji::RandNumber::GetRandomRangeFloat(0.7f, 1.0f);
     m_Speed *= modifier;
 
-    m_TransformCompPtr->SetPosition(m_Spawn);
     m_TextureCompPtr->SetOriginToCenter();
 }
 

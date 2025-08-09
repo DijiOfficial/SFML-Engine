@@ -1,6 +1,4 @@
 ﻿#pragma once
-#include <SFML/System/Vector2.hpp>
-
 #include "Engine/Components/Component.h"
 
 namespace diji
@@ -21,8 +19,7 @@ namespace zombieArena
     class Zombie final : public diji::Component
     {
     public:
-        explicit Zombie(diji::GameObject* ownerPtr, const diji::GameObject* target, ZombieType type, float x, float y);
-        explicit Zombie(diji::GameObject* ownerPtr, const diji::GameObject* target, ZombieType type, const sf::Vector2f& spawn);
+        explicit Zombie(diji::GameObject* ownerPtr, const diji::GameObject* target, ZombieType type);
         ~Zombie() noexcept override = default;
 
         void Init() override;
@@ -53,7 +50,6 @@ namespace zombieArena
         const diji::GameObject* m_PendingTarget = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::TextureComp* m_TextureCompPtr = nullptr;
-        sf::Vector2f m_Spawn = { 0, 0 };
         ZombieType m_Type = ZombieType::BLOATER;
         int m_Health = 0;
         float m_Speed = 0;
