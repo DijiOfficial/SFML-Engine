@@ -6,6 +6,7 @@
 
 #include <numbers>
 
+// TODO: DONT FORGET TO DELETE THEM WHEN THEY DIE
 zombieArena::Zombie::Zombie(diji::GameObject* ownerPtr, const diji::GameObject* target, const ZombieType type)
     : Component(ownerPtr)
     , m_Type{ type }
@@ -15,7 +16,6 @@ zombieArena::Zombie::Zombie(diji::GameObject* ownerPtr, const diji::GameObject* 
 
 void zombieArena::Zombie::Init()
 {
-    
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
     m_TextureCompPtr = GetOwner()->GetComponent<diji::TextureComp>();
     
@@ -24,29 +24,7 @@ void zombieArena::Zombie::Init()
     // I don't know a cleaner way
     m_PendingTarget = nullptr; // discard to free memory use
     
-    switch (m_Type)
-    {
-        case ZombieType::BLOATER:
-            m_Speed = BLOATER_SPEED;
-            m_Health = BLOATER_HEALTH;
-            m_TextureCompPtr->SetTexture("graphics/bloater.png");
-            break;
-        case ZombieType::CHASER:
-            m_Speed = CHASER_SPEED;
-            m_Health = CHASER_HEALTH;
-            m_TextureCompPtr->SetTexture("graphics/chaser.png");
-            break;
-        case ZombieType::CRAWLER:
-            m_Speed = CRAWLER_SPEED;
-            m_Health = CRAWLER_HEALTH;
-            m_TextureCompPtr->SetTexture("graphics/crawler.png");
-            break;
-    }
-    
-    const float modifier = diji::RandNumber::GetRandomRangeFloat(0.7f, 1.0f);
-    m_Speed *= modifier;
-
-    m_TextureCompPtr->SetOriginToCenter();
+    SetZombieStats();
 }
 
 void zombieArena::Zombie::Update()
@@ -79,4 +57,40 @@ bool zombieArena::Zombie::Hit()
 void zombieArena::Zombie::SetTarget(const diji::GameObject* target) const
 {
     m_TransformCompPtr->SetTarget(target);
+}
+
+void zombieArena::Zombie::SetType(const ZombieType type)
+{
+    m_Type = type;
+    
+    SetZombieStats();
+}
+
+void zombieArena::Zombie::SetZombieStats()
+{
+    switch (m_Type)
+    {
+    case ZombieType::BLOATER:
+        m_Speed = BLOATER_SPEED;
+        m_Health = BLOATER_HEALTH;
+        m_TextureCompPtr->SetTexture("graphics/bloater.png");
+        break;
+    case ZombieType::CHASER:
+        m_Speed = CHASER_SPEED;
+        m_Health = CHASER_HEALTH;
+        m_TextureCompPtr->SetTexture("graphics/chaser.png");
+        break;
+    case ZombieType::CRAWLER:
+        m_Speed = CRAWLER_SPEED;
+        m_Health = CRAWLER_HEALTH;
+        m_TextureCompPtr->SetTexture("graphics/crawler.png");
+        break;
+    case ZombieType::TOTAL_ZOMBIE_TYPES:
+        break;
+    }
+    
+    const float modifier = diji::RandNumber::GetRandomRangeFloat(0.7f, 1.0f);
+    m_Speed *= modifier;
+
+    m_TextureCompPtr->SetOriginToCenter();
 }

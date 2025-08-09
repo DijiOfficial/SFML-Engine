@@ -30,19 +30,20 @@ void SceneLoader::ZombieArena()
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::ZombieGameState::GameOver));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::GameOver));
 
+    sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 2000, 1100 } };
     // add arena to player constructor
     const auto player = scene->CreateGameObject("X_Player");
-    player->AddComponents<Transform>(25,25);
+    player->AddComponents<Transform>(arena.size.x * 0.5f, arena.size.y * 0.5f);
     player->AddComponents<TextureComp>("graphics/player.png");
     player->AddComponents<Render>();
-    player->AddComponents<zombieArena::Player>();
+    player->AddComponents<zombieArena::Player>(arena);
     player->AddComponents<Camera>(1920.f, 1080.f);
-    player->GetComponent<Camera>()->SetLevelBoundaries(sf::FloatRect{ sf::Vector2f{ 0, 0 }, sf::Vector2f{ 1920.f, 1080.f } });
+    player->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
     
     const auto tempBackground = scene->CreateGameObject("Background");
     // tempBackground->AddComponents<TextureComp>("graphics/background.png");
     tempBackground->AddComponents<Transform>(0, 0);
-    tempBackground->AddComponents<Sprite>("graphics/background_sheet.png", 50, 5, 500, 500);
+    tempBackground->AddComponents<Sprite>("graphics/background_sheet.png", 50, 5, arena.size.x, arena.size.y);
     tempBackground->GetComponent<Sprite>()->SetTileCount(1, 4);
     tempBackground->GetComponent<Sprite>()->SetWallSpritePosition(sf::FloatRect{ sf::Vector2f{ 0, 150 }, sf::Vector2f{ 50, 50 } });
     tempBackground->AddComponents<Render>();
@@ -62,7 +63,7 @@ void SceneLoader::ZombieArena()
 
     const auto spawnerTest = scene->CreateGameObject("SpawnerTest");
     spawnerTest->AddComponents<Transform>(0, 0);
-    spawnerTest->AddComponents<zombieArena::Spawner>();
+    spawnerTest->AddComponents<zombieArena::Spawner>(player, arena);
     
 #pragma region Commands
     auto& input = InputManager::GetInstance();

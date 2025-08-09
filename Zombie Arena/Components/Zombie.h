@@ -11,9 +11,10 @@ namespace zombieArena
 {
     enum class ZombieType
     {
-        BLOATER,
+        BLOATER = 0,
         CHASER,
-        CRAWLER
+        CRAWLER,
+        TOTAL_ZOMBIE_TYPES
     };
     
     class Zombie final : public diji::Component
@@ -36,6 +37,7 @@ namespace zombieArena
         bool Hit();
         bool IsDead() const { return m_IsDead; }
         void SetTarget(const diji::GameObject* target) const;
+        void SetType(const ZombieType type);
 
     private:
         // this type of information should be read from a file, for the scope though hell nah
@@ -54,5 +56,7 @@ namespace zombieArena
         int m_Health = 0;
         float m_Speed = 0;
         bool m_IsDead = false;
+
+        void SetZombieStats();
     };
 }

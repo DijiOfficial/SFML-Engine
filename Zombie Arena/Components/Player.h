@@ -15,7 +15,7 @@ namespace zombieArena
     class Player final : public diji::Component
     {
     public:
-        explicit Player(diji::GameObject* ownerPtr) : Component(ownerPtr) {}
+        explicit Player(diji::GameObject* ownerPtr, const sf::IntRect& arena);
         ~Player() noexcept override = default;
 
         void Init() override;
@@ -51,7 +51,7 @@ namespace zombieArena
         diji::Camera* m_CameraCompPtr = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::TextureComp* m_TextureCompPtr = nullptr;
-        sf::IntRect m_Arena = {};
+        sf::IntRect m_Arena;
         sf::Vector2f m_Direction = {0, 0};
         sf::Vector2i m_LastMousePos = {0, 0};
         

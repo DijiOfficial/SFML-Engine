@@ -14,6 +14,12 @@
 #include "Engine/Singleton/TimerManager.h"
 #include "Engine/Singleton/TimeSingleton.h"
 
+zombieArena::Player::Player(diji::GameObject* ownerPtr, const sf::IntRect& arena)
+    : Component(ownerPtr)
+    , m_Arena{ arena }
+{
+}
+
 void zombieArena::Player::Init()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();

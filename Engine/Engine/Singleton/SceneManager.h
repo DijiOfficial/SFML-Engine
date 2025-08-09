@@ -30,7 +30,7 @@ namespace diji
         void SetPendingDestroy(GameObject* gameObject);
 
         [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
-        void SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const;
+        GameObject* SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const;
 		
     private:
         std::map<int, std::unique_ptr<Scene>> m_ScenesUPtrMap;
