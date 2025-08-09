@@ -2,7 +2,7 @@
 
 #include "GameState.h"
 #include "../Components/Player.h"
-#include "../Components/Zombie.h"
+#include "../Components/Spawner.h"
 #include "../Input/CustomCommands.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/SceneManager.h"
@@ -29,7 +29,8 @@ void SceneLoader::ZombieArena()
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::ZombieGameState::GameOver));
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::ZombieGameState::GameOver));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::GameOver));
-    
+
+    // add arena to player constructor
     const auto player = scene->CreateGameObject("X_Player");
     player->AddComponents<Transform>(25,25);
     player->AddComponents<TextureComp>("graphics/player.png");
@@ -53,12 +54,16 @@ void SceneLoader::ZombieArena()
     fpsCounter->AddComponents<Transform>(static_cast<int>(1920 - 100.f), 40);
     fpsCounter->AddComponents<Render>();
 
-    const auto zombieTest = scene->CreateGameObject("ZombieTest");
-    zombieTest->AddComponents<Transform>(0, 0);
-    zombieTest->AddComponents<TextureComp>();
-    zombieTest->AddComponents<Render>();
-    zombieTest->AddComponents<zombieArena::Zombie>(player, zombieArena::ZombieType::BLOATER, 200.f, 200.f);
+    // const auto zombieTest = scene->CreateGameObject("ZombieTest");
+    // zombieTest->AddComponents<Transform>(0, 0);
+    // zombieTest->AddComponents<TextureComp>();
+    // zombieTest->AddComponents<Render>();
+    // zombieTest->AddComponents<zombieArena::Zombie>(player, zombieArena::ZombieType::BLOATER, 200.f, 200.f);
 
+    const auto spawnerTest = scene->CreateGameObject("SpawnerTest");
+    spawnerTest->AddComponents<Transform>(0, 0);
+    spawnerTest->AddComponents<zombieArena::Spawner>();
+    
 #pragma region Commands
     auto& input = InputManager::GetInstance();
     

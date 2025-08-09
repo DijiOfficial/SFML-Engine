@@ -29,7 +29,8 @@ namespace diji
         int GetActiveSceneId() const { return m_ActiveSceneId; }
         void SetPendingDestroy(GameObject* gameObject);
 
-        GameObject* GetGameObject(const std::string& name) const;
+        [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
+        void SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const;
 		
     private:
         std::map<int, std::unique_ptr<Scene>> m_ScenesUPtrMap;

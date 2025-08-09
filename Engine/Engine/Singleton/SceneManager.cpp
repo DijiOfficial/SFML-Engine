@@ -1,6 +1,7 @@
 ﻿#include "SceneManager.h"
 
 #include "TimerManager.h"
+#include "../Components/Transform.h"
 
 diji::Scene* diji::SceneManager::CreateScene(const int id)
 {
@@ -96,3 +97,12 @@ diji::GameObject* diji::SceneManager::GetGameObject(const std::string& name) con
     return m_ScenesUPtrMap.at(m_ActiveSceneId)->GetGameObject(name);
 }
 
+void diji::SceneManager::SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const
+{
+    const auto gameObject = m_ScenesUPtrMap.at(m_ActiveSceneId).get()->CreateGameObjectFromTemplate(name, original);
+
+    gameObject->GetComponent<Transform>()->SetPosition(spawnLocation);
+
+    gameObject->Init();
+    gameObject->Start();
+}
