@@ -1,10 +1,13 @@
 ﻿#pragma once
 #include "Component.h"
+#include "../Singleton/TimeSingleton.h"
 
 #include <SFML/System/Vector2.hpp>
 
 namespace diji
 {
+	// todo: Could be interesting to add basic AI steering behaviours (use GPP as reference)
+	// todo: Transform should not be a component, but rather a GameObject property
 	class Transform final : public Component
 	{
 	public:
@@ -34,9 +37,17 @@ namespace diji
 		void SetPosition(const sf::Vector2f pos) { m_Position = pos; }
 		void AddOffset(const float  x, const float y) { m_Position.x += x; m_Position.y += y; }
 		void AddOffset(const sf::Vector2f& offset) { m_Position.x += offset.x; m_Position.y += offset.y; }
+
+		// this probably should be separate later or if revisited with more behaviours
+		void Seek(float speed);
+		void SetTarget(const GameObject* target);
+		Transform* GetTarget() const { return m_Target; }
 		
 	private:
 		sf::Vector2f m_Position;
-		
+
+		// also separate 
+		Transform* m_Target = nullptr;
+		TimeSingleton& m_TimeSingleton = TimeSingleton::GetInstance();
 	};
 }
