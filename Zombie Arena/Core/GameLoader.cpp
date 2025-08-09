@@ -2,6 +2,7 @@
 
 #include "GameState.h"
 #include "../Components/Player.h"
+#include "../Components/Zombie.h"
 #include "../Input/CustomCommands.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/SceneManager.h"
@@ -51,6 +52,12 @@ void SceneLoader::ZombieArena()
     fpsCounter->AddComponents<FPSCounter>();
     fpsCounter->AddComponents<Transform>(static_cast<int>(1920 - 100.f), 40);
     fpsCounter->AddComponents<Render>();
+
+    const auto zombieTest = scene->CreateGameObject("ZombieTest");
+    zombieTest->AddComponents<Transform>(0, 0);
+    zombieTest->AddComponents<TextureComp>();
+    zombieTest->AddComponents<Render>();
+    zombieTest->AddComponents<zombieArena::Zombie>(player, zombieArena::ZombieType::BLOATER, 200.f, 200.f);
 
 #pragma region Commands
     auto& input = InputManager::GetInstance();
