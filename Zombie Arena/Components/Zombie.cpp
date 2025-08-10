@@ -27,6 +27,7 @@ void zombieArena::Zombie::Init()
     SetZombieStats();
 }
 
+// Game gets laggy quite fast with too many zombies. first likely because the game runs on 1 core only, second likely because of the seek behaviour 
 void zombieArena::Zombie::Update()
 {
     // todo: create a behaviour system like in GPP if going to expand on behaviours
