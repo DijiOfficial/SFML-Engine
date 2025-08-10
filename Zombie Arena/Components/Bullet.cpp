@@ -25,6 +25,12 @@ void zombieArena::Bullet::Init()
     {
         diji::SceneManager::GetInstance().SetPendingDestroy(GetOwner());
     }, m_Lifetime, false);
+
+
+    // todo: write helper functions for getting Angle from directions and turning radians into degrees
+    const float angleDeg = std::atan2(m_Direction.y, m_Direction.x) * 180.0f / std::numbers::pi_v<float>;
+    
+    m_TextureCompPtr->SetRotationAngle(angleDeg);
 }
 
 void zombieArena::Bullet::Update()
@@ -32,9 +38,4 @@ void zombieArena::Bullet::Update()
     // todo: optimize the calls to CollisionSingleton and TimeSingleton
     const auto deltaMovement = m_Direction * m_Speed * diji::TimeSingleton::GetInstance().GetDeltaTime();
     m_TransformCompPtr->AddOffset(deltaMovement);
-
-    // todo: write helper functions for getting Angle from directions and turning radians into degrees
-    const float angleDeg = std::atan2(m_Direction.y, m_Direction.x) * 180.0f / std::numbers::pi_v<float>;
-    
-    m_TextureCompPtr->SetRotationAngle(angleDeg);
 }
