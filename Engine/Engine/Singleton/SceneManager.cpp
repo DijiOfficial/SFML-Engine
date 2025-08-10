@@ -86,7 +86,7 @@ void diji::SceneManager::OnDestroy() const
     m_ScenesUPtrMap.at(m_ActiveSceneId)->OnDestroy();
 }
 
-void diji::SceneManager::SetPendingDestroy(GameObject* gameObject)
+void diji::SceneManager::SetPendingDestroy(const GameObject* gameObject)
 {
     m_HasPendingDestroy = true;
     m_PendingDestroyVec.push_back(gameObject);
