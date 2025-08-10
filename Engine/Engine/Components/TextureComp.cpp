@@ -43,6 +43,9 @@ void diji::TextureComp::SetTexture(const std::string& filename)
 	m_SFMLTexture = ResourceManager::GetInstance().LoadTexture(filename);
 	if (GetOwner()->HasComponent<Render>())
 		GetOwner()->GetComponent<Render>()->UpdateTexture(m_SFMLTexture);
+
+	if (m_NeedsCentering)
+		SetOriginToCenter();
 }
 
 void diji::TextureComp::SetScaleX(const float scaleX)
@@ -75,6 +78,12 @@ void diji::TextureComp::SetOriginToCenter()
 {
 	const auto textureSize = m_SFMLTexture.getSize();
 	m_Origin = { textureSize.x * 0.5f, textureSize.y * 0.5f };
+
+	// if texture is not set yet, dirty flag it
+	if (textureSize.x == 0 || textureSize.y == 0)
+		m_NeedsCentering = true;
+	else if (m_NeedsCentering)
+		m_NeedsCentering = false;
 }
 
 // todo: consider whether I should use float for sizes?

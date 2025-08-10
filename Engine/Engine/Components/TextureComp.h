@@ -68,6 +68,8 @@ namespace diji
 		sf::Angle m_RotationAngle = sf::Angle::Zero;
 		float m_ScaleX = 1;
 		float m_ScaleY = 1;
+
+		bool m_NeedsCentering = false;
 	};
 }
 
