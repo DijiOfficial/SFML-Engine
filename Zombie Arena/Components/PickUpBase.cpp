@@ -10,7 +10,7 @@ zombieArena::PickUpBase::PickUpBase(diji::GameObject* ownerPtr, const sf::IntRec
     : Component(ownerPtr)
     , m_Arena{ arena }
 {
-    m_Arena = sf::IntRect{ arena.position + sf::Vector2i{ 25, 25 }, arena.size - sf::Vector2i{ 25, 25 } };    
+    m_Arena = sf::IntRect{ arena.position + sf::Vector2i{ 25, 25 }, arena.size + sf::Vector2i{ 25, 25 } };    
 }
 
 void zombieArena::PickUpBase::Init()
