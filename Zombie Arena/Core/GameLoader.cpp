@@ -1,6 +1,7 @@
 ﻿#include "GameLoader.h"
 
 #include "GameState.h"
+#include "../Components/Crosshair.h"
 #include "../Components/Player.h"
 #include "../Components/Pistol.h"
 #include "../Components/Spawner.h"
@@ -75,6 +76,15 @@ void SceneLoader::ZombieArena()
     // const auto spawnerTest = scene->CreateGameObject("SpawnerTest");
     // spawnerTest->AddComponents<Transform>(0, 0);
     // spawnerTest->AddComponents<zombieArena::Spawner>(player, arena);
+
+    const auto crosshair = scene->CreateGameObject("Z_Crosshair");
+    crosshair->AddComponents<Transform>(0, 0);
+    crosshair->AddComponents<TextureComp>("graphics/crosshair.png");
+    crosshair->GetComponent<TextureComp>()->SetOriginToCenter();
+    crosshair->AddComponents<Render>();
+    crosshair->AddComponents<zombieArena::Crosshair>();
+    
+    
     
 #pragma region Commands
     auto& input = InputManager::GetInstance();

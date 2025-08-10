@@ -172,6 +172,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Components\Bullet.cpp" />
+    <ClCompile Include="Components\Crosshair.cpp" />
     <ClCompile Include="Components\Pistol.cpp" />
     <ClCompile Include="Components\Player.cpp" />
     <ClCompile Include="Components\Spawner.cpp" />
@@ -182,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Bullet.h" />
+    <ClInclude Include="Components\Crosshair.h" />
     <ClInclude Include="Components\Pistol.h" />
     <ClInclude Include="Components\Player.h" />
     <ClInclude Include="Components\Spawner.h" />
