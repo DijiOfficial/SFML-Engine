@@ -70,6 +70,8 @@ void diji::Engine::Run(const std::function<void()>& load) const
 			lag -= FIXED_TIME_STEP;
 		}
 
+		// starting to consider passing the deltaTime to Update methods with [[maybe_unused]] attribute
+		// TimeSingleton is useful for other purposes but gets annoying to use in update methods and mostly optimizing the call
 		sceneManager.Update();
 		sceneManager.LateUpdate();
 		
