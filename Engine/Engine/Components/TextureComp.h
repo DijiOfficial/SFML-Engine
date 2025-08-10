@@ -59,7 +59,7 @@ namespace diji
 		float GetScaleY() const { return m_ScaleY; }
 		sf::Angle GetRotationAngle() const { return m_RotationAngle; }
 		sf::Vector2f GetOrigin() const { return m_Origin; }
-
+		sf::Vector2u GetSize() const;
 	private:
 		sf::Texture m_SFMLTexture;
 		std::string m_FilePath;

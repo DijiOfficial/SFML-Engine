@@ -96,3 +96,8 @@ int diji::TextureComp::GetHeight() const
 {
 	return static_cast<int>(m_SFMLTexture.getSize().y * m_ScaleY);
 }
+
+sf::Vector2u diji::TextureComp::GetSize() const
+{
+	return m_SFMLTexture.getSize();
+}
