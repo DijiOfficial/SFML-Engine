@@ -22,6 +22,17 @@ void diji::CollisionSingleton::RemoveCollider(const Collider* object)
 		m_Colliders.erase(it);
 }
 
+void diji::CollisionSingleton::ParseRectInLevelCollider(const Rectf& rect)
+{
+	const sf::Vector2f bottomLeft(rect.left, rect.bottom);
+	const sf::Vector2f topLeft(rect.left, rect.bottom + rect.height);
+	const sf::Vector2f topRight(rect.left + rect.width, rect.bottom + rect.height);
+	const sf::Vector2f bottomRight(rect.left + rect.width, rect.bottom);
+
+	const std::vector<sf::Vector2f> vertices = { bottomLeft, topLeft, topRight, bottomRight };
+	AddLevelCollider(vertices);
+}
+
 void diji::CollisionSingleton::UpdateCollider(const Collider* object, const Rectf& collider)
 {
 	m_Colliders[object] = collider;
@@ -91,6 +102,17 @@ bool diji::CollisionSingleton::IsCollidingWithWorld(const sf::Vector2f& point1, 
 	{
 		return Raycast(collisionBox, point1, point2);
 	});
+}
+
+bool diji::CollisionSingleton::IsCollidingWithWorld(const Collider* object) const
+{
+	// Check if the object exists in the colliders map
+	const auto it = m_Colliders.find(object);
+	if (it == m_Colliders.end())
+		return false;
+
+	const Rectf& colliderRect = it->second;
+	return IsCollidingWithWorld(colliderRect);
 }
 
 #pragma region utility functions

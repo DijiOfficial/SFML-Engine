@@ -8,7 +8,7 @@ namespace diji
 {
 	class Collider;
 
-	// todo: put this in a utility header
+	// todo: put this in a utility header or replace it with the library rectf
 	struct Rectf
 	{
 		float left, bottom, width, height;
@@ -25,6 +25,8 @@ namespace diji
 		
 		void AddCollider(const Collider* object, const Rectf& collider);
 		void RemoveCollider(const Collider* object);
+		void AddLevelCollider(const std::vector<sf::Vector2f>& vertices) { m_LevelCollider.emplace_back(vertices); }
+		void ParseRectInLevelCollider(const Rectf& rect);
 
 		void UpdateCollider(const Collider* object, const Rectf& collider);
 
@@ -32,6 +34,7 @@ namespace diji
 		[[nodiscard]] bool AreColliding(const Collider* source, const Collider* target);
 		[[nodiscard]] bool IsCollidingWithWorld(const Rectf& shape) const;
 		[[nodiscard]] bool IsCollidingWithWorld(const sf::Vector2f& point1, const sf::Vector2f& point2) const;
+		[[nodiscard]] bool IsCollidingWithWorld(const Collider* object) const;
 		//temp
 		[[nodiscard]] std::vector<std::vector<sf::Vector2f>> GetLevelCollider() const { return m_LevelCollider; }
 
