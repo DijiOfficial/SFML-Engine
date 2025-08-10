@@ -10,9 +10,10 @@ namespace diji
     class Collider final : public Component
     {
     public:
-        Collider(GameObject* ownerPtr, const float width, const float height);
-        Collider(GameObject* ownerPtr, const int width, const int height);
-        Collider(GameObject* ownerPtr, const int width, const int height, const sf::Vector2f& offset);
+        explicit Collider(GameObject* ownerPtr);
+        explicit Collider(GameObject* ownerPtr, const float width, const float height);
+        explicit Collider(GameObject* ownerPtr, const int width, const int height);
+        explicit Collider(GameObject* ownerPtr, const int width, const int height, const sf::Vector2f& offset);
         ~Collider() noexcept override = default;
 
         void Init() override;
@@ -30,10 +31,11 @@ namespace diji
         [[nodiscard]] const GameObject* GetParent() const { return GetOwner(); }
 	
     private:
-        bool m_IsOffsetSet = false;
         sf::Vector2f m_Offset{ 0, 0 };
-        Transform* m_TransformCompPtr;
+        Transform* m_TransformCompPtr = nullptr;
         Rectf m_CollisionBox;
+        bool m_IsOffsetSet = false;
+        bool m_IsCollisionSet = true;
     };
 }
 

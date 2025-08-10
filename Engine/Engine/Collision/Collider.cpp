@@ -1,33 +1,46 @@
 ﻿#include "Collider.h"
+
+#include "../Components/TextureComp.h"
 #include "../Components/Transform.h"
 #include "../Core/GameObject.h"
 
-diji::Collider::Collider(GameObject* ownerPtr, const int width, const int height)
+diji::Collider::Collider(GameObject* ownerPtr)
     : Component(ownerPtr)
 {
-    m_TransformCompPtr = nullptr;
-    m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width), .height = static_cast<float>(height) };
-}
-
-diji::Collider::Collider(GameObject* ownerPtr, const int width, const int height, const sf::Vector2f& offset)
-    : Component(ownerPtr)
-    , m_IsOffsetSet{ true }
-    , m_Offset{ offset }
-{
-    m_TransformCompPtr = nullptr;
-    m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width), .height = static_cast<float>(height) };
+    m_IsCollisionSet = false;
+    m_CollisionBox = { .left = 0, .bottom = 0, .width = 0, .height = 0 };
 }
 
 diji::Collider::Collider(GameObject* ownerPtr, const float width, const float height)
     : Component(ownerPtr)
 {
-    m_TransformCompPtr = nullptr;
     m_CollisionBox = { .left = 0, .bottom = 0, .width = width, .height = height };
+}
+
+diji::Collider::Collider(GameObject* ownerPtr, const int width, const int height)
+    : Component(ownerPtr)
+{
+    m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width), .height = static_cast<float>(height) };
+}
+
+diji::Collider::Collider(GameObject* ownerPtr, const int width, const int height, const sf::Vector2f& offset)
+    : Component(ownerPtr)
+    , m_Offset{ offset }
+    , m_IsOffsetSet{ true }
+{
+    m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width), .height = static_cast<float>(height) };
 }
 
 void diji::Collider::Init()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<Transform>();
+
+    if (!m_IsCollisionSet)
+    {
+        const auto& size = GetOwner()->GetComponent<TextureComp>()->GetSize();
+        m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(size.x), .height = static_cast<float>(size.y) };
+        m_IsCollisionSet = true;
+    }
 
     const auto& pos = m_TransformCompPtr->GetPosition();
     m_CollisionBox.left = pos.x + m_Offset.x;
