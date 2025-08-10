@@ -1,9 +1,6 @@
 ﻿#include "Pistol.h"
 
-#include <iostream>
-
 #include "Bullet.h"
-#include "Engine/Components/RectRender.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/TimerManager.h"
 #include "Engine/Core/GameObject.h"
@@ -62,9 +59,6 @@ void zombieArena::Pistol::Reload()
         m_MagCapacity = MAX_CLIP_CAPACITY;
     
     m_TotalAmmo = std::max(0, m_TotalAmmo - MAX_CLIP_CAPACITY);
-
-    std::cout << "Reloading pistol: " << m_MagCapacity << " bullets in the magazine, " 
-              << m_TotalAmmo << " bullets left in total.\n";
 }
 
 void zombieArena::Pistol::HandleWeaponFired(const sf::Vector2f& direction)
@@ -83,7 +77,4 @@ void zombieArena::Pistol::HandleShot(const sf::Vector2f& direction)
     bullet->GetComponent<Bullet>()->SetDirection(direction);
 
     --m_MagCapacity;
-
-    std::cout << "Shot fired! Remaining bullets in the magazine: " 
-              << m_MagCapacity << ", Total ammo left: " << m_TotalAmmo << ".\n";
 }
