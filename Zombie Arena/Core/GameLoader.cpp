@@ -1,7 +1,9 @@
 ﻿#include "GameLoader.h"
 
 #include "GameState.h"
+#include "../Components/AmmoPickup.h"
 #include "../Components/Crosshair.h"
+#include "../Components/HealthPickup.h"
 #include "../Components/Player.h"
 #include "../Components/Pistol.h"
 #include "../Components/Spawner.h"
@@ -34,6 +36,7 @@ void SceneLoader::ZombieArena()
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::GameOver));
 
     sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 2000, 1100 } };
+    sf::IntRect arenaInner{ sf::Vector2i{ 50, 50 }, sf::Vector2i{ 2000 - 50, 1100 - 50 } };
     constexpr int TILE_SIZE = 50;
     const Rectf rectfArena
     {
@@ -59,14 +62,14 @@ void SceneLoader::ZombieArena()
     player->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
     pistol->SetParent(player, false);
     
-    const auto tempBackground = scene->CreateGameObject("Background");
+    const auto tempBackground = scene->CreateGameObject("A_Background");
     tempBackground->AddComponents<Transform>(0, 0);
     tempBackground->AddComponents<Sprite>("graphics/background_sheet.png", 50, 5, arena.size.x, arena.size.y);
     tempBackground->GetComponent<Sprite>()->SetTileCount(1, 4);
     tempBackground->GetComponent<Sprite>()->SetWallSpritePosition(sf::FloatRect{ sf::Vector2f{ 0, 150 }, sf::Vector2f{ 50, 50 } });
     tempBackground->AddComponents<Render>();
 
-    const auto fpsCounter = scene->CreateGameObject("fpsCounter");
+    const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");
     fpsCounter->AddComponents<TextComp>("0 FPS", "fonts/digital-7.ttf", sf::Color::White, true);
     fpsCounter->GetComponent<TextComp>()->GetText().setCharacterSize(33);
     fpsCounter->AddComponents<FPSCounter>();
@@ -83,8 +86,20 @@ void SceneLoader::ZombieArena()
     crosshair->GetComponent<TextureComp>()->SetOriginToCenter();
     crosshair->AddComponents<Render>();
     crosshair->AddComponents<zombieArena::Crosshair>();
-    
-    
+
+    const auto healthPickupTest =  scene->CreateGameObject("D_HealthPickupTest");
+    healthPickupTest->AddComponents<Transform>(0, 0);
+    healthPickupTest->AddComponents<TextureComp>();
+    healthPickupTest->GetComponent<TextureComp>()->SetOriginToCenter();
+    healthPickupTest->AddComponents<Render>();
+    healthPickupTest->AddComponents<zombieArena::HealthPickup>(arenaInner);
+
+    const auto ammoPickupTest=  scene->CreateGameObject("D_AmmoPickupTest");
+    ammoPickupTest->AddComponents<Transform>(0, 0);
+    ammoPickupTest->AddComponents<TextureComp>();
+    ammoPickupTest->GetComponent<TextureComp>()->SetOriginToCenter();
+    ammoPickupTest->AddComponents<Render>();
+    ammoPickupTest->AddComponents<zombieArena::AmmoPickup>(arenaInner);
     
 #pragma region Commands
     auto& input = InputManager::GetInstance();
