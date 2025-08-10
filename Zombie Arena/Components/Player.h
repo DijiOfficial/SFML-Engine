@@ -25,7 +25,7 @@ namespace zombieArena
         void Start() override {}
         
         void Update() override;
-        void FixedUpdate() override {}
+        void FixedUpdate() override;
         void LateUpdate() override {}
 
         void OnDisable() override {}

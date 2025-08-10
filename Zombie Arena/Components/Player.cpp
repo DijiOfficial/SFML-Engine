@@ -1,11 +1,15 @@
 ﻿#include "Player.h"
 
 #include <algorithm>
+#include <iostream>
 #include <numbers>
 #include <SFML/Window/Mouse.hpp>
 
+#include "PickUpBase.h"
 #include "Pistol.h"
 #include "../Core/GameState.h"
+#include "Engine/Collision/Collider.h"
+#include "Engine/Collision/CollisionSingleton.h"
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Components/Transform.h"
@@ -17,8 +21,8 @@
 
 zombieArena::Player::Player(diji::GameObject* ownerPtr, const sf::IntRect& arena)
     : Component(ownerPtr)
-    , m_Arena{ arena }
 {
+    m_Arena = { sf::Vector2i{ arena.position.x + 25, arena.position.y + 25},  sf::Vector2i{ arena.size.x - 50, arena.size.y - 50 }};
 }
 
 void zombieArena::Player::Init()
@@ -32,10 +36,12 @@ void zombieArena::Player::Init()
 
 void zombieArena::Player::Update()
 {
-    m_TransformCompPtr->AddOffset(m_Direction * m_CurrentSpeed * diji::TimeSingleton::GetInstance().GetDeltaTime());
-
     // clamp the position to the arena bounds
-
+    auto newPosition = m_TransformCompPtr->GetPosition() + m_Direction * m_CurrentSpeed * diji::TimeSingleton::GetInstance().GetDeltaTime();
+    newPosition.x = std::clamp(newPosition.x, static_cast<float>(m_Arena.position.x),static_cast<float>(m_Arena.position.x + m_Arena.size.x));
+    newPosition.y = std::clamp(newPosition.y, static_cast<float>(m_Arena.position.y), static_cast<float>(m_Arena.position.y + m_Arena.size.y));
+    m_TransformCompPtr->SetPosition(newPosition);
+    
     // Orient the player to mouse position
     if (!m_CameraCompPtr) return;
     
@@ -48,6 +54,18 @@ void zombieArena::Player::Update()
     m_TextureCompPtr->SetRotationAngle(angleDeg);
 
     m_PistolCompPtr->UpdatePosition(playerPos);
+}
+
+void zombieArena::Player::FixedUpdate()
+{
+    const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(GetOwner()->GetComponent<diji::Collider>());
+    for (const auto& collider : colliders)
+    {
+        if (collider->GetParent()->HasComponent<PickUpBase>())
+        {
+            std::cout << "Player collided with a pickup: " << std::endl;
+        }
+    }
 }
 
 void zombieArena::Player::Spawn(const sf::IntRect& arena, const int tileSize)

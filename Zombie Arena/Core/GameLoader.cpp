@@ -9,6 +9,7 @@
 #include "../Components/Spawner.h"
 #include "../Input/CustomCommands.h"
 #include "Engine/Collision/CollisionSingleton.h"
+#include "Engine//Collision/Collider.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Input/InputManager.h"
@@ -36,7 +37,7 @@ void SceneLoader::ZombieArena()
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::GameOver));
 
     sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 2000, 1100 } };
-    sf::IntRect arenaInner{ sf::Vector2i{ 50, 50 }, sf::Vector2i{ 2000 - 50, 1100 - 50 } };
+    sf::IntRect arenaInner{ sf::Vector2i{ 50, 50 }, sf::Vector2i{ 2000 - 100, 1100 - 100 } };
     constexpr int TILE_SIZE = 50;
     const Rectf rectfArena
     {
@@ -56,8 +57,9 @@ void SceneLoader::ZombieArena()
     player->AddComponents<Transform>(arena.size.x * 0.5f, arena.size.y * 0.5f);
     player->AddComponents<TextureComp>("graphics/player.png");
     player->AddComponents<Render>();
-    player->AddComponents<zombieArena::Player>(arena);
+    player->AddComponents<zombieArena::Player>(arenaInner);
     player->GetComponent<zombieArena::Player>()->GivePistol(pistol);
+    player->AddComponents<Collider>();
     player->AddComponents<Camera>(1920.f, 1080.f);
     player->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
     pistol->SetParent(player, false);
@@ -92,6 +94,7 @@ void SceneLoader::ZombieArena()
     healthPickupTest->AddComponents<TextureComp>();
     healthPickupTest->GetComponent<TextureComp>()->SetOriginToCenter();
     healthPickupTest->AddComponents<Render>();
+    healthPickupTest->AddComponents<Collider>();
     healthPickupTest->AddComponents<zombieArena::HealthPickup>(arenaInner);
 
     const auto ammoPickupTest=  scene->CreateGameObject("D_AmmoPickupTest");
@@ -99,6 +102,7 @@ void SceneLoader::ZombieArena()
     ammoPickupTest->AddComponents<TextureComp>();
     ammoPickupTest->GetComponent<TextureComp>()->SetOriginToCenter();
     ammoPickupTest->AddComponents<Render>();
+    ammoPickupTest->AddComponents<Collider>();
     ammoPickupTest->AddComponents<zombieArena::AmmoPickup>(arenaInner);
     
 #pragma region Commands
