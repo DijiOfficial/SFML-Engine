@@ -46,6 +46,7 @@ bool diji::InputManager::PollEvents()
 
 		if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>())
 		{
+			m_MousePosition = mouseMoved->position;
 			for (auto& command : m_MouseMoveCommandsVec)
 			{
 				if (command)

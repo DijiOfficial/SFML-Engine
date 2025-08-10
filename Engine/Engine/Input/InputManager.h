@@ -89,6 +89,7 @@ namespace diji
 
         void ResetCommands() { m_CommandUMap.clear(); }
         void Quit() { m_Continue = false; }
+        [[nodiscard]] sf::Vector2i GetMousePosition() const { return m_MousePosition; }
         
     private:
         bool m_Continue = true;
@@ -109,6 +110,7 @@ namespace diji
         // Mouse state tracking
         std::unordered_map<sf::Mouse::Button, bool> m_MousePressedState;
         std::unordered_map<sf::Mouse::Button, bool> m_MouseHeldState;
+        sf::Vector2i m_MousePosition = { 0, 0 };
         
         // O(1) lookup for commands
         struct CommandKey
