@@ -45,6 +45,7 @@ namespace zombieArena
         
         void GivePistol(const diji::GameObject* object);  
         void Shoot(bool isStart) const;
+        void Reload() const;
 
         diji::Event<> OnPauseEvent;
 

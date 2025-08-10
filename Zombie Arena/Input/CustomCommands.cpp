@@ -70,3 +70,14 @@ void zombieArena::Shoot::Execute()
     if (m_PlayerCompPtr)
         m_PlayerCompPtr->Shoot(m_IsStart);
 }
+
+zombieArena::Reload::Reload(diji::GameObject* actor)
+    : GameActorCommands(actor)
+{
+    m_PlayerCompPtr = actor->GetComponent<Player>();
+}
+
+void zombieArena::Reload::Execute()
+{
+    m_PlayerCompPtr->Reload();
+}

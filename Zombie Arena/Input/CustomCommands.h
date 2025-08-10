@@ -63,4 +63,16 @@ namespace zombieArena
         Player* m_PlayerCompPtr = nullptr;
         bool m_IsStart = false;
     };
+
+    class Reload final : public diji::GameActorCommands
+    {
+    public:
+        explicit Reload(diji::GameObject* actor);
+        ~Reload() noexcept override = default;
+
+        void Execute() override;
+
+    private:
+        Player* m_PlayerCompPtr = nullptr;
+    };
 }

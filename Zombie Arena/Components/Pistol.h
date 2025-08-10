@@ -16,7 +16,7 @@ namespace zombieArena
     {
     public:
         explicit Pistol(diji::GameObject* ownerPtr);
-        explicit Pistol(diji::GameObject* ownerPtr, float fireRate, int magCapacity);
+        explicit Pistol(diji::GameObject* ownerPtr, float fireRate, int magCapacity, int totalAmmo);
         ~Pistol() noexcept override = default;
 
         void Init() override;
@@ -34,15 +34,17 @@ namespace zombieArena
 
         void SetFireRate(const float fireRate) { m_FireRate = fireRate; }
         void SetMagCapacity(const int magCapacity) { m_MagCapacity = magCapacity; }
-        
-        // FireWeapon -> HandleWeaponFired (check mag, handleshot, play sound, VFX)
         void FireWeapon(bool isStart, const sf::Vector2f& direction);
+
+        void Reload();
         
     private:
         std::unique_ptr<diji::GameObject> m_BulletTemplate = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;
+        const int MAX_CLIP_CAPACITY = 6;
+        int m_TotalAmmo = 0;
         int m_MagCapacity = 0;
-        float m_FireRate = 0.5f;
+        float m_FireRate = 1.0f;
         bool m_CanShoot = true;
 
         void HandleWeaponFired(const sf::Vector2f& direction);

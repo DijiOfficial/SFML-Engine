@@ -114,3 +114,9 @@ void zombieArena::Player::Shoot(const bool isStart) const
 
     m_PistolCompPtr->FireWeapon(isStart, m_LookingDirection);
 }
+
+void zombieArena::Player::Reload() const
+{
+    m_PistolCompPtr->Reload();
+}
+

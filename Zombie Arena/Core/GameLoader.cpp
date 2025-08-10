@@ -45,7 +45,7 @@ void SceneLoader::ZombieArena()
 
     const auto pistol = scene->CreateGameObject("Pistol");
     pistol->AddComponents<Transform>(0, 0);
-    pistol->AddComponents<zombieArena::Pistol>(0.2f, 6);
+    pistol->AddComponents<zombieArena::Pistol>(1.0f, 6, 24);
     
     // add arena to player constructor and make player collide with arena
     const auto player = scene->CreateGameObject("X_Player");
@@ -102,6 +102,7 @@ void SceneLoader::ZombieArena()
 
     input.BindCommand<zombieArena::Shoot>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Mouse::Button::Left, player, true);
     input.BindCommand<zombieArena::Shoot>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Mouse::Button::Left, player, false); // release is not needed for semi auto weapons
+    input.BindCommand<zombieArena::Reload>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::R, player);
 #pragma endregion
 
 #pragma region Observers

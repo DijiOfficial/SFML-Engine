@@ -7,6 +7,7 @@ namespace diji
 {
     class Transform;
     class Collider;
+    class TextureComp;
 }
 
 namespace zombieArena
@@ -34,6 +35,7 @@ namespace zombieArena
 
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
+        diji::TextureComp* m_TextureCompPtr = nullptr;
         diji::Collider* m_ColliderCompPtr = nullptr;
         sf::Vector2f m_Direction = { 0.f, 0.f };
         const float m_Speed = 100.f;

@@ -1,6 +1,9 @@
 ﻿#include "Pistol.h"
 
+#include <iostream>
+
 #include "Bullet.h"
+#include "Engine/Components/RectRender.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/TimerManager.h"
 #include "Engine/Core/GameObject.h"
@@ -13,8 +16,9 @@ zombieArena::Pistol::Pistol(diji::GameObject* ownerPtr)
 {
 }
 
-zombieArena::Pistol::Pistol(diji::GameObject* ownerPtr, const float fireRate, const int magCapacity)
+zombieArena::Pistol::Pistol(diji::GameObject* ownerPtr, const float fireRate, const int magCapacity, const int totalAmmo)
     : Component(ownerPtr)
+    , m_TotalAmmo{ totalAmmo }
     , m_MagCapacity{ magCapacity }
     , m_FireRate{ fireRate }
 {
@@ -27,7 +31,7 @@ void zombieArena::Pistol::Init()
     
     m_BulletTemplate = std::make_unique<diji::GameObject>();
     m_BulletTemplate->AddComponents<diji::Transform>(position.x, position.y);
-    m_BulletTemplate->AddComponents<diji::TextureComp>("graphics/crawler.png"); // no texture needed
+    m_BulletTemplate->AddComponents<diji::TextureComp>("graphics/bullet.png");
     m_BulletTemplate->AddComponents<diji::Render>();
     m_BulletTemplate->AddComponents<Bullet>();
 }
@@ -47,6 +51,22 @@ void zombieArena::Pistol::FireWeapon(const bool isStart, const sf::Vector2f& dir
     (void)diji::TimerManager::GetInstance().SetTimer([&]() { m_CanShoot = true; }, m_FireRate, false);
 }
 
+void zombieArena::Pistol::Reload()
+{
+    if (m_TotalAmmo <= 0 || m_MagCapacity == MAX_CLIP_CAPACITY)
+        return;
+
+    if (m_TotalAmmo < MAX_CLIP_CAPACITY)
+        m_MagCapacity = m_TotalAmmo;
+    else
+        m_MagCapacity = MAX_CLIP_CAPACITY;
+    
+    m_TotalAmmo = std::max(0, m_TotalAmmo - MAX_CLIP_CAPACITY);
+
+    std::cout << "Reloading pistol: " << m_MagCapacity << " bullets in the magazine, " 
+              << m_TotalAmmo << " bullets left in total.\n";
+}
+
 void zombieArena::Pistol::HandleWeaponFired(const sf::Vector2f& direction)
 {
     if (m_MagCapacity <= 0)
@@ -63,4 +83,7 @@ void zombieArena::Pistol::HandleShot(const sf::Vector2f& direction)
     bullet->GetComponent<Bullet>()->SetDirection(direction);
 
     --m_MagCapacity;
+
+    std::cout << "Shot fired! Remaining bullets in the magazine: " 
+              << m_MagCapacity << ", Total ammo left: " << m_TotalAmmo << ".\n";
 }
