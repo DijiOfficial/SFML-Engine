@@ -50,4 +50,17 @@ namespace zombieArena
 
         void Execute() override;
     };
+
+    class Shoot final : public diji::GameActorCommands
+    {
+    public:
+        explicit Shoot(diji::GameObject* actor, bool isStart);
+        ~Shoot() noexcept override = default;
+
+        void Execute() override;
+
+    private:
+        Player* m_PlayerCompPtr = nullptr;
+        bool m_IsStart = false;
+    };
 }

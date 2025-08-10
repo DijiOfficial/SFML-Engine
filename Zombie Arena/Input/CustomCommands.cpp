@@ -57,3 +57,16 @@ void zombieArena::Pause::Execute()
 {
     GetGameActor()->GetComponent<Player>()->PauseGame();
 }
+
+zombieArena::Shoot::Shoot(diji::GameObject* actor, const bool isStart)
+    : GameActorCommands(actor)
+    , m_IsStart{ isStart }
+{
+    m_PlayerCompPtr = actor->GetComponent<Player>();
+}
+
+void zombieArena::Shoot::Execute()
+{
+    if (m_PlayerCompPtr)
+        m_PlayerCompPtr->Shoot(m_IsStart);
+}

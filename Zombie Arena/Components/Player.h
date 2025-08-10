@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include <SFML/Graphics/Rect.hpp>
-
 #include "Engine/Components/Component.h"
+
+#include <SFML/Graphics/Rect.hpp>
 
 namespace diji
 {
@@ -12,6 +12,8 @@ namespace diji
 
 namespace zombieArena
 {
+    class Pistol;
+
     class Player final : public diji::Component
     {
     public:
@@ -29,21 +31,20 @@ namespace zombieArena
         void OnDisable() override {}
         void OnDestroy() override {}
 
-        void Spawn(const sf::IntRect& arena, const int tileSize);
+        void Spawn(const sf::IntRect& arena, int tileSize);
         void ResetStats();
-        bool Hit(const int damage);
+        bool Hit(int damage);
         sf::Vector2f GetDirection() const { return m_Direction; }
         void SetDirection(const sf::Vector2f& direction) { m_Direction = direction; }
-        // double GetLastHitTime() const { return m_LastHitTime; }
-        // GetPosition() const { return m_TransformCompPtr->GetPosition(); }
-        // GetCenter();
 
         void UpgradeSpeed() { m_CurrentSpeed += START_SPEED * 0.2f; }
         void UpgradeHealth();
-        void Heal(const int amount);
-        // int GetCurrentHealth() const { return m_CurrentHealth; }
+        void Heal(int amount);
         void OrientPlayer(const sf::Vector2i& mousePos);
         void PauseGame();
+        
+        void GivePistol(const diji::GameObject* object);  
+        void Shoot(bool isStart) const;
 
         diji::Event<> OnPauseEvent;
 
@@ -51,8 +52,10 @@ namespace zombieArena
         diji::Camera* m_CameraCompPtr = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::TextureComp* m_TextureCompPtr = nullptr;
+        Pistol* m_PistolCompPtr = nullptr;
         sf::IntRect m_Arena;
         sf::Vector2f m_Direction = {0, 0};
+        sf::Vector2f m_LookingDirection = {0, 0};
         sf::Vector2i m_LastMousePos = {0, 0};
         
         const int START_HEALTH = 100;

@@ -4,6 +4,7 @@
 #include <numbers>
 #include <SFML/Window/Mouse.hpp>
 
+#include "Pistol.h"
 #include "../Core/GameState.h"
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/TextureComp.h"
@@ -39,12 +40,14 @@ void zombieArena::Player::Update()
     if (!m_CameraCompPtr) return;
     
     const sf::Vector2f playerPos = m_TransformCompPtr->GetPosition();
-    const sf::Vector2f direction = static_cast<sf::Vector2f>(m_CameraCompPtr->GetMouseWorldPosition(m_LastMousePos)) - playerPos;
+    m_LookingDirection = static_cast<sf::Vector2f>(m_CameraCompPtr->GetMouseWorldPosition(m_LastMousePos)) - playerPos;
 
     // todo: write helper functions for getting Angle from directions and turning radians into degrees
-    const float angleDeg = std::atan2(direction.y, direction.x) * 180.0f / std::numbers::pi_v<float>;
+    const float angleDeg = std::atan2(m_LookingDirection.y, m_LookingDirection.x) * 180.0f / std::numbers::pi_v<float>;
     
     m_TextureCompPtr->SetRotationAngle(angleDeg);
+
+    m_PistolCompPtr->UpdatePosition(playerPos);
 }
 
 void zombieArena::Player::Spawn(const sf::IntRect& arena, const int tileSize)
@@ -97,4 +100,17 @@ void zombieArena::Player::PauseGame()
     
     diji::PauseSingleton::GetInstance().TogglePause();
     OnPauseEvent.Broadcast();
+}
+
+void zombieArena::Player::GivePistol(const diji::GameObject* object)
+{
+    m_PistolCompPtr = object->GetComponent<Pistol>();
+}
+
+void zombieArena::Player::Shoot(const bool isStart) const
+{
+    if (!m_PistolCompPtr)
+        return;
+
+    m_PistolCompPtr->FireWeapon(isStart, m_LookingDirection);
 }

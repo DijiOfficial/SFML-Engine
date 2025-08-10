@@ -2,8 +2,10 @@
 
 #include "GameState.h"
 #include "../Components/Player.h"
+#include "../Components/Pistol.h"
 #include "../Components/Spawner.h"
 #include "../Input/CustomCommands.h"
+#include "Engine/Collision/CollisionSingleton.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Input/InputManager.h"
@@ -31,17 +33,32 @@ void SceneLoader::ZombieArena()
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::GameOver));
 
     sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 2000, 1100 } };
-    // add arena to player constructor
+    constexpr int TILE_SIZE = 50;
+    const Rectf rectfArena
+    {
+        .left = static_cast<float>(arena.position.x + TILE_SIZE),
+        .bottom = static_cast<float>(arena.position.y + TILE_SIZE),
+        .width = static_cast<float>(arena.size.x - TILE_SIZE),
+        .height = static_cast<float>(arena.size.y - TILE_SIZE)
+    };
+    CollisionSingleton::GetInstance().ParseRectInLevelCollider(rectfArena);
+
+    const auto pistol = scene->CreateGameObject("Pistol");
+    pistol->AddComponents<Transform>(0, 0);
+    pistol->AddComponents<zombieArena::Pistol>(0.2f, 6);
+    
+    // add arena to player constructor and make player collide with arena
     const auto player = scene->CreateGameObject("X_Player");
     player->AddComponents<Transform>(arena.size.x * 0.5f, arena.size.y * 0.5f);
     player->AddComponents<TextureComp>("graphics/player.png");
     player->AddComponents<Render>();
     player->AddComponents<zombieArena::Player>(arena);
+    player->GetComponent<zombieArena::Player>()->GivePistol(pistol);
     player->AddComponents<Camera>(1920.f, 1080.f);
     player->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
+    pistol->SetParent(player, false);
     
     const auto tempBackground = scene->CreateGameObject("Background");
-    // tempBackground->AddComponents<TextureComp>("graphics/background.png");
     tempBackground->AddComponents<Transform>(0, 0);
     tempBackground->AddComponents<Sprite>("graphics/background_sheet.png", 50, 5, arena.size.x, arena.size.y);
     tempBackground->GetComponent<Sprite>()->SetTileCount(1, 4);
@@ -55,15 +72,9 @@ void SceneLoader::ZombieArena()
     fpsCounter->AddComponents<Transform>(static_cast<int>(1920 - 100.f), 40);
     fpsCounter->AddComponents<Render>();
 
-    // const auto zombieTest = scene->CreateGameObject("ZombieTest");
-    // zombieTest->AddComponents<Transform>(0, 0);
-    // zombieTest->AddComponents<TextureComp>();
-    // zombieTest->AddComponents<Render>();
-    // zombieTest->AddComponents<zombieArena::Zombie>(player, zombieArena::ZombieType::BLOATER, 200.f, 200.f);
-
-    const auto spawnerTest = scene->CreateGameObject("SpawnerTest");
-    spawnerTest->AddComponents<Transform>(0, 0);
-    spawnerTest->AddComponents<zombieArena::Spawner>(player, arena);
+    // const auto spawnerTest = scene->CreateGameObject("SpawnerTest");
+    // spawnerTest->AddComponents<Transform>(0, 0);
+    // spawnerTest->AddComponents<zombieArena::Spawner>(player, arena);
     
 #pragma region Commands
     auto& input = InputManager::GetInstance();
@@ -88,6 +99,9 @@ void SceneLoader::ZombieArena()
 
     input.BindMouseMoveCommand<zombieArena::Aim>(player);
     input.BindCommand<zombieArena::Pause>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Enter, player);
+
+    input.BindCommand<zombieArena::Shoot>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Mouse::Button::Left, player, true);
+    input.BindCommand<zombieArena::Shoot>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Mouse::Button::Left, player, false); // release is not needed for semi auto weapons
 #pragma endregion
 
 #pragma region Observers
