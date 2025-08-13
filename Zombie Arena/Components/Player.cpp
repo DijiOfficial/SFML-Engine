@@ -1,7 +1,6 @@
 ﻿#include "Player.h"
 
 #include <algorithm>
-#include <iostream>
 #include <numbers>
 #include <SFML/Window/Mouse.hpp>
 
@@ -54,18 +53,6 @@ void zombieArena::Player::Update()
     m_TextureCompPtr->SetRotationAngle(angleDeg);
 
     m_PistolCompPtr->UpdatePosition(playerPos);
-}
-
-void zombieArena::Player::FixedUpdate()
-{
-    const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(GetOwner()->GetComponent<diji::Collider>());
-    for (const auto& collider : colliders)
-    {
-        if (collider->GetParent()->HasComponent<PickUpBase>())
-        {
-            std::cout << "Player collided with a pickup: " << std::endl;
-        }
-    }
 }
 
 void zombieArena::Player::Spawn(const sf::IntRect& arena, const int tileSize)
@@ -136,5 +123,10 @@ void zombieArena::Player::Shoot(const bool isStart) const
 void zombieArena::Player::Reload() const
 {
     m_PistolCompPtr->Reload();
+}
+
+void zombieArena::Player::GiveAmmo(const int value) const
+{
+    m_PistolCompPtr->GiveAmmo(value);
 }
 

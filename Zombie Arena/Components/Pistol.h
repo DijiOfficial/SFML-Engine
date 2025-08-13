@@ -37,6 +37,7 @@ namespace zombieArena
         void FireWeapon(bool isStart, const sf::Vector2f& direction);
 
         void Reload();
+        void GiveAmmo(const int value) { m_TotalAmmo += value; }
         
     private:
         std::unique_ptr<diji::GameObject> m_BulletTemplate = nullptr;

@@ -11,5 +11,6 @@ namespace zombieArena
         ~AmmoPickup() noexcept override = default;
 
         void Init() override;
+        void PickedUp(const diji::GameObject* player) override;
     };
 }

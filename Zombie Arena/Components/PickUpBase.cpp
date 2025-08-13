@@ -1,5 +1,8 @@
 ﻿#include "PickUpBase.h"
 
+#include "Player.h"
+#include "Engine/Collision/CollisionSingleton.h"
+#include "Engine/Collision/Collider.h"
 #include "Engine/Singleton/RandNumber.h"
 #include "Engine/Core/GameObject.h"
 #include "Engine/Components/Transform.h"
@@ -18,6 +21,18 @@ void zombieArena::PickUpBase::Init()
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
     
     Spawn();
+}
+
+void zombieArena::PickUpBase::FixedUpdate()
+{
+    const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(GetOwner()->GetComponent<diji::Collider>());
+    for (const auto& collider : colliders)
+    {
+        if (!collider->GetParent()->HasComponent<Player>())
+            continue;
+
+        PickedUp(collider->GetParent());
+    }
 }
 
 void zombieArena::PickUpBase::Spawn() const

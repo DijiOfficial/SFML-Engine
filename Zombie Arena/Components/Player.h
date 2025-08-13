@@ -25,7 +25,7 @@ namespace zombieArena
         void Start() override {}
         
         void Update() override;
-        void FixedUpdate() override;
+        void FixedUpdate() override {}
         void LateUpdate() override {}
 
         void OnDisable() override {}
@@ -46,7 +46,7 @@ namespace zombieArena
         void GivePistol(const diji::GameObject* object);  
         void Shoot(bool isStart) const;
         void Reload() const;
-
+        void GiveAmmo(int value) const;
         diji::Event<> OnPauseEvent;
 
     private:

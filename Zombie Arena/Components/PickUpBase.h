@@ -23,7 +23,7 @@ namespace zombieArena
         void Start() override {}
         
         void Update() override {}
-        void FixedUpdate() override {}
+        void FixedUpdate() override;
         void LateUpdate() override {}
 
         void OnDisable() override {}
@@ -33,6 +33,9 @@ namespace zombieArena
         void SetArena(const sf::IntRect& arena) { m_Arena = arena; }
 
         void Spawn() const;
+
+        // there are different ways to decouple it more, this time i'll take the easy route
+        virtual void PickedUp(const diji::GameObject* player) = 0;
 
     protected:
         diji::Transform* m_TransformCompPtr = nullptr;
