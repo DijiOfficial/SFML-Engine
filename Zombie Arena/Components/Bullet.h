@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Engine/Components/Component.h"
+#include "Engine/Singleton/TimerManager.h"
 
 #include <SFML/System/Vector2.hpp>
 
@@ -31,14 +32,17 @@ namespace zombieArena
         void OnDestroy() override {}
 
         void SetLifetime(const float lifetime) { m_Lifetime = lifetime; }
-        void SetDirection(const sf::Vector2f& direction) { m_Direction = direction; }
+        void SetDirection(const sf::Vector2f& direction) { m_Direction = direction; SetTextureAngle(); }
 
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::TextureComp* m_TextureCompPtr = nullptr;
         diji::Collider* m_ColliderCompPtr = nullptr;
+        diji::TimerManager::TimerHandle m_TimerHandle;
         sf::Vector2f m_Direction = { 0.f, 0.f };
-        const float m_Speed = 100.f;
+        const float m_Speed = 10.f;
         float m_Lifetime = 2.f;
+
+        void SetTextureAngle() const;
     };
 }

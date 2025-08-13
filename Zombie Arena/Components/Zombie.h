@@ -34,7 +34,7 @@ namespace zombieArena
         void OnDisable() override {}
         void OnDestroy() override {}
 
-        bool Hit();
+        [[nodiscard]] bool Hit();
         bool IsDead() const { return m_IsDead; }
         void SetTarget(const diji::GameObject* target) const;
         void SetType(const ZombieType type);
@@ -45,9 +45,12 @@ namespace zombieArena
         const float CHASER_SPEED = 80;
         const float CRAWLER_SPEED = 20;
 
-        const int BLOATER_HEALTH = 5;
+        // const int BLOATER_HEALTH = 5;
+        // const int CHASER_HEALTH = 1;
+        // const int CRAWLER_HEALTH = 3;
+        const int BLOATER_HEALTH = 1;
         const int CHASER_HEALTH = 1;
-        const int CRAWLER_HEALTH = 3;
+        const int CRAWLER_HEALTH = 1;
 
         const diji::GameObject* m_PendingTarget = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;

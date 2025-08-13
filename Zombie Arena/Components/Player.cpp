@@ -7,8 +7,6 @@
 #include "PickUpBase.h"
 #include "Pistol.h"
 #include "../Core/GameState.h"
-#include "Engine/Collision/Collider.h"
-#include "Engine/Collision/CollisionSingleton.h"
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Components/Transform.h"

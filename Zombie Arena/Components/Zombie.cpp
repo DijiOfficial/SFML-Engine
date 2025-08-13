@@ -3,6 +3,7 @@
 #include "Engine/Components/Transform.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/RandNumber.h"
+#include "Engine/Collision/Collider.h"
 
 #include <numbers>
 
@@ -30,6 +31,9 @@ void zombieArena::Zombie::Init()
 // Game gets laggy quite fast with too many zombies. first likely because the game runs on 1 core only, second likely because of the seek behaviour 
 void zombieArena::Zombie::Update()
 {
+    if (m_IsDead)
+        return;
+    
     // todo: create a behaviour system like in GPP if going to expand on behaviours
     m_TransformCompPtr->Seek(m_Speed);
 
@@ -65,6 +69,8 @@ void zombieArena::Zombie::SetType(const ZombieType type)
     m_Type = type;
     
     SetZombieStats();
+
+    GetOwner()->GetComponent<diji::Collider>()->UpdateColliderFromTexture();
 }
 
 void zombieArena::Zombie::SetZombieStats()

@@ -1,12 +1,15 @@
 ﻿#include "Pistol.h"
 
 #include "Bullet.h"
+#include "Zombie.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/TimerManager.h"
 #include "Engine/Core/GameObject.h"
 #include "Engine/Components/Transform.h"
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Components/Render.h"
+#include "Engine/Collision/Collider.h"
+#include "Engine/Components/RectRender.h"
 
 zombieArena::Pistol::Pistol(diji::GameObject* ownerPtr)
     : Component(ownerPtr)
@@ -29,7 +32,9 @@ void zombieArena::Pistol::Init()
     m_BulletTemplate = std::make_unique<diji::GameObject>();
     m_BulletTemplate->AddComponents<diji::Transform>(position.x, position.y);
     m_BulletTemplate->AddComponents<diji::TextureComp>("graphics/bullet.png");
+    m_BulletTemplate->AddComponents<diji::Collider>();
     m_BulletTemplate->AddComponents<diji::Render>();
+    m_BulletTemplate->AddComponents<diji::RectRender>(true);
     m_BulletTemplate->AddComponents<Bullet>();
 }
 

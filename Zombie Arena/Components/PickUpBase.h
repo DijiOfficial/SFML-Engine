@@ -6,6 +6,7 @@
 namespace diji
 {
     class Transform;
+    class Collider;
 }
 
 // In the case of this game, a PickUpManager with the combined logic of the pickups would have been simpler
@@ -38,6 +39,7 @@ namespace zombieArena
         virtual void PickedUp(const diji::GameObject* player) = 0;
 
     protected:
+        diji::Collider* m_ColliderCompPtr = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;
         sf::IntRect m_Arena = {};
         int m_Value = 0;

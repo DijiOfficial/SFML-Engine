@@ -78,9 +78,9 @@ void SceneLoader::ZombieArena()
     fpsCounter->AddComponents<Transform>(static_cast<int>(1920 - 100.f), 40);
     fpsCounter->AddComponents<Render>();
 
-    // const auto spawnerTest = scene->CreateGameObject("SpawnerTest");
-    // spawnerTest->AddComponents<Transform>(0, 0);
-    // spawnerTest->AddComponents<zombieArena::Spawner>(player, arena);
+    const auto spawnerTest = scene->CreateGameObject("SpawnerTest");
+    spawnerTest->AddComponents<Transform>(0, 0);
+    spawnerTest->AddComponents<zombieArena::Spawner>(player, arena);
 
     const auto crosshair = scene->CreateGameObject("Z_Crosshair");
     crosshair->AddComponents<Transform>(0, 0);

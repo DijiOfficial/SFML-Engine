@@ -19,19 +19,22 @@ zombieArena::PickUpBase::PickUpBase(diji::GameObject* ownerPtr, const sf::IntRec
 void zombieArena::PickUpBase::Init()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
+    m_ColliderCompPtr = GetOwner()->GetComponent<diji::Collider>();
     
     Spawn();
 }
 
 void zombieArena::PickUpBase::FixedUpdate()
 {
-    const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(GetOwner()->GetComponent<diji::Collider>());
+    const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr);
     for (const auto& collider : colliders)
     {
         if (!collider->GetParent()->HasComponent<Player>())
             continue;
 
         PickedUp(collider->GetParent());
+        diji::SceneManager::GetInstance().SetPendingDestroy(GetOwner());
+        break;
     }
 }
 
