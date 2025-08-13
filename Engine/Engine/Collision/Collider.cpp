@@ -31,7 +31,7 @@ diji::Collider::Collider(GameObject* ownerPtr, const int width, const int height
     m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width), .height = static_cast<float>(height) };
 }
 
-void diji::Collider::Init()
+void diji::Collider::Start()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<Transform>();
 

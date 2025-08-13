@@ -16,9 +16,9 @@ namespace diji
         explicit Collider(GameObject* ownerPtr, const int width, const int height, const sf::Vector2f& offset);
         ~Collider() noexcept override = default;
 
-        void Init() override;
+        void Init() override {}
         void OnEnable() override {}
-        void Start() override {}
+        void Start() override;
 
         void FixedUpdate() override {}
         void Update() override;
@@ -29,7 +29,7 @@ namespace diji
 
         [[nodiscard]] Rectf GetCollisionBox() const { return m_CollisionBox; } // todo: const ref?
         [[nodiscard]] const GameObject* GetParent() const { return GetOwner(); }
-	
+
     private:
         sf::Vector2f m_Offset{ 0, 0 };
         Transform* m_TransformCompPtr = nullptr;
