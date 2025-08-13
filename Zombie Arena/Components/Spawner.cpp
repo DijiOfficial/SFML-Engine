@@ -1,7 +1,6 @@
 ﻿#include "Spawner.h"
 #include "Zombie.h"
 #include "Engine/Collision/Collider.h"
-#include "Engine/Components/RectRender.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Singleton/TimerManager.h"
@@ -23,7 +22,6 @@ void zombieArena::Spawner::Init()
     m_ZombieTemplatePtr->AddComponents<diji::TextureComp>();
     m_ZombieTemplatePtr->AddComponents<diji::Render>();
     m_ZombieTemplatePtr->AddComponents<diji::Collider>();
-    m_ZombieTemplatePtr->AddComponents<diji::RectRender>(true);
     m_ZombieTemplatePtr->AddComponents<Zombie>(m_PlayerPtr, ZombieType::BLOATER);
 
     // (void)diji::TimerManager::GetInstance().SetTimer([&, this]()
