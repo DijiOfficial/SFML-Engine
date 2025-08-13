@@ -76,6 +76,7 @@ void diji::TextureComp::SetHeight(const int height)
 
 void diji::TextureComp::SetOriginToCenter()
 {
+	m_IsCentered = true;
 	const auto textureSize = m_SFMLTexture.getSize();
 	m_Origin = { textureSize.x * 0.5f, textureSize.y * 0.5f };
 

@@ -25,15 +25,21 @@ namespace diji
         void LateUpdate() override {}
 
         void OnDisable() override {}
-        void OnDestroy() override {}
+        void OnDestroy() override;
+
+        void UpdateColliderFromTexture();
 
         [[nodiscard]] Rectf GetCollisionBox() const { return m_CollisionBox; } // todo: const ref?
         [[nodiscard]] const GameObject* GetParent() const { return GetOwner(); }
+        [[nodiscard]] Rectf GetLastState() const { return m_CollisionBox; }
+        [[nodiscard]] sf::Vector2f GetOffset() const { return m_Offset; }
+        [[nodiscard]] sf::Vector2f GetPosition() const;
 
     private:
         sf::Vector2f m_Offset{ 0, 0 };
         Transform* m_TransformCompPtr = nullptr;
         Rectf m_CollisionBox;
+        Rectf m_LastState { .left = 0, .bottom = 0, .width = 0, .height = 0 };
         bool m_IsOffsetSet = false;
         bool m_IsCollisionSet = true;
     };

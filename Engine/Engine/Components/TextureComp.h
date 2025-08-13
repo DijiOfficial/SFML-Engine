@@ -60,6 +60,8 @@ namespace diji
 		sf::Angle GetRotationAngle() const { return m_RotationAngle; }
 		sf::Vector2f GetOrigin() const { return m_Origin; }
 		sf::Vector2u GetSize() const;
+		bool IsCentered() const { return m_IsCentered; }
+		
 	private:
 		sf::Texture m_SFMLTexture;
 		std::string m_FilePath;
@@ -70,6 +72,7 @@ namespace diji
 		float m_ScaleY = 1;
 
 		bool m_NeedsCentering = false;
+		bool m_IsCentered = false;
 	};
 }
 
