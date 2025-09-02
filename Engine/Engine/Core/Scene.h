@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <SFML/Graphics/View.hpp>
 
 namespace diji 
 {
@@ -32,10 +33,16 @@ namespace diji
         void Remove(const GameObject* object);
         void Remove(const std::string& name);
         void RemoveAll();
-        GameObject* GetGameObject(const std::string& name) const;
+        [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
         std::string GetGameObjectName(const GameObject* object) const;
+
+        void SetGameObjectAsCanvasObject(const std::string& name);
+        void SetGameObjectAsCanvasObject(const GameObject* object);
+        void SetCanvasView(const sf::View& view) { m_CanvasView = view; }
 		
     private:
         std::map<std::string, std::unique_ptr<GameObject>> m_ObjectsUPtrMap;
+        std::map<std::string, std::unique_ptr<GameObject>> m_CanvasObjectsUPtrMap;
+        sf::View m_CanvasView = sf::View(sf::Vector2f{ 1920 * 0.5f, 1080 * 0.5f }, sf::Vector2f{ 1920, 1080 });
     };
 }

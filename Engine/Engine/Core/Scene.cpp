@@ -3,6 +3,8 @@
 #include <ranges>
 #include <stdexcept>
 
+#include "Engine.h"
+
 diji::Scene::~Scene() noexcept
 {
     m_ObjectsUPtrMap.clear();
@@ -14,11 +16,21 @@ void diji::Scene::Init()
     {
         gameObject->Init();
     }
+
+    for (const auto& gameObject : m_CanvasObjectsUPtrMap | std::views::values)
+    {
+        gameObject->Init();
+    }
 }
 
 void diji::Scene::Start()
 {
     for (const auto& gameObject : m_ObjectsUPtrMap | std::views::values)
+    {
+        gameObject->Start();
+    }
+
+    for (const auto& gameObject : m_CanvasObjectsUPtrMap | std::views::values)
     {
         gameObject->Start();
     }
@@ -30,11 +42,21 @@ void diji::Scene::FixedUpdate()
     {
         gameObject->FixedUpdate();
     }
+
+    for (const auto& gameObject : m_CanvasObjectsUPtrMap | std::views::values)
+    {
+        gameObject->FixedUpdate();
+    }
 }
 
 void diji::Scene::Update()
 {
     for(const auto& gameObject : m_ObjectsUPtrMap | std::views::values)
+    {
+        gameObject->Update();
+    }
+
+    for (const auto& gameObject : m_CanvasObjectsUPtrMap | std::views::values)
     {
         gameObject->Update();
     }
@@ -46,11 +68,22 @@ void diji::Scene::LateUpdate()
     {
         gameObject->LateUpdate();
     }
+
+    for (const auto& gameObject : m_CanvasObjectsUPtrMap | std::views::values)
+    {
+        gameObject->LateUpdate();
+    }
 }
 
 void diji::Scene::Render() const
 {
     for (const auto& gameObject : m_ObjectsUPtrMap | std::views::values)
+    {
+        gameObject->Render();
+    }
+
+    window::g_window_ptr->setView(m_CanvasView);
+    for (const auto& gameObject : m_CanvasObjectsUPtrMap | std::views::values)
     {
         gameObject->Render();
     }
@@ -63,7 +96,13 @@ void diji::Scene::OnDestroy()
         gameObject->OnDestroy();
     }
 
+    for (const auto& gameObject : m_CanvasObjectsUPtrMap | std::views::values)
+    {
+        gameObject->OnDestroy();
+    }
+
     m_ObjectsUPtrMap.clear();
+    m_CanvasObjectsUPtrMap.clear();
 }
 
 diji::GameObject* diji::Scene::CreateGameObject(const std::string& name)
@@ -164,4 +203,31 @@ std::string diji::Scene::GetGameObjectName(const GameObject* object) const
     throw std::runtime_error("GameObject not found in the scene.");
 }
 
+void diji::Scene::SetGameObjectAsCanvasObject(const std::string& name)
+{
+    const auto it = m_ObjectsUPtrMap.find(name);
+    if (it != m_ObjectsUPtrMap.end())
+    {
+        // Move the GameObject to m_CanvasObjectsUPtrMap
+        m_CanvasObjectsUPtrMap[name] = std::move(it->second);
+        m_ObjectsUPtrMap.erase(it);
+    }
+    else
+        throw std::runtime_error("GameObject with the given name does not exist in the scene.");
+}
 
+void diji::Scene::SetGameObjectAsCanvasObject(const GameObject* object)
+{
+    for (auto it = m_ObjectsUPtrMap.begin(); it != m_ObjectsUPtrMap.end(); ++it)
+    {
+        if (it->second.get() == object)
+        {
+            // Move the GameObject to m_CanvasObjectsUPtrMap
+            m_CanvasObjectsUPtrMap[it->first] = std::move(it->second);
+            m_ObjectsUPtrMap.erase(it);
+            return;
+        }
+    }
+
+    throw std::runtime_error("GameObject does not exist in the scene.");
+}
