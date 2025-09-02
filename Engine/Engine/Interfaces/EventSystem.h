@@ -23,9 +23,17 @@ namespace diji
             m_Listeners.push_back(std::move(cb));
         }
 
-        // todo: add const function compatibility.
         template<typename T>
         void AddListener(T* observer, void (T::*func)(Args...))
+        {
+            m_Listeners.push_back([observer, func](Args... args)
+            {
+                (observer->*func)(args...);
+            });
+        }
+
+        template<typename T>
+        void AddListener(const T* observer, void (T::*func)(Args...) const)
         {
             m_Listeners.push_back([observer, func](Args... args)
             {
