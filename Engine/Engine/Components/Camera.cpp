@@ -65,6 +65,7 @@ void diji::Camera::Clamp(sf::Vector2f& pos) const
     const float minY = levelTop + halfHeight;
     const float maxY = levelBottom - halfHeight;
 
+    // todo: add a check for valid boundaries. Can't have min be bigger than max
     pos.x = std::clamp(pos.x, minX, maxX);
     pos.y = std::clamp(pos.y, minY, maxY);
 }
