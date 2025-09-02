@@ -19,10 +19,13 @@ namespace diji
         void FixedUpdate() const;   // 3rd
         void Update() const;        // 4th
         void LateUpdate() const;    // 5th
-        void Render();              // 6th
+        void Render() const;        // 6th
 
         // Destroy Phase
         void OnDestroy() const;     // 6th
+
+        // Handle End of Frame tasks
+        void EndFrameUpdate();
 
         void SetActiveScene(const int id) { m_ActiveSceneId = id; m_NextScene = id; }
         //todo: better name would be ChangeScene
@@ -32,7 +35,7 @@ namespace diji
 
         [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
         GameObject* SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const;
-		
+
     private:
         std::map<int, std::unique_ptr<Scene>> m_ScenesUPtrMap;
         std::vector<const GameObject*> m_PendingDestroyVec;

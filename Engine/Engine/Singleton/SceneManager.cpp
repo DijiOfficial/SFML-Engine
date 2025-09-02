@@ -45,12 +45,18 @@ void diji::SceneManager::LateUpdate() const
     m_ScenesUPtrMap.at(m_ActiveSceneId)->LateUpdate();
 }
 
-void diji::SceneManager::Render()
+void diji::SceneManager::Render() const
 {
     m_ScenesUPtrMap.at(m_ActiveSceneId)->Render();
+}
 
-    // todo: everything below this should be in a custom function called at the end of the frame. 
-    // Everything has been updated and rendered
+void diji::SceneManager::OnDestroy() const
+{
+    m_ScenesUPtrMap.at(m_ActiveSceneId)->OnDestroy();
+}
+
+void diji::SceneManager::EndFrameUpdate()
+{
     // Handle pending destroy
     if (m_HasPendingDestroy)
     {
@@ -64,8 +70,8 @@ void diji::SceneManager::Render()
         m_HasPendingDestroy = false;
     }
     
-    //  we can load the new scene
-    if (m_IsSceneChange) // todo: async new scene loading, ideally this should be its own function after the whole loop
+    //  We can load the new scene
+    if (m_IsSceneChange) // todo: async new scene loading
     {
         m_IsSceneChange = false;
         
@@ -81,11 +87,6 @@ void diji::SceneManager::Render()
         m_ScenesUPtrMap.at(m_ActiveSceneId)->Init();
         m_ScenesUPtrMap.at(m_ActiveSceneId)->Start();
     }
-}
-
-void diji::SceneManager::OnDestroy() const
-{
-    m_ScenesUPtrMap.at(m_ActiveSceneId)->OnDestroy();
 }
 
 void diji::SceneManager::SetPendingDestroy(const GameObject* gameObject)
