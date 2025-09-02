@@ -105,6 +105,11 @@ diji::GameObject* diji::SceneManager::GetGameObject(const std::string& name) con
     return m_ScenesUPtrMap.at(m_ActiveSceneId)->GetGameObject(name);
 }
 
+std::string diji::SceneManager::GetGameObjectName(const GameObject* object) const
+{
+    return m_ScenesUPtrMap.at(m_ActiveSceneId)->GetGameObjectName(object);
+}
+
 diji::GameObject* diji::SceneManager::SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const
 {
     const auto gameObject = m_ScenesUPtrMap.at(m_ActiveSceneId).get()->CreateGameObjectFromTemplate(name, original);

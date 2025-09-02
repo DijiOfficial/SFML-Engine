@@ -34,6 +34,7 @@ namespace diji
         void SetPendingDestroy(const GameObject* gameObject);
 
         [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
+        [[nodiscard]] std::string GetGameObjectName(const GameObject* object) const;
         GameObject* SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const;
 
         using SceneLoaderFunc = std::function<void()>;

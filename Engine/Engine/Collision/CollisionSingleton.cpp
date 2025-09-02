@@ -1,8 +1,7 @@
 ﻿#include "CollisionSingleton.h"
+#include "Collider.h"
 
 #include <algorithm>
-
-#include "Collider.h"
 
 void diji::CollisionSingleton::Reset()
 {
@@ -17,9 +16,7 @@ void diji::CollisionSingleton::AddCollider(const Collider* object, const Rectf& 
 
 void diji::CollisionSingleton::RemoveCollider(const Collider* object)
 {
-	const auto& it = m_Colliders.find(object);
-	if (it != m_Colliders.end())
-		m_Colliders.erase(it);
+	m_Colliders.erase(object);
 }
 
 void diji::CollisionSingleton::ParseRectInLevelCollider(const Rectf& rect)
@@ -35,7 +32,8 @@ void diji::CollisionSingleton::ParseRectInLevelCollider(const Rectf& rect)
 
 void diji::CollisionSingleton::UpdateCollider(const Collider* object, const Rectf& collider)
 {
-	m_Colliders[object] = collider;
+	if (m_Colliders.contains(object))
+		m_Colliders[object] = collider;
 }
 
 std::vector<const diji::Collider*> diji::CollisionSingleton::IsColliding(const Collider* object)
