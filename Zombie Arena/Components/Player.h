@@ -34,7 +34,7 @@ namespace zombieArena
         void Spawn(const sf::IntRect& arena, int tileSize);
         void ResetStats();
         bool Hit(int damage);
-        sf::Vector2f GetDirection() const { return m_Direction; }
+        [[nodiscard]] sf::Vector2f GetDirection() const { return m_Direction; }
         void SetDirection(const sf::Vector2f& direction) { m_Direction = direction; }
 
         void UpgradeSpeed() { m_CurrentSpeed += START_SPEED * 0.2f; }
@@ -47,6 +47,7 @@ namespace zombieArena
         void Shoot(bool isStart) const;
         void Reload() const;
         void GiveAmmo(int value) const;
+        
         diji::Event<> OnPauseEvent;
 
     private:

@@ -2,6 +2,7 @@
 
 #include "GameState.h"
 #include "../Components/AmmoPickup.h"
+#include "../Components/BulletHudDisplay.h"
 #include "../Components/Crosshair.h"
 #include "../Components/HealthBar.h"
 #include "../Components/HealthPickup.h"
@@ -34,7 +35,8 @@ void SceneLoader::GameStartUp()
 #else
     ServiceLocator::RegisterSoundSystem(std::make_unique<SFMLISoundSystem>());
 #endif
-    
+
+    //todo: this would be better if it was part of the CreateScene function.
     SceneManager::GetInstance().RegisterScene(static_cast<int>(zombieArena::ZombieGameState::Level), ZombieArena);
     SceneManager::GetInstance().RegisterScene(static_cast<int>(zombieArena::ZombieGameState::StartMenu), StartMenu);
     SceneManager::GetInstance().RegisterScene(static_cast<int>(zombieArena::ZombieGameState::Upgrading), Upgrade);
@@ -83,13 +85,6 @@ void SceneLoader::ZombieArena()
     background->GetComponent<Sprite>()->SetWallSpritePosition(sf::FloatRect{ sf::Vector2f{ 0, 150 }, sf::Vector2f{ 50, 50 } });
     background->AddComponents<Render>();
 
-    const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");
-    fpsCounter->AddComponents<TextComp>("0 FPS", "fonts/digital-7.ttf", sf::Color::White, true);
-    fpsCounter->GetComponent<TextComp>()->GetText().setCharacterSize(33);
-    fpsCounter->AddComponents<FPSCounter>();
-    fpsCounter->AddComponents<Transform>(static_cast<int>(1920 - 100.f), 40);
-    fpsCounter->AddComponents<Render>();
-
     const auto spawnerTest = scene->CreateGameObject("SpawnerTest");
     spawnerTest->AddComponents<Transform>(0, 0);
     spawnerTest->AddComponents<zombieArena::Spawner>(player, arena);
@@ -118,6 +113,13 @@ void SceneLoader::ZombieArena()
     ammoPickupTest->AddComponents<zombieArena::AmmoPickup>(arenaInner);
 
 #pragma region HUD
+    const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");
+    fpsCounter->AddComponents<TextComp>("0 FPS", "fonts/digital-7.ttf", sf::Color::White, true);
+    fpsCounter->GetComponent<TextComp>()->GetText().setCharacterSize(33);
+    fpsCounter->AddComponents<FPSCounter>();
+    fpsCounter->AddComponents<Transform>(static_cast<int>(1920 - 100.f), 40);
+    fpsCounter->AddComponents<Render>();
+    
     const auto highScore = scene->CreateGameObject("Z_highScoreHUD");
     highScore->AddComponents<Transform>(1400, 0);
     highScore->AddComponents<TextComp>("HIGH SCORE: 0", "fonts/zombiecontrol.ttf");
@@ -130,6 +132,7 @@ void SceneLoader::ZombieArena()
     ammoText->AddComponents<TextComp>("24/24", "fonts/zombiecontrol.ttf");
     ammoText->GetComponent<TextComp>()->GetText().setCharacterSize(55);
     ammoText->AddComponents<Render>();
+    ammoText->AddComponents<zombieArena::BulletHudDisplay>();
 
     const auto scoreText = scene->CreateGameObject("Z_scoreTextHUD");
     scoreText->AddComponents<Transform>(20, 0);
@@ -199,7 +202,7 @@ void SceneLoader::ZombieArena()
 #pragma endregion
 
 #pragma region Observers
-    // ball->GetComponent<pong::Ball>()->OnLifeLostEvent.AddListener(livesCounter->GetComponent<ScoreCounter>(), &ScoreCounter::DecreaseScore);
+    pistol->GetComponent<zombieArena::Pistol>()->OnAmmoChangedEvent.AddListener(ammoText->GetComponent<zombieArena::BulletHudDisplay>(), &zombieArena::BulletHudDisplay::UpdateText);
     // ball->GetComponent<pong::Ball>()->OnIncreaseScoreEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
     //
     // livesCounter->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(livesCounter->GetComponent<ScoreCounter>(), &ScoreCounter::Reset);

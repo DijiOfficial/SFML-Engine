@@ -61,6 +61,8 @@ void zombieArena::Pistol::Reload()
         m_MagCapacity = MAX_CLIP_CAPACITY;
     
     m_TotalAmmo = std::max(0, m_TotalAmmo - MAX_CLIP_CAPACITY);
+    
+    OnAmmoChangedEvent.Broadcast(m_MagCapacity, m_TotalAmmo);
 }
 
 void zombieArena::Pistol::HandleWeaponFired(const sf::Vector2f& direction)
@@ -79,4 +81,6 @@ void zombieArena::Pistol::HandleShot(const sf::Vector2f& direction)
     bullet->GetComponent<Bullet>()->SetDirection(direction);
 
     --m_MagCapacity;
+
+    OnAmmoChangedEvent.Broadcast(m_MagCapacity, m_TotalAmmo);
 }

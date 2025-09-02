@@ -37,7 +37,9 @@ namespace zombieArena
         void FireWeapon(bool isStart, const sf::Vector2f& direction);
 
         void Reload();
-        void GiveAmmo(const int value) { m_TotalAmmo += value; }
+        void GiveAmmo(const int value) { m_TotalAmmo += value; OnAmmoChangedEvent.Broadcast(m_MagCapacity, m_TotalAmmo); }
+
+        diji::Event<int, int> OnAmmoChangedEvent;
         
     private:
         std::unique_ptr<diji::GameObject> m_BulletTemplate = nullptr;

@@ -173,6 +173,7 @@
   <ItemGroup>
     <ClCompile Include="Components\AmmoPickup.cpp" />
     <ClCompile Include="Components\Bullet.cpp" />
+    <ClCompile Include="Components\BulletHudDisplay.cpp" />
     <ClCompile Include="Components\Crosshair.cpp" />
     <ClCompile Include="Components\GameManager.cpp" />
     <ClCompile Include="Components\HealthBar.cpp" />
@@ -190,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="Components\AmmoPickup.h" />
     <ClInclude Include="Components\Bullet.h" />
+    <ClInclude Include="Components\BulletHudDisplay.h" />
     <ClInclude Include="Components\Crosshair.h" />
     <ClInclude Include="Components\GameManager.h" />
     <ClInclude Include="Components\HealthBar.h" />
