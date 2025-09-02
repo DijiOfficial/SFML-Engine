@@ -1,7 +1,11 @@
 ﻿#include "CustomCommands.h"
 
 #include "../Components/Player.h"
+#include "../Core/GameLoader.h"
+#include "../Core/GameState.h"
 #include "Engine/Core/GameObject.h"
+#include "Engine/Singleton/GameStateManager.h"
+#include "Engine/Singleton/SceneManager.h"
 
 zombieArena::MovePlayer::MovePlayer(diji::GameObject* actor, const Movement movement, const bool isStart)
     : GameActorCommands(actor)
@@ -80,4 +84,17 @@ zombieArena::Reload::Reload(diji::GameObject* actor)
 void zombieArena::Reload::Execute()
 {
     m_PlayerCompPtr->Reload();
+}
+
+zombieArena::Start::Start(diji::GameObject* actor, const ZombieGameState nextState)
+    : GameActorCommands(actor)
+    , m_NextState{ nextState }
+{
+}
+
+void zombieArena::Start::Execute()
+{
+    SceneLoader::Upgrade();
+    diji::SceneManager::GetInstance().SetNextSceneToActivate(static_cast<int>(ZombieGameState::Upgrading));
+    diji::GameStateManager::GetInstance().SetNewGameState(static_cast<diji::GameState>(ZombieGameState::Upgrading));
 }

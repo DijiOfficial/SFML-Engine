@@ -20,6 +20,7 @@
 #include "Engine/Components/FPSCounter.h"
 #include "Engine/Components/Sprite.h"
 #include "Engine/Components/TextComp.h"
+#include "Engine/Core/Engine.h"
 #include "Engine/Singleton/GameStateManager.h"
 
 using namespace diji;
@@ -33,7 +34,7 @@ void SceneLoader::ZombieArena()
 #endif
     
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::ZombieGameState::GameOver));
-    SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::ZombieGameState::GameOver));
+    // SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::ZombieGameState::GameOver));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::GameOver));
 
     sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 2000, 1100 } };
@@ -64,12 +65,12 @@ void SceneLoader::ZombieArena()
     player->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
     pistol->SetParent(player, false);
     
-    const auto tempBackground = scene->CreateGameObject("A_Background");
-    tempBackground->AddComponents<Transform>(0, 0);
-    tempBackground->AddComponents<Sprite>("graphics/background_sheet.png", 50, 5, arena.size.x, arena.size.y);
-    tempBackground->GetComponent<Sprite>()->SetTileCount(1, 4);
-    tempBackground->GetComponent<Sprite>()->SetWallSpritePosition(sf::FloatRect{ sf::Vector2f{ 0, 150 }, sf::Vector2f{ 50, 50 } });
-    tempBackground->AddComponents<Render>();
+    const auto background = scene->CreateGameObject("A_Background");
+    background->AddComponents<Transform>(0, 0);
+    background->AddComponents<Sprite>("graphics/background_sheet.png", 50, 5, arena.size.x, arena.size.y);
+    background->GetComponent<Sprite>()->SetTileCount(1, 4);
+    background->GetComponent<Sprite>()->SetWallSpritePosition(sf::FloatRect{ sf::Vector2f{ 0, 150 }, sf::Vector2f{ 50, 50 } });
+    background->AddComponents<Render>();
 
     const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");
     fpsCounter->AddComponents<TextComp>("0 FPS", "fonts/digital-7.ttf", sf::Color::White, true);
@@ -140,5 +141,99 @@ void SceneLoader::ZombieArena()
     //
     // livesCounter->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(livesCounter->GetComponent<ScoreCounter>(), &ScoreCounter::Reset);
     // livesCounter->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::Reset);
+#pragma endregion
+}
+
+void SceneLoader::StartMenu()
+{
+    const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::ZombieGameState::StartMenu));
+    SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::ZombieGameState::StartMenu));
+    GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::StartMenu));
+    constexpr sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 1920, 1080 } };
+
+    const auto background = scene->CreateGameObject("A_Background");
+    background->AddComponents<Transform>(0, 0);
+    background->AddComponents<TextureComp>("graphics/background.png");
+    background->AddComponents<Render>();
+    background->AddComponents<Camera>(1920.f, 1080.f);
+    background->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
+
+    // set up a camera and use the camera instead of the window sizes
+    const auto HUD = scene->CreateGameObject("Z_HUD");
+    HUD->AddComponents<Transform>(0, 0);
+
+    const auto startText = scene->CreateGameObject("Z_playerTextHUD");
+    startText->AddComponents<Transform>(250, 850);
+    startText->AddComponents<TextComp>("PRESS ENTER TO PLAY", "fonts/zombiecontrol.ttf");
+    startText->GetComponent<TextComp>()->GetText().setCharacterSize(125);
+    startText->AddComponents<Render>();
+    startText->SetParent(HUD, true);
+
+    const auto highScore = scene->CreateGameObject("Z_highScoreHUD");
+    highScore->AddComponents<Transform>(1400, 0);
+    highScore->AddComponents<TextComp>("HIGH SCORE: 0", "fonts/zombiecontrol.ttf");
+    highScore->GetComponent<TextComp>()->GetText().setCharacterSize(55);
+    highScore->AddComponents<Render>();
+    highScore->SetParent(HUD, true);
+    
+    const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");
+    fpsCounter->AddComponents<TextComp>("0 FPS", "fonts/digital-7.ttf", sf::Color::White, true);
+    fpsCounter->GetComponent<TextComp>()->GetText().setCharacterSize(33);
+    fpsCounter->AddComponents<FPSCounter>();
+    fpsCounter->AddComponents<Transform>(static_cast<int>(1920 - 100.f), 40);
+    fpsCounter->AddComponents<Render>();
+    
+#pragma region Commands
+    auto& input = InputManager::GetInstance();
+    
+    input.BindCommand<zombieArena::Start>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Enter, startText, zombieArena::ZombieGameState::Upgrading);
+#pragma endregion
+}
+
+void SceneLoader::Upgrade()
+{
+    const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::ZombieGameState::Upgrading));
+    GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::Upgrading));
+    constexpr sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 1920, 1080 } };
+
+    const auto background = scene->CreateGameObject("A_Background");
+    background->AddComponents<Transform>(0, 0);
+    background->AddComponents<TextureComp>("graphics/background.png");  
+    background->AddComponents<Render>();
+    background->AddComponents<Camera>(1920.f, 1080.f);
+    background->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
+
+    // set up a camera and use the camera instead of the window sizes
+    const auto HUD = scene->CreateGameObject("Z_HUD");
+    HUD->AddComponents<Transform>(0, 0);
+
+
+    // levelUpStream <<
+    //  "1- Increased rate of fire" <<
+    //  "\n2- Increased clip size(next reload)" <<
+    //  "\n3- Increased max health" <<
+    //  "\n4- Increased run speed" <<
+    //  "\n5- More and better health pickups" <<
+    //  "\n6- More and better ammo pickups";
+    // levelUpText.setString(levelUpStream.str());
+    
+    const auto startText = scene->CreateGameObject("Z_playerTextHUD");
+    startText->AddComponents<Transform>(150, 250);
+    startText->AddComponents<TextComp>("1- Increased rate of fire\n2- Increased clip size(next reload)\n3- Increased max health\n4- Increased run speed\n5- More and better health pickups\n6- More and better ammo pickups", "fonts/zombiecontrol.ttf");
+    startText->GetComponent<TextComp>()->GetText().setCharacterSize(80);
+    startText->AddComponents<Render>();
+    startText->SetParent(HUD, true);
+    
+    const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");
+    fpsCounter->AddComponents<TextComp>("0 FPS", "fonts/digital-7.ttf", sf::Color::White, true);
+    fpsCounter->GetComponent<TextComp>()->GetText().setCharacterSize(33);
+    fpsCounter->AddComponents<FPSCounter>();
+    fpsCounter->AddComponents<Transform>(static_cast<int>(1920 - 100.f), 40);
+    fpsCounter->AddComponents<Render>();
+    
+#pragma region Commands
+    auto& input = InputManager::GetInstance();
+    
+    input.BindCommand<zombieArena::Start>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Enter, startText, zombieArena::ZombieGameState::Upgrading);
 #pragma endregion
 }

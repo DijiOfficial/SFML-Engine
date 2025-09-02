@@ -4,6 +4,7 @@ namespace zombieArena
     enum class ZombieGameState
     {
         Invalid = -1,
+        StartMenu,
         Paused,
         Level,
         Upgrading,

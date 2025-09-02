@@ -5,6 +5,7 @@
 
 namespace zombieArena
 {
+    enum class ZombieGameState;
     class Player;
 
     enum class Movement
@@ -74,5 +75,16 @@ namespace zombieArena
 
     private:
         Player* m_PlayerCompPtr = nullptr;
+    };
+
+    class Start final : public diji::GameActorCommands
+    {
+    public:
+        explicit Start(diji::GameObject* actor, ZombieGameState nextState);
+        ~Start() noexcept override = default;
+
+        void Execute() override;
+    private:
+        ZombieGameState m_NextState;
     };
 }
