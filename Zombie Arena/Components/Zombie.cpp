@@ -55,7 +55,7 @@ bool zombieArena::Zombie::Hit()
 
     m_IsDead = true;
     m_TextureCompPtr->SetTexture("graphics/blood.png");
-    
+    diji::CollisionSingleton::GetInstance().RemoveCollider(GetOwner()->GetComponent<diji::Collider>());
     return true;
 }
 
