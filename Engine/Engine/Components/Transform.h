@@ -32,7 +32,7 @@ namespace diji
 		void OnDisable() override {}
 		void OnDestroy() override {}
 
-		sf::Vector2f GetPosition() const { return m_Position; }
+		[[nodiscard]] sf::Vector2f GetPosition() const { return m_Position; }
 		void SetPosition(const float x, const float y) { m_Position.x = x; m_Position.y = y; }
 		void SetPosition(const sf::Vector2f pos) { m_Position = pos; }
 		void AddOffset(const float  x, const float y) { m_Position.x += x; m_Position.y += y; }
@@ -41,7 +41,7 @@ namespace diji
 		// this probably should be separate later or if revisited with more behaviours
 		void Seek(float speed);
 		void SetTarget(const GameObject* target);
-		Transform* GetTarget() const { return m_Target; }
+		[[nodiscard]] Transform* GetTarget() const { return m_Target; }
 		
 	private:
 		sf::Vector2f m_Position;
