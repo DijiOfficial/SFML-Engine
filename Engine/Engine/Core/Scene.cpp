@@ -60,8 +60,10 @@ void diji::Scene::OnDestroy()
 {
     for (const auto& gameObject : m_ObjectsUPtrMap | std::views::values)
     {
-        gameObject->OnDisable();
+        gameObject->OnDestroy();
     }
+
+    m_ObjectsUPtrMap.clear();
 }
 
 diji::GameObject* diji::Scene::CreateGameObject(const std::string& name)

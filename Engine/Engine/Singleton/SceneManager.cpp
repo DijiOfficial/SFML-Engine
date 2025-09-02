@@ -70,10 +70,12 @@ void diji::SceneManager::Render()
         m_IsSceneChange = false;
         
         // Destroy current scene
-       OnDestroy();
-
+        OnDestroy();
+        m_ScenesUPtrMap.erase(m_ActiveSceneId);
         
         m_ActiveSceneId = m_NextScene;
+
+        // todo: User has to manually load the scene separately beforehand. Create a Function that links the loader to the SceneId so that it is loaded here instead.
         
         // Load New scene
         m_ScenesUPtrMap.at(m_ActiveSceneId)->Init();

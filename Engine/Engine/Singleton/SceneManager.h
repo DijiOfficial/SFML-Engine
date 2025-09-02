@@ -25,8 +25,9 @@ namespace diji
         void OnDestroy() const;     // 6th
 
         void SetActiveScene(const int id) { m_ActiveSceneId = id; m_NextScene = id; }
+        //todo: better name would be ChangeScene
         void SetNextSceneToActivate(const int id) { m_NextScene = id; m_IsSceneChange = true; }
-        int GetActiveSceneId() const { return m_ActiveSceneId; }
+        [[nodiscard]] int GetActiveSceneId() const { return m_ActiveSceneId; }
         void SetPendingDestroy(const GameObject* gameObject);
 
         [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
