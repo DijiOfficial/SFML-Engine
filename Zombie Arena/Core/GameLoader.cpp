@@ -3,6 +3,7 @@
 #include "GameState.h"
 #include "../Components/AmmoPickup.h"
 #include "../Components/Crosshair.h"
+#include "../Components/HealthBar.h"
 #include "../Components/HealthPickup.h"
 #include "../Components/Player.h"
 #include "../Components/Pistol.h"
@@ -18,6 +19,7 @@
 #include "Engine/Components/Render.h"
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/FPSCounter.h"
+#include "Engine/Components/RectRender.h"
 #include "Engine/Components/Sprite.h"
 #include "Engine/Components/TextComp.h"
 #include "Engine/Core/Engine.h"
@@ -33,9 +35,9 @@ void SceneLoader::ZombieArena()
     ServiceLocator::RegisterSoundSystem(std::make_unique<SFMLISoundSystem>());
 #endif
     
-    const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::ZombieGameState::GameOver));
-    // SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::ZombieGameState::GameOver));
-    GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::GameOver));
+    const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::ZombieGameState::Level));
+    // SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::ZombieGameState::Level));
+    GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::Level));
 
     sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 2000, 1100 } };
     sf::IntRect arenaInner{ sf::Vector2i{ 50, 50 }, sf::Vector2i{ 2000 - 100, 1100 - 100 } };
@@ -105,6 +107,58 @@ void SceneLoader::ZombieArena()
     ammoPickupTest->AddComponents<Render>();
     ammoPickupTest->AddComponents<Collider>();
     ammoPickupTest->AddComponents<zombieArena::AmmoPickup>(arenaInner);
+
+#pragma region HUD
+    const auto highScore = scene->CreateGameObject("Z_highScoreHUD");
+    highScore->AddComponents<Transform>(1400, 0);
+    highScore->AddComponents<TextComp>("HIGH SCORE: 0", "fonts/zombiecontrol.ttf");
+    highScore->GetComponent<TextComp>()->GetText().setCharacterSize(55);
+    highScore->AddComponents<Render>();
+    scene->SetGameObjectAsCanvasObject(highScore);
+
+    const auto ammoText = scene->CreateGameObject("Z_ammoTextHUD");
+    ammoText->AddComponents<Transform>(200, 980);
+    ammoText->AddComponents<TextComp>("24/24", "fonts/zombiecontrol.ttf");
+    ammoText->GetComponent<TextComp>()->GetText().setCharacterSize(55);
+    ammoText->AddComponents<Render>();
+
+    const auto scoreText = scene->CreateGameObject("Z_scoreTextHUD");
+    scoreText->AddComponents<Transform>(20, 0);
+    scoreText->AddComponents<TextComp>("SCORE: 0", "fonts/zombiecontrol.ttf");
+    scoreText->GetComponent<TextComp>()->GetText().setCharacterSize(55);
+    scoreText->AddComponents<Render>();
+
+    const auto zombiesRemainingText = scene->CreateGameObject("Z_zombiesRemainingTextHUD");
+    zombiesRemainingText->AddComponents<Transform>(1500, 980);
+    zombiesRemainingText->AddComponents<TextComp>("Zombies: 100", "fonts/zombiecontrol.ttf");
+    zombiesRemainingText->GetComponent<TextComp>()->GetText().setCharacterSize(55);
+    zombiesRemainingText->AddComponents<Render>();
+
+    const auto waveNumberText = scene->CreateGameObject("Z_waveNumberTextHUD");
+    waveNumberText->AddComponents<Transform>(1250, 980);
+    waveNumberText->AddComponents<TextComp>("Wave: 0", "fonts/zombiecontrol.ttf");
+    waveNumberText->GetComponent<TextComp>()->GetText().setCharacterSize(55);
+    waveNumberText->AddComponents<Render>();
+    
+    const auto healthBar = scene->CreateGameObject("Z_healthBarHUD");
+    healthBar->AddComponents<Transform>(650, 980);
+    healthBar->AddComponents<RectRender>();
+    
+    sf::RectangleShape rect2;
+    rect2.setSize(sf::Vector2f{545 , 125});
+
+    healthBar->GetComponent<RectRender>()->SetRectangle(rect2);
+    healthBar->GetComponent<RectRender>()->SetFillColor(sf::Color::Red);
+    healthBar->GetComponent<RectRender>()->SetLineWidth(0.f);
+    healthBar->AddComponents<zombieArena::HealthBar>();
+    
+    scene->SetGameObjectAsCanvasObject("Z_ammoTextHUD");
+    scene->SetGameObjectAsCanvasObject("Z_scoreTextHUD");
+    scene->SetGameObjectAsCanvasObject("Z_zombiesRemainingTextHUD");
+    scene->SetGameObjectAsCanvasObject("Z_waveNumberTextHUD");
+    scene->SetGameObjectAsCanvasObject("Z_healthBarHUD");
+    scene->SetGameObjectAsCanvasObject("Z_FPSCounter");
+#pragma endregion
     
 #pragma region Commands
     auto& input = InputManager::GetInstance();
@@ -206,16 +260,6 @@ void SceneLoader::Upgrade()
     // set up a camera and use the camera instead of the window sizes
     const auto HUD = scene->CreateGameObject("Z_HUD");
     HUD->AddComponents<Transform>(0, 0);
-
-
-    // levelUpStream <<
-    //  "1- Increased rate of fire" <<
-    //  "\n2- Increased clip size(next reload)" <<
-    //  "\n3- Increased max health" <<
-    //  "\n4- Increased run speed" <<
-    //  "\n5- More and better health pickups" <<
-    //  "\n6- More and better ammo pickups";
-    // levelUpText.setString(levelUpStream.str());
     
     const auto startText = scene->CreateGameObject("Z_playerTextHUD");
     startText->AddComponents<Transform>(150, 250);
@@ -234,6 +278,6 @@ void SceneLoader::Upgrade()
 #pragma region Commands
     auto& input = InputManager::GetInstance();
     
-    input.BindCommand<zombieArena::Start>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Enter, startText, zombieArena::ZombieGameState::Upgrading);
+    input.BindCommand<zombieArena::Start>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Enter, startText, zombieArena::ZombieGameState::Level);
 #pragma endregion
 }

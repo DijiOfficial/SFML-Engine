@@ -94,7 +94,11 @@ zombieArena::Start::Start(diji::GameObject* actor, const ZombieGameState nextSta
 
 void zombieArena::Start::Execute()
 {
-    SceneLoader::Upgrade();
-    diji::SceneManager::GetInstance().SetNextSceneToActivate(static_cast<int>(ZombieGameState::Upgrading));
-    diji::GameStateManager::GetInstance().SetNewGameState(static_cast<diji::GameState>(ZombieGameState::Upgrading));
+    //temp
+    if (m_NextState == ZombieGameState::Upgrading && static_cast<ZombieGameState>(diji::GameStateManager::GetInstance().GetCurrentGameState()) == ZombieGameState::StartMenu)
+        SceneLoader::Upgrade();
+    else if (m_NextState == ZombieGameState::Level && static_cast<ZombieGameState>(diji::GameStateManager::GetInstance().GetCurrentGameState()) == ZombieGameState::Upgrading)
+        SceneLoader::ZombieArena();
+    diji::SceneManager::GetInstance().SetNextSceneToActivate(static_cast<int>(m_NextState));
+    // diji::GameStateManager::GetInstance().SetNewGameState(static_cast<diji::GameState>(ZombieGameState::Upgrading));
 }
