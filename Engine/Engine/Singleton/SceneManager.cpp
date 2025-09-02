@@ -1,5 +1,7 @@
 ﻿#include "SceneManager.h"
 
+#include <stdexcept>
+
 #include "TimerManager.h"
 #include "../Components/Transform.h"
 
@@ -81,9 +83,12 @@ void diji::SceneManager::EndFrameUpdate()
         
         m_ActiveSceneId = m_NextScene;
 
-        // todo: User has to manually load the scene separately beforehand. Create a Function that links the loader to the SceneId so that it is loaded here instead.
-        
         // Load New scene
+        if (const auto it = m_SceneLoaders.find(m_ActiveSceneId); it != m_SceneLoaders.end())
+            it->second();
+        else
+            throw std::runtime_error("SceneLoader not registered for SceneId.");
+
         m_ScenesUPtrMap.at(m_ActiveSceneId)->Init();
         m_ScenesUPtrMap.at(m_ActiveSceneId)->Start();
     }

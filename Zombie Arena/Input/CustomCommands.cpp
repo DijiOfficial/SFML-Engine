@@ -1,10 +1,8 @@
 ﻿#include "CustomCommands.h"
 
 #include "../Components/Player.h"
-#include "../Core/GameLoader.h"
 #include "../Core/GameState.h"
 #include "Engine/Core/GameObject.h"
-#include "Engine/Singleton/GameStateManager.h"
 #include "Engine/Singleton/SceneManager.h"
 
 zombieArena::MovePlayer::MovePlayer(diji::GameObject* actor, const Movement movement, const bool isStart)
@@ -95,10 +93,10 @@ zombieArena::Start::Start(diji::GameObject* actor, const ZombieGameState nextSta
 void zombieArena::Start::Execute()
 {
     //temp
-    if (m_NextState == ZombieGameState::Upgrading && static_cast<ZombieGameState>(diji::GameStateManager::GetInstance().GetCurrentGameState()) == ZombieGameState::StartMenu)
-        SceneLoader::Upgrade();
-    else if (m_NextState == ZombieGameState::Level && static_cast<ZombieGameState>(diji::GameStateManager::GetInstance().GetCurrentGameState()) == ZombieGameState::Upgrading)
-        SceneLoader::ZombieArena();
+    // if (m_NextState == ZombieGameState::Upgrading && static_cast<ZombieGameState>(diji::GameStateManager::GetInstance().GetCurrentGameState()) == ZombieGameState::StartMenu)
+    //     SceneLoader::Upgrade();
+    // else if (m_NextState == ZombieGameState::Level && static_cast<ZombieGameState>(diji::GameStateManager::GetInstance().GetCurrentGameState()) == ZombieGameState::Upgrading)
+    //     SceneLoader::ZombieArena();
     diji::SceneManager::GetInstance().SetNextSceneToActivate(static_cast<int>(m_NextState));
     // diji::GameStateManager::GetInstance().SetNewGameState(static_cast<diji::GameState>(ZombieGameState::Upgrading));
 }

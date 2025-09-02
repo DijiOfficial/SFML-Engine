@@ -27,7 +27,7 @@
 
 using namespace diji;
 
-void SceneLoader::ZombieArena() 
+void SceneLoader::GameStartUp()
 {
 #ifndef NDEBUG
     ServiceLocator::RegisterSoundSystem(std::make_unique<LoggingSoundSystem>(std::make_unique<SFMLISoundSystem>()));
@@ -35,8 +35,17 @@ void SceneLoader::ZombieArena()
     ServiceLocator::RegisterSoundSystem(std::make_unique<SFMLISoundSystem>());
 #endif
     
+    SceneManager::GetInstance().RegisterScene(static_cast<int>(zombieArena::ZombieGameState::Level), ZombieArena);
+    SceneManager::GetInstance().RegisterScene(static_cast<int>(zombieArena::ZombieGameState::StartMenu), StartMenu);
+    SceneManager::GetInstance().RegisterScene(static_cast<int>(zombieArena::ZombieGameState::Upgrading), Upgrade);
+
+    SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::ZombieGameState::StartMenu));
+    StartMenu();
+}
+
+void SceneLoader::ZombieArena() 
+{
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::ZombieGameState::Level));
-    // SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::ZombieGameState::Level));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::Level));
 
     sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 2000, 1100 } };
@@ -201,7 +210,6 @@ void SceneLoader::ZombieArena()
 void SceneLoader::StartMenu()
 {
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::ZombieGameState::StartMenu));
-    SceneManager::GetInstance().SetActiveScene(static_cast<int>(zombieArena::ZombieGameState::StartMenu));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::StartMenu));
     constexpr sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 1920, 1080 } };
 

@@ -36,9 +36,15 @@ namespace diji
         [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
         GameObject* SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const;
 
+        using SceneLoaderFunc = std::function<void()>;
+        void RegisterScene(const int id, SceneLoaderFunc loader) { m_SceneLoaders[id] = std::move(loader); }
+        
     private:
+        // todo: replace int with SceneId enum class??
         std::map<int, std::unique_ptr<Scene>> m_ScenesUPtrMap;
         std::vector<const GameObject*> m_PendingDestroyVec;
+        std::unordered_map<int, SceneLoaderFunc> m_SceneLoaders;
+        
         int m_ActiveSceneId = 0;
         int m_NextScene = 0;
         bool m_IsSceneChange = false;
