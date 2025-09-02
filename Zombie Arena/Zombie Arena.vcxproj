@@ -171,13 +171,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Components\AmmoPickup.cpp" />
     <ClCompile Include="Components\Bullet.cpp" />
     <ClCompile Include="Components\BulletHudDisplay.cpp" />
     <ClCompile Include="Components\Crosshair.cpp" />
     <ClCompile Include="Components\GameManager.cpp" />
     <ClCompile Include="Components\HealthBar.cpp" />
-    <ClCompile Include="Components\HealthPickup.cpp" />
     <ClCompile Include="Components\PickUpBase.cpp" />
     <ClCompile Include="Components\PickUpManager.cpp" />
     <ClCompile Include="Components\Pistol.cpp" />
@@ -189,13 +187,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Components\AmmoPickup.h" />
     <ClInclude Include="Components\Bullet.h" />
     <ClInclude Include="Components\BulletHudDisplay.h" />
     <ClInclude Include="Components\Crosshair.h" />
     <ClInclude Include="Components\GameManager.h" />
     <ClInclude Include="Components\HealthBar.h" />
-    <ClInclude Include="Components\HealthPickup.h" />
     <ClInclude Include="Components\PickUpBase.h" />
     <ClInclude Include="Components\PickUpManager.h" />
     <ClInclude Include="Components\Pistol.h" />

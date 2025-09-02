@@ -3,6 +3,11 @@
 
 #include <SFML/Graphics/Rect.hpp>
 
+namespace zombieArena
+{
+    enum class PickUpType;
+}
+
 namespace diji
 {
     class Camera;
@@ -37,16 +42,15 @@ namespace zombieArena
         [[nodiscard]] sf::Vector2f GetDirection() const { return m_Direction; }
         void SetDirection(const sf::Vector2f& direction) { m_Direction = direction; }
 
+        void HandlePickups(PickUpType, int value);
         void UpgradeSpeed() { m_CurrentSpeed += START_SPEED * 0.2f; }
         void UpgradeHealth();
-        void Heal(int amount);
         void OrientPlayer(const sf::Vector2i& mousePos);
         void PauseGame();
         
         void GivePistol(const diji::GameObject* object);  
         void Shoot(bool isStart) const;
         void Reload() const;
-        void GiveAmmo(int value) const;
         
         diji::Event<> OnPauseEvent;
 
@@ -68,5 +72,8 @@ namespace zombieArena
         float m_CurrentSpeed = START_SPEED;
         const float INVINCIBILITY_TIME = 0.2f;
         bool m_IsHit = false;
+
+        void Heal(int amount);
+        void GiveAmmo(int value) const;
     };
 }

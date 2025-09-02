@@ -1,11 +1,11 @@
 ﻿#include "GameLoader.h"
 
 #include "GameState.h"
-#include "../Components/AmmoPickup.h"
 #include "../Components/BulletHudDisplay.h"
 #include "../Components/Crosshair.h"
+#include "../Components/GameManager.h"
 #include "../Components/HealthBar.h"
-#include "../Components/HealthPickup.h"
+#include "../Components/PickUpBase.h"
 #include "../Components/Player.h"
 #include "../Components/Pistol.h"
 #include "../Components/Spawner.h"
@@ -96,21 +96,22 @@ void SceneLoader::ZombieArena()
     crosshair->AddComponents<Render>();
     crosshair->AddComponents<zombieArena::Crosshair>();
 
-    const auto healthPickupTest =  scene->CreateGameObject("D_HealthPickupTest");
-    healthPickupTest->AddComponents<Transform>(0, 0);
-    healthPickupTest->AddComponents<TextureComp>();
-    healthPickupTest->GetComponent<TextureComp>()->SetOriginToCenter();
-    healthPickupTest->AddComponents<Render>();
-    healthPickupTest->AddComponents<Collider>();
-    healthPickupTest->AddComponents<zombieArena::HealthPickup>(arenaInner);
+    const auto healthPickup =  scene->CreateGameObject("D_HealthPickup");
+    healthPickup->AddComponents<Transform>(0, 0);
+    healthPickup->AddComponents<TextureComp>();
+    healthPickup->GetComponent<TextureComp>()->SetOriginToCenter();
+    healthPickup->AddComponents<Render>();
+    healthPickup->AddComponents<Collider>();
+    healthPickup->AddComponents<zombieArena::PickUpBase>(arenaInner, "graphics/health_pickup.png", zombieArena::PickUpType::HEALTH, 50);
 
-    const auto ammoPickupTest=  scene->CreateGameObject("D_AmmoPickupTest");
-    ammoPickupTest->AddComponents<Transform>(0, 0);
-    ammoPickupTest->AddComponents<TextureComp>();
-    ammoPickupTest->GetComponent<TextureComp>()->SetOriginToCenter();
-    ammoPickupTest->AddComponents<Render>();
-    ammoPickupTest->AddComponents<Collider>();
-    ammoPickupTest->AddComponents<zombieArena::AmmoPickup>(arenaInner);
+    const auto ammoPickup=  scene->CreateGameObject("D_AmmoPickup");
+    ammoPickup->AddComponents<Transform>(0, 0);
+    ammoPickup->AddComponents<TextureComp>();
+    ammoPickup->GetComponent<TextureComp>()->SetOriginToCenter();
+    ammoPickup->AddComponents<Render>();
+    ammoPickup->AddComponents<Collider>();
+    ammoPickup->AddComponents<zombieArena::PickUpBase>(arenaInner, "graphics/ammo_pickup.png", zombieArena::PickUpType::AMMO, 12);
+    zombieArena::GameManager::GetInstance().OnPickedUpEvent.AddListener(player->GetComponent<zombieArena::Player>(), &zombieArena::Player::HandlePickups);
 
 #pragma region HUD
     const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");

@@ -6,6 +6,7 @@
 
 #include "PickUpBase.h"
 #include "Pistol.h"
+#include "PickUpBase.h"
 #include "../Core/GameState.h"
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/TextureComp.h"
@@ -77,6 +78,22 @@ bool zombieArena::Player::Hit(const int damage)
     (void)diji::TimerManager::GetInstance().SetTimer([this]() { m_IsHit = false; }, INVINCIBILITY_TIME, false);
 
     return true;
+}
+
+void zombieArena::Player::HandlePickups(const PickUpType type, const int value)
+{
+    switch (type)
+    {
+    case PickUpType::HEALTH:
+        Heal(value);
+        break;
+    case PickUpType::AMMO:
+        GiveAmmo(value);
+        break;
+    case PickUpType::NONE:
+    default:
+        break;
+    }
 }
 
 void zombieArena::Player::UpgradeHealth()

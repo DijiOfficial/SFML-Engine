@@ -1,9 +1,16 @@
 ﻿#pragma once
+#include "Engine/Singleton/Singleton.h"
+#include "Engine/Interfaces/EventSystem.h"
 
 //todo: add zombie counter and scene changes
-// todo: increase core when womzbie dies
-class GameManager
+// todo: increase core when zombie dies
+namespace zombieArena
 {
-public:
+    enum class PickUpType;
     
-};
+    class GameManager final : public diji::Singleton<GameManager>
+    {
+    public:
+        diji::Event<PickUpType, int> OnPickedUpEvent;
+    };
+}

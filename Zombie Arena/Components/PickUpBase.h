@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <string>
+
 #include "Engine/Components/Component.h"
 
 #include <SFML/Graphics/Rect.hpp>
@@ -12,11 +14,19 @@ namespace diji
 // In the case of this game, a PickUpManager with the combined logic of the pickups would have been simpler
 namespace zombieArena
 {
+    enum class PickUpType
+    {
+        NONE = -1,
+        HEALTH,
+        AMMO
+    };
+    
     class PickUpBase : public diji::Component
     {
     public:
         explicit PickUpBase(diji::GameObject* ownerPtr) : Component(ownerPtr) {}
-        explicit PickUpBase(diji::GameObject* ownerPtr, const sf::IntRect& arena);
+        explicit PickUpBase(diji::GameObject* ownerPtr, const sf::IntRect& arena, std::string texturePath);
+        explicit PickUpBase(diji::GameObject* ownerPtr, const sf::IntRect& arena, std::string texturePath, PickUpType type, int value);
         ~PickUpBase() noexcept override = default;
 
         void Init() override;
@@ -32,20 +42,17 @@ namespace zombieArena
 
         void SetValue(const int value) { m_Value = value; }
         void SetArena(const sf::IntRect& arena) { m_Arena = arena; }
+        void SetTexturePath(const std::string& texturePath) { m_TexturePath = texturePath; }
+        void SetPickUpType(const PickUpType type) { m_Type = type; }
 
         void Spawn() const;
-
-        // there are different ways to decouple it more, this time i'll take the easy route
-        virtual void PickedUp(const diji::GameObject* player) = 0;
 
     protected:
         diji::Collider* m_ColliderCompPtr = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;
+        PickUpType m_Type = PickUpType::NONE;
+        std::string m_TexturePath;
         sf::IntRect m_Arena = {};
         int m_Value = 0;
-
-    private:
-        const float LIFETIME = 5.f;
-        const float RESPAWN_DELAY = 10;
     };
 }
