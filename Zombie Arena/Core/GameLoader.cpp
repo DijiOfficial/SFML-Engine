@@ -5,7 +5,6 @@
 #include "../Components/Crosshair.h"
 #include "../Components/GameManager.h"
 #include "../Components/HealthBar.h"
-#include "../Components/PickUpBase.h"
 #include "../Components/Player.h"
 #include "../Components/Pistol.h"
 #include "../Components/Spawner.h"
@@ -79,6 +78,8 @@ void SceneLoader::ZombieArena()
     player->AddComponents<Camera>(1920.f, 1080.f);
     player->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
     pistol->SetParent(player, false);
+
+    zombieArena::GameManager::GetInstance().Init(); // pass the area
     
     const auto background = scene->CreateGameObject("A_Background");
     background->AddComponents<Transform>(0, 0);
@@ -97,22 +98,6 @@ void SceneLoader::ZombieArena()
     crosshair->GetComponent<TextureComp>()->SetOriginToCenter();
     crosshair->AddComponents<Render>();
     crosshair->AddComponents<zombieArena::Crosshair>();
-
-    const auto healthPickup =  scene->CreateGameObject("D_HealthPickup");
-    healthPickup->AddComponents<Transform>(0, 0);
-    healthPickup->AddComponents<TextureComp>();
-    healthPickup->GetComponent<TextureComp>()->SetOriginToCenter();
-    healthPickup->AddComponents<Render>();
-    healthPickup->AddComponents<Collider>();
-    healthPickup->AddComponents<zombieArena::PickUpBase>(arenaInner, "graphics/health_pickup.png", zombieArena::PickUpType::HEALTH, 50);
-
-    const auto ammoPickup=  scene->CreateGameObject("D_AmmoPickup");
-    ammoPickup->AddComponents<Transform>(0, 0);
-    ammoPickup->AddComponents<TextureComp>();
-    ammoPickup->GetComponent<TextureComp>()->SetOriginToCenter();
-    ammoPickup->AddComponents<Render>();
-    ammoPickup->AddComponents<Collider>();
-    ammoPickup->AddComponents<zombieArena::PickUpBase>(arenaInner, "graphics/ammo_pickup.png", zombieArena::PickUpType::AMMO, 12);
 
 #pragma region HUD
     const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");
