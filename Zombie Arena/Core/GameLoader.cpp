@@ -3,6 +3,7 @@
 #include "GameState.h"
 #include "../Components/BulletHudDisplay.h"
 #include "../Components/Crosshair.h"
+#include "../Components/CustomScoreCounter.h"
 #include "../Components/GameManager.h"
 #include "../Components/HealthBar.h"
 #include "../Components/Player.h"
@@ -51,6 +52,7 @@ void SceneLoader::ZombieArena()
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::ZombieGameState::Level));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::Level));
 
+    // CollisionSingleton::GetInstance().Reset();
     sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 2000, 1100 } };
     sf::IntRect arenaInner{ sf::Vector2i{ 50, 50 }, sf::Vector2i{ 2000 - 100, 1100 - 100 } };
     constexpr int TILE_SIZE = 50;
@@ -65,7 +67,7 @@ void SceneLoader::ZombieArena()
 
     const auto pistol = scene->CreateGameObject("Pistol");
     pistol->AddComponents<Transform>(0, 0);
-    pistol->AddComponents<zombieArena::Pistol>(1.0f, 6, 24);
+    pistol->AddComponents<zombieArena::Pistol>();
     
     // add arena to player constructor and make player collide with arena
     const auto player = scene->CreateGameObject("X_Player");
@@ -126,16 +128,16 @@ void SceneLoader::ZombieArena()
     scoreText->AddComponents<TextComp>("SCORE: 0", "fonts/zombiecontrol.ttf");
     scoreText->GetComponent<TextComp>()->GetText().setCharacterSize(55);
     scoreText->AddComponents<Render>();
-    scoreText->AddComponents<ScoreCounter>();
-    scoreText->GetComponent<ScoreCounter>()->SetString("Score:");
-    scoreText->GetComponent<ScoreCounter>()->SetScoreIncreaseIncrement(10);
+    scoreText->AddComponents<zombieArena::CustomScoreCounter>(zombieArena::GameManager::GetInstance().GetCurrentPlayerScore());
+    scoreText->GetComponent<zombieArena::CustomScoreCounter>()->SetString("Score:");
+    scoreText->GetComponent<zombieArena::CustomScoreCounter>()->SetScoreIncreaseIncrement(10);
 
     const auto zombiesRemainingText = scene->CreateGameObject("Z_zombiesRemainingTextHUD");
     zombiesRemainingText->AddComponents<Transform>(1500, 980);
     zombiesRemainingText->AddComponents<TextComp>("Zombies: 100", "fonts/zombiecontrol.ttf");
     zombiesRemainingText->GetComponent<TextComp>()->GetText().setCharacterSize(55);
     zombiesRemainingText->AddComponents<Render>();
-    zombiesRemainingText->AddComponents<ScoreCounter>();
+    zombiesRemainingText->AddComponents<ScoreCounter>(0);
     zombiesRemainingText->GetComponent<ScoreCounter>()->SetString("Zombies: ");
     zombiesRemainingText->GetComponent<ScoreCounter>()->SetGoalScore(0);
 
@@ -169,6 +171,8 @@ void SceneLoader::ZombieArena()
     
 #pragma region Commands
     auto& input = InputManager::GetInstance();
+    // todo: Find a way to keep commands updated on scene change or automatically delete them when scene is create deleted!
+    input.ResetCommands();
     
     input.BindCommand<zombieArena::MovePlayer>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Left, player, zombieArena::Movement::Left, true);
     input.BindCommand<zombieArena::MovePlayer>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::Left, player, zombieArena::Movement::Left, false);
@@ -202,9 +206,12 @@ void SceneLoader::ZombieArena()
     zombieArena::GameManager::GetInstance().OnZombieKilledEvent.AddListener(scoreText->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
     zombieArena::GameManager::GetInstance().OnZombieKilledEvent.AddListener(zombiesRemainingText->GetComponent<ScoreCounter>(), &ScoreCounter::DecreaseScore);
     spawner->GetComponent<zombieArena::Spawner>()->OnWaveSpawnedEvent.AddListener(zombiesRemainingText->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
-    
+    zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(&zombieArena::GameManager::GetInstance(), &zombieArena::GameManager::IncrementCurrentWave);
+    zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(pistol->GetComponent<zombieArena::Pistol>(), &zombieArena::Pistol::SaveInfo);
+    zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(scoreText->GetComponent<zombieArena::CustomScoreCounter>(), &zombieArena::CustomScoreCounter::SaveScore);
+
     // ball->GetComponent<pong::Ball>()->OnIncreaseScoreEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
-    //
+    
     // livesCounter->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(livesCounter->GetComponent<ScoreCounter>(), &ScoreCounter::Reset);
     // livesCounter->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::Reset);
 #pragma endregion

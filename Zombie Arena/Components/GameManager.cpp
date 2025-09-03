@@ -1,6 +1,7 @@
 ﻿#include "GameManager.h"
 
 #include "PickUpBase.h"
+#include "../Core/GameState.h"
 #include "Engine/Collision/Collider.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/SceneManager.h"
@@ -38,22 +39,32 @@ void zombieArena::GameManager::Init()
     OnPickedUpEvent.AddListener(this, &GameManager::RespawnPickUp);
 }
 
-void zombieArena::GameManager::RespawnPickUp(const PickUpType type, int) const
+void zombieArena::GameManager::IncrementCurrentWave()
 {
-    // todo: need to find a way to pass the type to the timer callback without interfering with each other. So that I can have a unified timer call.
+    ++m_CurrentWave;
+
+    diji::TimerManager::GetInstance().ClearTimer(m_AmmoRespawnTimerHandle);
+    diji::TimerManager::GetInstance().ClearTimer(m_HealthRespawnTimerHandle);
+    OnZombieKilledEvent.ClearListeners();
+    OnPickedUpEvent.ClearListeners();
+    diji::SceneManager::GetInstance().SetNextSceneToActivate(static_cast<int>(ZombieGameState::Upgrading));
+}
+
+void zombieArena::GameManager::RespawnPickUp(const PickUpType type, int)
+{
     float respawnTime = 0.f;
     switch (type)
     {
     case PickUpType::HEALTH:
         respawnTime = m_HealthTimerRespawn;
-        (void)diji::TimerManager::GetInstance().SetTimer([&, this]()
+        m_HealthRespawnTimerHandle = diji::TimerManager::GetInstance().SetTimer([&, this]()
         {
             diji::SceneManager::GetInstance().SpawnGameObject("D_HealthPickup", m_HealthPickUpTemplate.get(), sf::Vector2f{ 0, 0 });
         }, respawnTime, false);
         break;
     case PickUpType::AMMO:
         respawnTime = m_AmmoTimerRespawn;
-        (void)diji::TimerManager::GetInstance().SetTimer([&, this]()
+        m_AmmoRespawnTimerHandle = diji::TimerManager::GetInstance().SetTimer([&, this]()
         {
             diji::SceneManager::GetInstance().SpawnGameObject("D_AmmoPickup", m_AmmoPickUpTemplate.get(), sf::Vector2f{ 0, 0 });
         }, respawnTime, false);

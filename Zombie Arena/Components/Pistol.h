@@ -16,12 +16,11 @@ namespace zombieArena
     {
     public:
         explicit Pistol(diji::GameObject* ownerPtr);
-        explicit Pistol(diji::GameObject* ownerPtr, float fireRate, int magCapacity, int totalAmmo);
         ~Pistol() noexcept override = default;
 
         void Init() override;
         void OnEnable() override {}
-        void Start() override {}
+        void Start() override;
         
         void Update() override {}
         void FixedUpdate() override {}
@@ -38,6 +37,7 @@ namespace zombieArena
 
         void Reload();
         void GiveAmmo(const int value) { m_TotalAmmo += value; OnAmmoChangedEvent.Broadcast(m_MagCapacity, m_TotalAmmo); }
+        void SaveInfo() const;
 
         diji::Event<int, int> OnAmmoChangedEvent;
         

@@ -1,6 +1,7 @@
 ﻿#include "Pistol.h"
 
 #include "Bullet.h"
+#include "GameManager.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/TimerManager.h"
 #include "Engine/Core/GameObject.h"
@@ -14,16 +15,13 @@ zombieArena::Pistol::Pistol(diji::GameObject* ownerPtr)
 {
 }
 
-zombieArena::Pistol::Pistol(diji::GameObject* ownerPtr, const float fireRate, const int magCapacity, const int totalAmmo)
-    : Component(ownerPtr)
-    , m_TotalAmmo{ totalAmmo }
-    , m_MagCapacity{ magCapacity }
-    , m_FireRate{ fireRate }
-{
-}
-
 void zombieArena::Pistol::Init()
 {
+    const auto& gameManager = GameManager::GetInstance();
+    m_TotalAmmo = gameManager.GetCurrentPlayerTotalBullets();
+    m_MagCapacity = gameManager.GetCurrentPlayerBulletsInClip();
+    m_FireRate = gameManager.GetPlayerFireRate();
+    
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
     const sf::Vector2f& position = m_TransformCompPtr->GetPosition();
     
@@ -33,6 +31,11 @@ void zombieArena::Pistol::Init()
     m_BulletTemplate->AddComponents<diji::Collider>();
     m_BulletTemplate->AddComponents<diji::Render>();
     m_BulletTemplate->AddComponents<Bullet>();
+}
+
+void zombieArena::Pistol::Start()
+{
+    OnAmmoChangedEvent.Broadcast(m_MagCapacity, m_TotalAmmo);
 }
 
 void zombieArena::Pistol::UpdatePosition(const sf::Vector2f& pos) const
@@ -63,6 +66,13 @@ void zombieArena::Pistol::Reload()
     m_TotalAmmo = std::max(0, m_TotalAmmo - MAX_CLIP_CAPACITY);
     
     OnAmmoChangedEvent.Broadcast(m_MagCapacity, m_TotalAmmo);
+}
+
+void zombieArena::Pistol::SaveInfo() const
+{
+    auto& gameManager = GameManager::GetInstance();
+    gameManager.SetCurrentPlayerTotalBullets(m_TotalAmmo);
+    gameManager.SetCurrentPlayerBulletsInClip(m_MagCapacity);
 }
 
 void zombieArena::Pistol::HandleWeaponFired(const sf::Vector2f& direction)
