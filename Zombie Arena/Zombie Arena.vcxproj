@@ -181,6 +181,7 @@
     <ClCompile Include="Components\Pistol.cpp" />
     <ClCompile Include="Components\Player.cpp" />
     <ClCompile Include="Components\Spawner.cpp" />
+    <ClCompile Include="Components\WaveCounter.cpp" />
     <ClCompile Include="Components\Zombie.cpp" />
     <ClCompile Include="Core\GameLoader.cpp" />
     <ClCompile Include="Input\CustomCommands.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Components\Pistol.h" />
     <ClInclude Include="Components\Player.h" />
     <ClInclude Include="Components\Spawner.h" />
+    <ClInclude Include="Components\WaveCounter.h" />
     <ClInclude Include="Components\Zombie.h" />
     <ClInclude Include="Core\GameLoader.h" />
     <ClInclude Include="Core\GameState.h" />

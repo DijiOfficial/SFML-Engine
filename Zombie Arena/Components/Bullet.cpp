@@ -11,6 +11,8 @@
 
 #include <numbers>
 
+#include "GameManager.h"
+
 zombieArena::Bullet::Bullet(diji::GameObject* ownerPtr, const sf::Vector2f& direction)
     : Component(ownerPtr)
     , m_Direction{ direction }
@@ -44,8 +46,7 @@ void zombieArena::Bullet::Update()
 
         // Again I could decouple this but let's go simple for npw
         if (collider->GetParent()->GetComponent<Zombie>()->Hit())
-            m_Lifetime = 5.f;
-            // add points?
+            GameManager::GetInstance().OnZombieKilledEvent.Broadcast();
 
         diji::TimerManager::GetInstance().ClearTimer(m_TimerHandle);
         diji::SceneManager::GetInstance().SetPendingDestroy(GetOwner());

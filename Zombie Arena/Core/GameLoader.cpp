@@ -9,6 +9,7 @@
 #include "../Components/Player.h"
 #include "../Components/Pistol.h"
 #include "../Components/Spawner.h"
+#include "../Components/WaveCounter.h"
 #include "../Input/CustomCommands.h"
 #include "Engine/Collision/CollisionSingleton.h"
 #include "Engine//Collision/Collider.h"
@@ -21,6 +22,7 @@
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/FPSCounter.h"
 #include "Engine/Components/RectRender.h"
+#include "Engine/Components/ScoreCounter.h"
 #include "Engine/Components/Sprite.h"
 #include "Engine/Components/TextComp.h"
 #include "Engine/Core/Engine.h"
@@ -85,9 +87,9 @@ void SceneLoader::ZombieArena()
     background->GetComponent<Sprite>()->SetWallSpritePosition(sf::FloatRect{ sf::Vector2f{ 0, 150 }, sf::Vector2f{ 50, 50 } });
     background->AddComponents<Render>();
 
-    const auto spawnerTest = scene->CreateGameObject("SpawnerTest");
-    spawnerTest->AddComponents<Transform>(0, 0);
-    spawnerTest->AddComponents<zombieArena::Spawner>(player, arena);
+    const auto spawner = scene->CreateGameObject("Spawner");
+    spawner->AddComponents<Transform>(0, 0);
+    spawner->AddComponents<zombieArena::Spawner>(player, arena);
 
     const auto crosshair = scene->CreateGameObject("Z_Crosshair");
     crosshair->AddComponents<Transform>(0, 0);
@@ -111,7 +113,6 @@ void SceneLoader::ZombieArena()
     ammoPickup->AddComponents<Render>();
     ammoPickup->AddComponents<Collider>();
     ammoPickup->AddComponents<zombieArena::PickUpBase>(arenaInner, "graphics/ammo_pickup.png", zombieArena::PickUpType::AMMO, 12);
-    zombieArena::GameManager::GetInstance().OnPickedUpEvent.AddListener(player->GetComponent<zombieArena::Player>(), &zombieArena::Player::HandlePickups);
 
 #pragma region HUD
     const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");
@@ -140,18 +141,26 @@ void SceneLoader::ZombieArena()
     scoreText->AddComponents<TextComp>("SCORE: 0", "fonts/zombiecontrol.ttf");
     scoreText->GetComponent<TextComp>()->GetText().setCharacterSize(55);
     scoreText->AddComponents<Render>();
+    scoreText->AddComponents<ScoreCounter>();
+    scoreText->GetComponent<ScoreCounter>()->SetString("Score:");
+    scoreText->GetComponent<ScoreCounter>()->SetScoreIncreaseIncrement(10);
 
     const auto zombiesRemainingText = scene->CreateGameObject("Z_zombiesRemainingTextHUD");
     zombiesRemainingText->AddComponents<Transform>(1500, 980);
     zombiesRemainingText->AddComponents<TextComp>("Zombies: 100", "fonts/zombiecontrol.ttf");
     zombiesRemainingText->GetComponent<TextComp>()->GetText().setCharacterSize(55);
     zombiesRemainingText->AddComponents<Render>();
+    zombiesRemainingText->AddComponents<ScoreCounter>();
+    zombiesRemainingText->GetComponent<ScoreCounter>()->SetString("Zombies: ");
+    zombiesRemainingText->GetComponent<ScoreCounter>()->SetGoalScore(0);
 
     const auto waveNumberText = scene->CreateGameObject("Z_waveNumberTextHUD");
     waveNumberText->AddComponents<Transform>(1250, 980);
     waveNumberText->AddComponents<TextComp>("Wave: 0", "fonts/zombiecontrol.ttf");
     waveNumberText->GetComponent<TextComp>()->GetText().setCharacterSize(55);
     waveNumberText->AddComponents<Render>();
+    waveNumberText->AddComponents<zombieArena::WaveCounter>();
+    waveNumberText->GetComponent<zombieArena::WaveCounter>()->SetString("Wave: ");
     
     const auto healthBar = scene->CreateGameObject("Z_healthBarHUD");
     healthBar->AddComponents<Transform>(650, 980);
@@ -204,6 +213,11 @@ void SceneLoader::ZombieArena()
 
 #pragma region Observers
     pistol->GetComponent<zombieArena::Pistol>()->OnAmmoChangedEvent.AddListener(ammoText->GetComponent<zombieArena::BulletHudDisplay>(), &zombieArena::BulletHudDisplay::UpdateText);
+    zombieArena::GameManager::GetInstance().OnPickedUpEvent.AddListener(player->GetComponent<zombieArena::Player>(), &zombieArena::Player::HandlePickups);
+    zombieArena::GameManager::GetInstance().OnZombieKilledEvent.AddListener(scoreText->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
+    zombieArena::GameManager::GetInstance().OnZombieKilledEvent.AddListener(zombiesRemainingText->GetComponent<ScoreCounter>(), &ScoreCounter::DecreaseScore);
+    spawner->GetComponent<zombieArena::Spawner>()->OnWaveSpawnedEvent.AddListener(zombiesRemainingText->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
+    
     // ball->GetComponent<pong::Ball>()->OnIncreaseScoreEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
     //
     // livesCounter->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(livesCounter->GetComponent<ScoreCounter>(), &ScoreCounter::Reset);

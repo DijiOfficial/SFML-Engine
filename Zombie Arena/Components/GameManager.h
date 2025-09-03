@@ -12,5 +12,10 @@ namespace zombieArena
     {
     public:
         diji::Event<PickUpType, int> OnPickedUpEvent;
+        diji::Event<> OnZombieKilledEvent;
+
+        [[nodiscard]] int GetCurrentWave() const { return m_CurrentWave; }
+    private:
+        int m_CurrentWave = 1;
     };
 }

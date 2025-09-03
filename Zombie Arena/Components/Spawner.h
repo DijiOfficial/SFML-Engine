@@ -26,9 +26,13 @@ namespace zombieArena
 
         void CreateHorde(const int totalZombies) const;
 
+        diji::Event<int> OnWaveSpawnedEvent;
+
     private:
         diji::GameObject* m_PlayerPtr = nullptr;
         std::unique_ptr<diji::GameObject> m_ZombieTemplatePtr = nullptr;
         sf::IntRect m_Arena;
+        
+        const int ZOMBIE_PER_WAVE = 5;
     };
 }

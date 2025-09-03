@@ -1,4 +1,6 @@
 ﻿#include "Spawner.h"
+
+#include "GameManager.h"
 #include "Zombie.h"
 #include "Engine/Collision/Collider.h"
 #include "Engine/Components/TextureComp.h"
@@ -30,7 +32,9 @@ void zombieArena::Spawner::Init()
     // }, 1.0f, true);
     (void)diji::TimerManager::GetInstance().SetTimer([&, this]()
     {
-        CreateHorde(10);
+        const int totalZombiesSpawned = GameManager::GetInstance().GetCurrentWave() * ZOMBIE_PER_WAVE;
+        CreateHorde(totalZombiesSpawned);
+        OnWaveSpawnedEvent.Broadcast(totalZombiesSpawned);
     }, 0.1f, false);
 }
 
