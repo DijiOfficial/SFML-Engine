@@ -34,7 +34,7 @@ void diji::ScoreCounter::IncreaseScore(const int score)
 }
 void diji::ScoreCounter::IncreaseScore()
 {
-    ++m_Score;
+    m_Score += m_ScoreIncrease;
 
     OnScoreIncreasedEvent.Broadcast(m_Score);
     ScoreChangeCheck();

@@ -8,7 +8,7 @@ namespace diji
     class TextComp;
 
     // todo: rename to more general counter display name
-    class ScoreCounter final : public Component
+    class ScoreCounter : public Component
     {
     public:
         explicit ScoreCounter(GameObject* ownerPtr, int score = 0, bool shouldCallEvent = false);
@@ -34,20 +34,24 @@ namespace diji
         void SetString(const std::string& str) { m_StringScore = str; }
         void SetGoalScore(const int goalScore) { m_GoalScore = goalScore; }
         void Reset();
+        void SetScoreIncreaseIncrement(const int increment) { m_ScoreIncrease = increment; }
 
         Event<int> OnScoreIncreasedEvent;
         Event<int> OnScoreDecreasedEvent;
         Event<> OnGivenScoreReachedEvent;
 
+    protected:
+        int m_Score;
+        void ScoreChangeCheck();
+
     private:
         const int m_StartingScore = 0;
         bool m_ShouldCallEvent = false;
-        int m_Score;
         int m_GoalScore = 0;
+        int m_ScoreIncrease = 1;
         std::string m_StringScore = "Score = ";
         
         TextComp* m_TextCompPtr;
-        void ScoreChangeCheck();
     };
 }
 
