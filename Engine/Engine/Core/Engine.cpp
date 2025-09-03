@@ -17,7 +17,7 @@
 diji::Engine::Engine(const std::string& dataPath, const std::string& title, const bool useScreenResolution)
 {
 	window::VIEWPORT = useScreenResolution ? sf::VideoMode::getDesktopMode().size : sf::Vector2u{ 1920, 1080 };
-	window::g_window_ptr = std::make_unique<sf::RenderWindow>(sf::VideoMode(window::VIEWPORT), title, sf::Style::Default, sf::State::Windowed);
+	window::g_window_ptr = std::make_unique<sf::RenderWindow>(sf::VideoMode(window::VIEWPORT), title, sf::Style::Default, sf::State::Fullscreen);
 
 	if (window::g_window_ptr == nullptr)
 	{
