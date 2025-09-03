@@ -44,7 +44,7 @@ namespace zombieArena
     private:
         std::unique_ptr<diji::GameObject> m_BulletTemplate = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;
-        const int MAX_CLIP_CAPACITY = 6;
+        int m_max_clip_capacity = 6;
         int m_TotalAmmo = 0;
         int m_MagCapacity = 0;
         float m_FireRate = 1.0f;

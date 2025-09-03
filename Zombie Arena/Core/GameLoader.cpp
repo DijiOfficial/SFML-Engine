@@ -52,9 +52,8 @@ void SceneLoader::ZombieArena()
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(zombieArena::ZombieGameState::Level));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(zombieArena::ZombieGameState::Level));
 
-    // CollisionSingleton::GetInstance().Reset();
-    sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 2000, 1100 } };
-    sf::IntRect arenaInner{ sf::Vector2i{ 50, 50 }, sf::Vector2i{ 2000 - 100, 1100 - 100 } };
+    sf::IntRect arena{ sf::Vector2i{ 0, 0 }, zombieArena::GameManager::GetInstance().GetMapSize() };
+    sf::IntRect arenaInner{ sf::Vector2i{ 50, 50 }, zombieArena::GameManager::GetInstance().GetMapSize() - sf::Vector2i{ 100, 100 } };
     constexpr int TILE_SIZE = 50;
     const Rectf rectfArena
     {
@@ -210,6 +209,7 @@ void SceneLoader::ZombieArena()
     zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(pistol->GetComponent<zombieArena::Pistol>(), &zombieArena::Pistol::SaveInfo);
     zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(scoreText->GetComponent<zombieArena::CustomScoreCounter>(), &zombieArena::CustomScoreCounter::SaveScore);
     player->GetComponent<zombieArena::Player>()->OnHealthChangeEvent.AddListener(healthBar->GetComponent<zombieArena::HealthBar>(), &zombieArena::HealthBar::UpdateHealthBar);
+    player->GetComponent<zombieArena::Player>()->OnDeathEvent.AddListener(&zombieArena::GameManager::GetInstance(), &zombieArena::GameManager::Reset);
 
     // ball->GetComponent<pong::Ball>()->OnIncreaseScoreEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
     
@@ -297,6 +297,17 @@ void SceneLoader::Upgrade()
 #pragma region Commands
     auto& input = InputManager::GetInstance();
     
-    input.BindCommand<zombieArena::Start>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Enter, startText, zombieArena::ZombieGameState::Level);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Num1, startText, zombieArena::UpgradeType::FIRE_RATE);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Numpad1, startText, zombieArena::UpgradeType::FIRE_RATE);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Num2, startText, zombieArena::UpgradeType::CLIP_SIZE);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Numpad2, startText, zombieArena::UpgradeType::CLIP_SIZE);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Num3, startText, zombieArena::UpgradeType::HEALTH);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Numpad3, startText, zombieArena::UpgradeType::HEALTH);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Num4, startText, zombieArena::UpgradeType::SPEED);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Numpad4, startText, zombieArena::UpgradeType::SPEED);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Num5, startText, zombieArena::UpgradeType::HEALTH_PICKUP);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Numpad5, startText, zombieArena::UpgradeType::HEALTH_PICKUP);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Num6, startText, zombieArena::UpgradeType::AMMO_PICKUP);
+    input.BindCommand<zombieArena::UpgradeChoice>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Numpad6, startText, zombieArena::UpgradeType::AMMO_PICKUP);
 #pragma endregion
 }

@@ -21,6 +21,7 @@ void zombieArena::Pistol::Init()
     m_TotalAmmo = gameManager.GetCurrentPlayerTotalBullets();
     m_MagCapacity = gameManager.GetCurrentPlayerBulletsInClip();
     m_FireRate = gameManager.GetPlayerFireRate();
+    m_max_clip_capacity = gameManager.GetMaxClipSize();
     
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
     const sf::Vector2f& position = m_TransformCompPtr->GetPosition();
@@ -55,15 +56,15 @@ void zombieArena::Pistol::FireWeapon(const bool isStart, const sf::Vector2f& dir
 
 void zombieArena::Pistol::Reload()
 {
-    if (m_TotalAmmo <= 0 || m_MagCapacity == MAX_CLIP_CAPACITY)
+    if (m_TotalAmmo <= 0 || m_MagCapacity == m_max_clip_capacity)
         return;
 
-    if (m_TotalAmmo < MAX_CLIP_CAPACITY)
+    if (m_TotalAmmo < m_max_clip_capacity)
         m_MagCapacity = m_TotalAmmo;
     else
-        m_MagCapacity = MAX_CLIP_CAPACITY;
+        m_MagCapacity = m_max_clip_capacity;
     
-    m_TotalAmmo = std::max(0, m_TotalAmmo - MAX_CLIP_CAPACITY);
+    m_TotalAmmo = std::max(0, m_TotalAmmo - m_max_clip_capacity);
     
     OnAmmoChangedEvent.Broadcast(m_MagCapacity, m_TotalAmmo);
 }

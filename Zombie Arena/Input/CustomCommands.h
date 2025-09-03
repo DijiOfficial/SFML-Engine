@@ -87,4 +87,16 @@ namespace zombieArena
     private:
         ZombieGameState m_NextState;
     };
+
+    enum class UpgradeType;
+    class UpgradeChoice final : public diji::GameActorCommands
+    {
+    public:
+        explicit UpgradeChoice(diji::GameObject* actor, UpgradeType upgradeType);
+        ~UpgradeChoice() noexcept override = default;
+
+        void Execute() override;
+    private:
+        UpgradeType m_UpgradeType;
+    };
 }

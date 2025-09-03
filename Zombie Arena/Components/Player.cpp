@@ -4,6 +4,7 @@
 #include <numbers>
 #include <SFML/Window/Mouse.hpp>
 
+#include "GameManager.h"
 #include "PickUpBase.h"
 #include "Pistol.h"
 #include "Zombie.h"
@@ -33,6 +34,10 @@ void zombieArena::Player::Init()
     m_ColliderCompPtr = GetOwner()->GetComponent<diji::Collider>();
 
     m_TextureCompPtr->SetOriginToCenter();
+    const auto& gameManager = GameManager::GetInstance();
+    m_MaxHealth = gameManager.GetMaxHealth();
+    m_CurrentHealth = gameManager.GetPlayerHealth();
+    m_CurrentSpeed = gameManager.GetRunSpeed();
 }
 
 void zombieArena::Player::Update()
@@ -85,13 +90,6 @@ void zombieArena::Player::Spawn(const sf::IntRect& arena, const int tileSize)
     m_TileSize = tileSize;
 }
 
-void zombieArena::Player::ResetStats()
-{
-    m_CurrentSpeed = START_SPEED;
-    m_CurrentHealth = START_HEALTH;
-    m_MaxHealth = START_HEALTH;
-}
-
 bool zombieArena::Player::Hit(const int damage)
 {
     if (m_IsHit) return false;
@@ -125,13 +123,6 @@ void zombieArena::Player::HandlePickups(const PickUpType type, const int value)
     default:
         break;
     }
-}
-
-void zombieArena::Player::UpgradeHealth()
-{
-    const int bonusHealth = static_cast<int>(static_cast<float>(START_HEALTH) * 0.2f);
-    m_MaxHealth += bonusHealth;
-    Heal(bonusHealth);
 }
 
 void zombieArena::Player::Heal(const int amount)

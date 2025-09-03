@@ -178,7 +178,6 @@
     <ClCompile Include="Components\GameManager.cpp" />
     <ClCompile Include="Components\HealthBar.cpp" />
     <ClCompile Include="Components\PickUpBase.cpp" />
-    <ClCompile Include="Components\PickUpManager.cpp" />
     <ClCompile Include="Components\Pistol.cpp" />
     <ClCompile Include="Components\Player.cpp" />
     <ClCompile Include="Components\Spawner.cpp" />
@@ -196,7 +195,6 @@
     <ClInclude Include="Components\GameManager.h" />
     <ClInclude Include="Components\HealthBar.h" />
     <ClInclude Include="Components\PickUpBase.h" />
-    <ClInclude Include="Components\PickUpManager.h" />
     <ClInclude Include="Components\Pistol.h" />
     <ClInclude Include="Components\Player.h" />
     <ClInclude Include="Components\Spawner.h" />

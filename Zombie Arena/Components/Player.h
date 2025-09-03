@@ -40,14 +40,11 @@ namespace zombieArena
         void OnDestroy() override;
 
         void Spawn(const sf::IntRect& arena, int tileSize);
-        void ResetStats();
         bool Hit(int damage);
         [[nodiscard]] sf::Vector2f GetDirection() const { return m_Direction; }
         void SetDirection(const sf::Vector2f& direction) { m_Direction = direction; }
 
         void HandlePickups(PickUpType, int value);
-        void UpgradeSpeed() { m_CurrentSpeed += START_SPEED * 0.2f; }
-        void UpgradeHealth();
         void OrientPlayer(const sf::Vector2i& mousePos);
         void PauseGame();
         
@@ -71,12 +68,11 @@ namespace zombieArena
         sf::Vector2f m_LookingDirection = {0, 0};
         sf::Vector2i m_LastMousePos = {0, 0};
         
-        const int START_HEALTH = 100;
-        int m_CurrentHealth = START_HEALTH;
-        int m_MaxHealth = START_HEALTH;
+        int m_CurrentHealth = 100;
+        int m_MaxHealth = 100;
         int m_TileSize = 0;
-        const float START_SPEED = 200.0f;
-        float m_CurrentSpeed = START_SPEED;
+        // const float START_SPEED = 200.0f;
+        float m_CurrentSpeed = 200.f;
         const float INVINCIBILITY_TIME = 0.2f;
         bool m_IsHit = false;
 
