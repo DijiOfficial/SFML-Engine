@@ -52,6 +52,11 @@ namespace diji
             }
         }
 
+        void ClearListeners()
+        {
+            m_Listeners.clear();
+        }
+
     private:
         
         std::vector<Callback> m_Listeners;
