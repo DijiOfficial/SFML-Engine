@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics/Rect.hpp>
 
+#include "Engine/Singleton/TimerManager.h"
+
 namespace zombieArena
 {
     enum class PickUpType;
@@ -10,6 +12,7 @@ namespace zombieArena
 
 namespace diji
 {
+    class Collider;
     class Camera;
     class Transform;
     class TextureComp;
@@ -30,11 +33,11 @@ namespace zombieArena
         void Start() override {}
         
         void Update() override;
-        void FixedUpdate() override {}
+        void FixedUpdate() override;
         void LateUpdate() override {}
 
         void OnDisable() override {}
-        void OnDestroy() override {}
+        void OnDestroy() override;
 
         void Spawn(const sf::IntRect& arena, int tileSize);
         void ResetStats();
@@ -53,12 +56,16 @@ namespace zombieArena
         void Reload() const;
         
         diji::Event<> OnPauseEvent;
+        diji::Event<> OnDeathEvent;
+        diji::Event<int> OnHealthChangeEvent;
 
     private:
         diji::Camera* m_CameraCompPtr = nullptr;
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::TextureComp* m_TextureCompPtr = nullptr;
+        diji::Collider* m_ColliderCompPtr = nullptr;
         Pistol* m_PistolCompPtr = nullptr;
+        diji::TimerManager::TimerHandle m_InvincibilityTimerHandle;
         sf::IntRect m_Arena;
         sf::Vector2f m_Direction = {0, 0};
         sf::Vector2f m_LookingDirection = {0, 0};

@@ -209,6 +209,7 @@ void SceneLoader::ZombieArena()
     zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(&zombieArena::GameManager::GetInstance(), &zombieArena::GameManager::IncrementCurrentWave);
     zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(pistol->GetComponent<zombieArena::Pistol>(), &zombieArena::Pistol::SaveInfo);
     zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(scoreText->GetComponent<zombieArena::CustomScoreCounter>(), &zombieArena::CustomScoreCounter::SaveScore);
+    player->GetComponent<zombieArena::Player>()->OnHealthChangeEvent.AddListener(healthBar->GetComponent<zombieArena::HealthBar>(), &zombieArena::HealthBar::UpdateHealthBar);
 
     // ball->GetComponent<pong::Ball>()->OnIncreaseScoreEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
     

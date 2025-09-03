@@ -6,8 +6,10 @@
 
 #include "PickUpBase.h"
 #include "Pistol.h"
-#include "PickUpBase.h"
+#include "Zombie.h"
 #include "../Core/GameState.h"
+#include "Engine/Collision/CollisionSingleton.h"
+#include "Engine/Collision/Collider.h"
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Components/Transform.h"
@@ -28,6 +30,7 @@ void zombieArena::Player::Init()
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
     m_TextureCompPtr = GetOwner()->GetComponent<diji::TextureComp>();
     m_CameraCompPtr = GetOwner()->GetComponent<diji::Camera>();
+    m_ColliderCompPtr = GetOwner()->GetComponent<diji::Collider>();
 
     m_TextureCompPtr->SetOriginToCenter();
 }
@@ -54,9 +57,29 @@ void zombieArena::Player::Update()
     m_PistolCompPtr->UpdatePosition(playerPos);
 }
 
+void zombieArena::Player::FixedUpdate()
+{
+    if (m_IsHit) return;
+
+    const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr);
+    for (const auto& collider : colliders)
+    {
+        if (!collider->GetParent()->HasComponent<Zombie>())
+            continue;
+
+        Hit(10);
+        break;
+    }
+}
+
+void zombieArena::Player::OnDestroy()
+{
+    diji::TimerManager::GetInstance().ClearTimer(m_InvincibilityTimerHandle);
+}
+
 void zombieArena::Player::Spawn(const sf::IntRect& arena, const int tileSize)
 {
-    m_TransformCompPtr->SetPosition(arena.size.x * 0.5f, arena.size.y * 0.5f);
+    m_TransformCompPtr->SetPosition(static_cast<float>(arena.size.x) * 0.5f, static_cast<float>(arena.size.y) * 0.5f);
     m_Arena = arena;
 
     m_TileSize = tileSize;
@@ -72,10 +95,18 @@ void zombieArena::Player::ResetStats()
 bool zombieArena::Player::Hit(const int damage)
 {
     if (m_IsHit) return false;
-    
+
+    m_IsHit = true;
     m_CurrentHealth -= damage;
+    OnHealthChangeEvent.Broadcast(m_CurrentHealth);
     
-    (void)diji::TimerManager::GetInstance().SetTimer([this]() { m_IsHit = false; }, INVINCIBILITY_TIME, false);
+    if (m_CurrentHealth <= 0)
+    {
+        OnDeathEvent.Broadcast();
+        return true;
+    }
+    
+    m_InvincibilityTimerHandle = diji::TimerManager::GetInstance().SetTimer([this]() { m_IsHit = false; }, INVINCIBILITY_TIME, false);
 
     return true;
 }
@@ -98,7 +129,7 @@ void zombieArena::Player::HandlePickups(const PickUpType type, const int value)
 
 void zombieArena::Player::UpgradeHealth()
 {
-    const int bonusHealth = static_cast<int>(START_HEALTH * 0.2f);
+    const int bonusHealth = static_cast<int>(static_cast<float>(START_HEALTH) * 0.2f);
     m_MaxHealth += bonusHealth;
     Heal(bonusHealth);
 }
@@ -106,6 +137,7 @@ void zombieArena::Player::UpgradeHealth()
 void zombieArena::Player::Heal(const int amount)
 {
     m_CurrentHealth = std::min(m_CurrentHealth += amount, m_MaxHealth);
+    OnHealthChangeEvent.Broadcast(m_CurrentHealth);
 }
 
 void zombieArena::Player::OrientPlayer(const sf::Vector2i& mousePos)
