@@ -177,6 +177,7 @@
     <ClCompile Include="Components\CustomScoreCounter.cpp" />
     <ClCompile Include="Components\GameManager.cpp" />
     <ClCompile Include="Components\HealthBar.cpp" />
+    <ClCompile Include="Components\HighScore.cpp" />
     <ClCompile Include="Components\PickUpBase.cpp" />
     <ClCompile Include="Components\Pistol.cpp" />
     <ClCompile Include="Components\Player.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Components\CustomScoreCounter.h" />
     <ClInclude Include="Components\GameManager.h" />
     <ClInclude Include="Components\HealthBar.h" />
+    <ClInclude Include="Components\HighScore.h" />
     <ClInclude Include="Components\PickUpBase.h" />
     <ClInclude Include="Components\Pistol.h" />
     <ClInclude Include="Components\Player.h" />

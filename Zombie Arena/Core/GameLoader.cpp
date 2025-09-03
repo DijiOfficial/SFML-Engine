@@ -6,6 +6,7 @@
 #include "../Components/CustomScoreCounter.h"
 #include "../Components/GameManager.h"
 #include "../Components/HealthBar.h"
+#include "../Components/HighScore.h"
 #include "../Components/Player.h"
 #include "../Components/Pistol.h"
 #include "../Components/Spawner.h"
@@ -70,7 +71,7 @@ void SceneLoader::ZombieArena()
     
     // add arena to player constructor and make player collide with arena
     const auto player = scene->CreateGameObject("X_Player");
-    player->AddComponents<Transform>(arena.size.x * 0.5f, arena.size.y * 0.5f);
+    player->AddComponents<Transform>(static_cast<float>(arena.size.x) * 0.5f, static_cast<float>(arena.size.y) * 0.5f);
     player->AddComponents<TextureComp>("graphics/player.png");
     player->AddComponents<Render>();
     player->AddComponents<zombieArena::Player>(arenaInner);
@@ -113,6 +114,8 @@ void SceneLoader::ZombieArena()
     highScore->AddComponents<TextComp>("HIGH SCORE: 0", "fonts/zombiecontrol.ttf");
     highScore->GetComponent<TextComp>()->GetText().setCharacterSize(55);
     highScore->AddComponents<Render>();
+    highScore->AddComponents<zombieArena::HighScore>();
+    highScore->GetComponent<zombieArena::HighScore>()->SetString("HIGH SCORE: ");
     scene->SetGameObjectAsCanvasObject(highScore);
 
     const auto ammoText = scene->CreateGameObject("Z_ammoTextHUD");
@@ -204,12 +207,15 @@ void SceneLoader::ZombieArena()
     zombieArena::GameManager::GetInstance().OnPickedUpEvent.AddListener(player->GetComponent<zombieArena::Player>(), &zombieArena::Player::HandlePickups);
     zombieArena::GameManager::GetInstance().OnZombieKilledEvent.AddListener(scoreText->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
     zombieArena::GameManager::GetInstance().OnZombieKilledEvent.AddListener(zombiesRemainingText->GetComponent<ScoreCounter>(), &ScoreCounter::DecreaseScore);
+    scoreText->GetComponent<ScoreCounter>()->OnScoreIncreasedEvent.AddListener(highScore->GetComponent<zombieArena::HighScore>(), &zombieArena::HighScore::UpdateScore);
+    scoreText->GetComponent<zombieArena::CustomScoreCounter>()->OnScoreSetEvent.AddListener(highScore->GetComponent<zombieArena::HighScore>(), &zombieArena::HighScore::UpdateScore);
     spawner->GetComponent<zombieArena::Spawner>()->OnWaveSpawnedEvent.AddListener(zombiesRemainingText->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
     zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(&zombieArena::GameManager::GetInstance(), &zombieArena::GameManager::IncrementCurrentWave);
     zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(pistol->GetComponent<zombieArena::Pistol>(), &zombieArena::Pistol::SaveInfo);
     zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(scoreText->GetComponent<zombieArena::CustomScoreCounter>(), &zombieArena::CustomScoreCounter::SaveScore);
     player->GetComponent<zombieArena::Player>()->OnHealthChangeEvent.AddListener(healthBar->GetComponent<zombieArena::HealthBar>(), &zombieArena::HealthBar::UpdateHealthBar);
     player->GetComponent<zombieArena::Player>()->OnDeathEvent.AddListener(&zombieArena::GameManager::GetInstance(), &zombieArena::GameManager::Reset);
+    player->GetComponent<zombieArena::Player>()->OnDeathEvent.AddListener(highScore->GetComponent<zombieArena::HighScore>(), &zombieArena::HighScore::SaveHighScore);
 
     // ball->GetComponent<pong::Ball>()->OnIncreaseScoreEvent.AddListener(scoreCounter->GetComponent<ScoreCounter>(), &ScoreCounter::IncreaseScore);
     
@@ -248,6 +254,8 @@ void SceneLoader::StartMenu()
     highScore->GetComponent<TextComp>()->GetText().setCharacterSize(55);
     highScore->AddComponents<Render>();
     highScore->SetParent(HUD, true);
+    highScore->AddComponents<zombieArena::HighScore>();
+    highScore->GetComponent<zombieArena::HighScore>()->SetString("HIGH SCORE: ");
     
     const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");
     fpsCounter->AddComponents<TextComp>("0 FPS", "fonts/digital-7.ttf", sf::Color::White, true);

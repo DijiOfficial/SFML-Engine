@@ -8,7 +8,10 @@ namespace zombieArena
     public:
         using ScoreCounter::ScoreCounter;
         ~CustomScoreCounter() noexcept override = default;
-        
-        void SaveScore() const;
+
+        void Start() override;
+        void SaveScore();
+
+        diji::Event<int> OnScoreSetEvent;
     };
 }

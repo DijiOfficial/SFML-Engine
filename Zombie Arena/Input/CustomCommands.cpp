@@ -4,6 +4,7 @@
 #include "../Components/Player.h"
 #include "../Core/GameState.h"
 #include "Engine/Core/GameObject.h"
+#include "Engine/Singleton/GameStateManager.h"
 #include "Engine/Singleton/SceneManager.h"
 
 zombieArena::MovePlayer::MovePlayer(diji::GameObject* actor, const Movement movement, const bool isStart)
@@ -58,7 +59,8 @@ void zombieArena::Aim::Execute(const sf::Vector2i& mousePos)
 
 void zombieArena::Pause::Execute()
 {
-    GetGameActor()->GetComponent<Player>()->PauseGame();
+    if (static_cast<ZombieGameState>(diji::GameStateManager::GetInstance().GetCurrentGameState()) == ZombieGameState::Level)
+        GetGameActor()->GetComponent<Player>()->PauseGame();
 }
 
 zombieArena::Shoot::Shoot(diji::GameObject* actor, const bool isStart)
