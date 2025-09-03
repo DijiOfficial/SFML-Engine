@@ -4,17 +4,21 @@
 
 diji::ScoreCounter::ScoreCounter(GameObject* ownerPtr, const int score, const bool shouldCallEvent)
     : Component(ownerPtr)
+    , m_Score{ score }
     , m_StartingScore{ score }
     , m_ShouldCallEvent{ shouldCallEvent }
-    , m_Score{ score }
     , m_TextCompPtr{ nullptr }
 {
-    
 }
 
 void diji::ScoreCounter::Init()
 {
     m_TextCompPtr = GetOwner()->GetComponent<TextComp>();
+}
+
+void diji::ScoreCounter::Start()
+{
+    ScoreChangeCheck(true);
 }
 
 void diji::ScoreCounter::IncreaseScore(bool)
@@ -66,12 +70,12 @@ void diji::ScoreCounter::Reset()
     ScoreChangeCheck();
 }
 
-void diji::ScoreCounter::ScoreChangeCheck()
+void diji::ScoreCounter::ScoreChangeCheck(const bool isInitialCheck)
 {
     const std::string newScore = m_StringScore + std::to_string(m_Score);
     m_TextCompPtr->GetText().setString(newScore);
     
-    if (m_Score == m_GoalScore)
+    if (m_Score == m_GoalScore && !isInitialCheck)
     {
         OnGivenScoreReachedEvent.Broadcast();
     }

@@ -16,7 +16,7 @@ namespace diji
 
         void Init() override;
         void OnEnable() override {}
-        void Start() override {}
+        void Start() override;
         
         void Update() override {}
         void FixedUpdate() override {}
@@ -42,7 +42,7 @@ namespace diji
 
     protected:
         int m_Score;
-        void ScoreChangeCheck();
+        void ScoreChangeCheck(bool isInitialCheck = false);
 
     private:
         const int m_StartingScore = 0;
