@@ -106,11 +106,22 @@ Introduced a static `RandomNumber` helper class with **thread safety**, capable 
 
 The Input Manager saw **major improvements** over the original version. It now supports proper `HELD`, `PRESSED`, and `RELEASED` states for keys using **unordered maps**.
 
+Mouse movement and mouse button support have also been added, implemented using templates for flexibility.
+
 The call to the associated command has been optimized using a hash map, reducing lookup time from **O(n)** to** O(1)**:
 
-![image of hash map optimization]()
+![image of hash map optimization](https://github.com/DijiOfficial/SFML-Engine/blob/master/GitHubAssets/inputHashMap.png)
 
-Mouse movement and mouse button support have also been added, implemented using templates for flexibility.
+If you're interested in how this work strap in because there is some witchraft at play here.
+
+The first part of this puzzle is the `CommandKey` struct, combining a `KeyState` and `Input::InputType` to map a desired input to a command.
+We then hash both the `KeyState` and `Input::InputType` and XOR `h1` and `h2` (shifted left by 1) for an O(1) lookup time of the command.
+To hash the `KeyState` we turn it into an `int` from an enum class and use standard `int` hash `std::hash<int>`.
+Now to hash the input type it's a bit more complicated.	The `InputType` is a variant holding multiple types. `typedef std::variant<sf::Keyboard::Scancode, sf::Mouse::Button, Controller::Button> InputType;`.
+We want to hash the type but we don't know what it is, so we use `std::visit` which is some new fuckery that allows you to pass to a callback the type of the `std::variant`. So far so good?
+We then pass a lambda with a `size_t` return type because that's what we want to end up with. We then forward the `k.input` to the lambda, you might ask why forward it when you're hashing it anyways. Because I can and it works and I ain't touching it. With the input forwarded we then `std::decay_t` to remove any reference or qualifiers we want the "raw type" so to speak. we then cast that into it's underlying type using `std::underlying_type_t<>`. For example if we have an `enum class` it's underlying type would be an `int`. Well now that we have that, we do the same to pass it to the hash function and voila.
+
+Templates are amazing aren't they?
 
 ### <ins>**Event System**</ins>
 
@@ -125,8 +136,29 @@ This new system is a very close replica of Unreal’s and brings massive improve
 
 A significant step forward from the original engine:
 
-![image of hash map optimization]()
-image of use case
+![image of the event system](https://github.com/DijiOfficial/SFML-Engine/blob/master/GitHubAssets/EventSystemCallback.png)
+
+We can now create `Events`
+
+```c++
+	// Creating events
+	diji::Event<> OnDeathEvent;
+	diji::Event<int> OnHealthChangeEvent;
+
+	// Broadcasting the event
+	if (m_CurrentHealth <= 0)
+    {
+        OnDeathEvent.Broadcast();
+        return true;
+    }
+
+	// Listening to the event when creating the scene
+	player->GetComponent<zombieArena::Player>()->OnDeathEvent.AddListener(highScore->GetComponent<zombieArena::HighScore>(), &zombieArena::HighScore::SaveHighScore);
+	
+	// Alternatively you can listen to events by finding the object
+	const auto player = diji::SceneManager::GetInstance().GetGameObject("X_player");
+    player->GetComponent<PlayerBehaviour>()->OnPlayerMovedEvent.AddListener(this, &BranchBehaviour::MoveBranch);
+```
 
 ### <ins>**Timers**</ins>
 
