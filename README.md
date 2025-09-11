@@ -77,7 +77,7 @@ For reference, here’s the previous pipeline:
 
 And the current pipeline:
 
-![Picture of the Pipeline](https://github.com/DijiOfficial/SFML-Engine/blob/master/GitHubAssets/PipelineSFML.png)
+![Picture of the Pipeline](https://github.com/DijiOfficial/SFML-Engine/blob/main/GitHubAssets/PipelineSFML.png)
 
 While it’s not shown in the diagram, part of loading a new scene involves calling both `Init` and `Start`. Similarly, when destroying objects at the end of the frame, `OnDestroy` is called.
 
@@ -110,7 +110,7 @@ Mouse movement and mouse button support have also been added, implemented using 
 
 The call to the associated command has been optimized using a hash map, reducing lookup time from **O(n)** to** O(1)**:
 
-![image of hash map optimization](https://github.com/DijiOfficial/SFML-Engine/blob/master/GitHubAssets/inputHashMap.png)
+![image of hash map optimization](https://github.com/DijiOfficial/SFML-Engine/blob/main/GitHubAssets/inputHashMap.png)
 
 If you're interested in how this work strap in because there is some witchraft at play here.
 
@@ -136,7 +136,7 @@ This new system is a very close replica of Unreal’s and brings massive improve
 
 A significant step forward from the original engine:
 
-![image of the event system](https://github.com/DijiOfficial/SFML-Engine/blob/master/GitHubAssets/EventSystemCallback.png)
+![image of the event system](https://github.com/DijiOfficial/SFML-Engine/blob/main/GitHubAssets/EventSystemCallback.png)
 
 We can now create `Events`
 
