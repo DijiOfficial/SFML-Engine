@@ -48,3 +48,57 @@ The [**Four Games**]() included in this repo serves as proof of the engine's cap
   - [**Conclusion**](#conclusion)
     - [**References**](#references) 
 
+# The Engine
+
+In this section I will cover the changes and improvements over my first engine. I won't go over the features and programming patterns as they are essentially the same as my [**Diji-Engine**](). I will instead cover the transition and differences with an extensive focus on the Improvements made.
+
+<details>
+	 <summary>Click to expand engine details</summary>
+
+## From SDL to SFML
+
+### Overview
+#### ResourceManager
+#### Renderer & Render Component
+#### Text & Texture Component
+
+### Why SFML
+
+## Comparing SFML and SDL
+
+## Improvements and Additions
+
+### Engine Pipeline
+### Pause Singleton
+### GameObjects
+### RandNumber Helper
+### InputManager
+### Event System
+### Timers
+### Camera
+### RectRender
+### ScoreCounter
+### GameStateManager
+### Sprite
+### Transform
+### Scene & Scene Manager
+
+## Improvements & Todos
+
+</details>
+
+# The Four Games
+## Intro
+    
+# Overview
+
+# The Games
+## Timber
+## Pong
+## Zombie Game
+## Tom?Other?
+
+## Playe The Games
+
+# Conclusion
+## References
