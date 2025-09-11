@@ -28,7 +28,7 @@ Since it's based of my Diji-Engine the structure is based of the Unity Engine as
     	- [**Score Counter**](#score-counter) 
     	- [**Transform**](#transform) 
     	- [**Scene & Scene Manager**](#scene--scene-manager) 
-    - [**Future Improvements & Todo's**](#future-improvements--todo--s)
+    - [**Future Improvements & Todo's**](#future-improvements--todos)
   - [**Conclusion**](#conclusion)
     - [**References**](#references) 
 
