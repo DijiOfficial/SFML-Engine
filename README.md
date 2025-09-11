@@ -90,7 +90,7 @@ Although I'm aware that giving global access to the window can lead to issues, t
 
 ### <ins>**Pause Singleton**</ins>
 
-A Pause Singleton has been added, allowing the player to easily pause or unpause the game as needed. This feature is still in its early stages—see the [Improvements & Todos](future-improvements--todos) section for how it may be expanded in the future.
+A Pause Singleton has been added, allowing the player to easily pause or unpause the game as needed. This feature is still in its early stages. See the [Improvements & Todos](future-improvements--todos) section for how it may be expanded in the future.
 
 ### <ins>**GameObjects**</ins>
 
