@@ -94,7 +94,7 @@ For reference we can see here the previous pipeline,
 
 and the current Pipeline:
 
-![Picture of the Pipeline]()
+![Picture of the Pipeline](https://github.com/DijiOfficial/SFML-Engine/blob/master/GitHubAssets/PipelineSFML.png)
 
 While it is not shown in the diagram, part of loading the new scene is calling the `Init` And `Start`, same thing for destroying object at the end of the frame, the `onDestroy` is called. While the pipeline has been expanded on almost all fronts we can see the `FixedUpdated` lagging a bit behind. One of the [improvemtns]() will be the expansion of the physics part of the engine with the fixed upadte.
 
@@ -175,6 +175,48 @@ Scene was adapted to Engine's new functions and SceneManager's new additions.
 SceneManager now loads scenes automatically when switched, granted the user registers the sceneLoader. Previously when changing the scene, the new scene needed to be called from the Loader. Now users can register a scene from the sceneLoader to be loaded automatically when switching the scene. see [improvemtns and todos]() on how I plan to expand this ssytem
 
 ## Improvements & Todos
+
+While working on this project I had to find a right balance between time invested and how worth a feature is to implement. Thus many features were left in early stages as they worked for my use cases. This with the inevitablity of making mistakes a few systems need some revisions as well.
+
+Here is a list of Potential Imporvemtns and marked todo's within the engine for future upgrades:
+
+- The physics and Collision system. Having worked on non heavy physics games it was inevitebale that the engine would lack in that domain. Its refelceted in the pipeliine for the fixed update which is very basic. Collision is handled through a singleton and is poorly optimized. So future updates would see:
+	- Removing Collision as a singleton.
+ 	- adding collisino to the physics pipeline with different events similar to unreal engine.
+  	- optimization such as tags from unity, collision presets from Unreal as well as Partitionning and other optimization methods
+  	- Addtion of deeper physics simulation
+  	- Optimizing collider updates
+  	- Use of static flag for objects for ignoring updates.
+- Complete Implementation of `OnEnable` and `OnDisable` systems with optimization within game object logics
+- Introdcution of wrapper class for Viewport and ViewWindow allowing users the benefit of global acces to window while keeping it safe, expandebale and maintaineble
+- Improvemtns over the PauseSignleton, Currently only compatible with input system. It can be improved to allow Huds to update, whilst also seperating pause commands and gamecommands allowing gamecommands to be ignored while the game is paused and pause commands to contiue working.
+- Addition of TimerPhysics, with the addition of timer capable of slowing down or accelerating physics.
+- Addition of deeper AI systems, Seperating Ai behaviours from Core compoennts and moving it into an AI system complete with Blackboards, Behavior Tree (AI controlller), Tasks, Services, and Decorators.
+- addition of Navigation System to work in tandem with new AI systems
+- Scene Manager registering SceneLoaders for scenes. Improve the current system when creating a scene to register the loader with it. Removing user error in the process.
+- Introduce static Mathematical helpers. SFML does not support mathematicals helpers like GLM.
+- Improve current command registration system, it can be expnaded upon like the unity or unreal input ssytems to be more complete.
+	- Find a solution for duplicate Commands, Manually destroying commands before creeating them is not a good solution. either mapping them to the scene to be destroyed with the scene or static commands or...
+- Introduce Interfaces for decoupling and ....
+- Change all component base class methods to be non-pure virtual. It's Unecessary
+- Pimpl away the constructor of the Event System
+- Most GameObjects need custom logic, find a way to simplify the addition of custom components within gameObject. (like how unreal actors come packaged with their own unique blueprint)
+- GameObjects should all come with a TRansform component on creation
+- Improve the call to play audio. Audio files can be mapped to an enum and use that instead of the file name. it makes it easier to use and more readeable it also avoid user erros.
+- Expand on the InputManager playerIndexes allowing more than just 4 unique players. perhaps moving from an enum class to size_t
+- Change Renderer to take in textures as parameters instead of all the parameters seperately. And update it to use the static window ptr
+- Render Comopoentent revamped
+	- Either -> it would be better if every object had a render component and that render comp was different than a component. You could then regardless of the component call a virtual Render function on it, making the use of custom renderer much rarer
+  	- Or render should be a separate kind of component different from component components that goes for textures and text too allowing me to clearly seperate rendering and game logic.
+- Optimize the CreateGameObjectFromTemplate function. Likely some optimization can be done here. Like keeping track of the last used suffix or internal counter or ...
+- Optimize deletion of gameObjects at the end of the frame. currently pushing O(n^2) can be optimized to O(n) by moving the components to the end of the vector while keeping track of how many are moved. Then resizing the vector to delete them all at once. Or perhaps use a list?
+- Load scene asynchronously to allow loading screns and whatnot.
+- rename SetNextSceneToActivate to ChangeScene and replace Scene int with SceneId enum or size_t for readability.
+- rename ScoreCounter to a more General counter name reflecting its general use.
+- Add scaling to text comoponents
+- Optimize timer class by using a map or list to erase (stop) timers faster.
+- Add DelayUntilNext tick Fucntion to the timer class
+- Change SetTimer function to take in a TimerHandle parameter that assigns it isntead of creating one and returnging it.
 
 </details>
 
