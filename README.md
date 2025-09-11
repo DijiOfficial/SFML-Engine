@@ -1,11 +1,11 @@
 # <ins>**SFML Engine**</ins>
 
-**My SFML Engine is a lightweight C++ engine built with [Simple and Fast Multimedia Library or SFML](https://www.sfml-dev.org), implemented following the C++ Core Guidelines.**
+**My SFML Engine is a lightweight C++ engine built with [SFML (Simple and Fast Multimedia Library)](https://www.sfml-dev.org), implemented following the C++ Core Guidelines.**
 
 # <ins>**Overview**</ins>
 
-This Engine is built on the foundation of my [**Diji-Engine**](https://github.com/DijiOfficial/Diji-Engine), using [**SFML**]() over [**SDL**]() this project aims to improve my knowledge of programming, programming guidelines, game programming and learning capacities using new library.
-Since it's based of my Diji-Engine the structure is based of the Unity Engine as well as The Unreal Engine using systems appropritate for my use case. With an Improved more robust Pipeline simplyfying systems while expanding on them.
+This Engine is built on the foundation of my [**Diji-Engine**](https://github.com/DijiOfficial/Diji-Engine), using [**SFML**](https://www.sfml-dev.org) over [**SDL**](https://github.com/libsdl-org/SDL). The goal is to deepen my understanding of programming, software architecture, game engine design, and to improve development practices by exploring a new multimedia library.
+While inspired by both Unity and Unreal Engine, this engine is tailored for my use case, focusing on a more streamlined yet expandable system architecture with a cleaner pipeline and more robust internal systems than its predecessor.
 
 # <ins>**Contents**</ins>
 
@@ -32,167 +32,216 @@ Since it's based of my Diji-Engine the structure is based of the Unity Engine as
   - [**Conclusion**](#conclusion)
     - [**References**](#references) 
 
-# The Engine
+# <ins>**The Engine**</ins>
 
-In this section I will cover the changes and improvements over my first engine. I won't go over the features and programming patterns as they are essentially the same as my [**Diji-Engine**](). I will instead cover the transition and differences with an extensive focus on the Improvements made.
+In this section, I will cover the changes and improvements over my [**Diji-Engine**](https://github.com/DijiOfficial/Diji-Engine). I won’t be going over all the features or programming patterns this time, for that please refer to the [**Diji-Engine README**](https://github.com/DijiOfficial/Diji-Engine).
 
-## SDL to SFML
+Instead, I’ll focus on the transition from [**SDL**](https://github.com/libsdl-org/SDL) to [**SFML**](https://www.sfml-dev.org), the differences that arose from it, and give an extensive breakdown of improvements made, along with the future improvements I plan to implement.
 
-As this engine was made with a different library than my orginal a few systems had to be modified. Where SDL provides a low-level, C-based API focused on maximum portability across platforms, SFML is built for modern C++ and offers a more object-oriented, user-friendly library, making it easier to use and understand, thus the change was not a difficult challenge as SDL needed more abstractions already ocvered by SFML.
+## <ins>**SDL to SFML**</ins>
 
-The biggest changes related to the libraries will be about resources and renderering having vastly different handling methods between the two.
+The switch from [**SDL**](https://github.com/libsdl-org/SDL) to [**SFML**](https://www.sfml-dev.org) introduced significant yet manageable changes. [**SDL**](https://github.com/libsdl-org/SDL) is a low-level, C-style library prioritizing portability, while [**SFML**](https://www.sfml-dev.org) provides a more modern, object-oriented C++ API. As a result, many abstractions previously implemented manually (e.g., RAII wrappers) became redundant. Which in turn made the port quite managebale.
 
-### Resource Manager
+The most notable differences relate to rendering and resource management.
 
-The resource manager saw changes all across as SDL provides raw pointers to the information needed for textures, fonts and other resources. Needing RAII Wrappers to encaspulate those resources. SFML already provides Wrappers for those making it much easier to use and therefore seeing the removal of all the existing RAII wrappers. 
+### <ins>**Resource Manager**</ins>
 
-As for the logic it remained the same.
+In [**SDL**](https://github.com/libsdl-org/SDL), resource handling required manual memory management and custom RAII wrappers to encapsulate the resources. [**SFML**](https://www.sfml-dev.org) eliminates that need by managing its own resources (e.g., textures, fonts) internally. thus the logic behind the manager remained largely unchanged. 
 
-### Renderer & Render Component
+### <ins>**Renderer & Render Component**</ins>
 
-The renderer was simplified, used in tandem with the SFML RenderWindow. SFML also offers vertex rendering, by using an SFML vertexArray altough not changing much for the Renderer will see the introduciton of the [Sprtie compoenet]() able to calculate and create its vertex array for rendering from SPriteSheets. Render component was adapted with the RAII wrappers for Texture, fonts, ect...
+Rendering is now handled via `sf::RenderWindow`. [**SFML**](https://www.sfml-dev.org) also supports `sf::VertexArray`, enabling more advanced rendering operations. This laid the groundwork for introducing a Sprite Component capable of computing vertex arrays from sprite sheets.
 
-### Why SFML
+The Render Component has also been adapted to leverage [**SFML's**](https://www.sfml-dev.org) resource management, removing the need for manual wrappers.
 
-Changing library is more than just swapping APIs. it's an exercise in problem-solving, and learning to manage wide-reaching changes across a codebase. Migrating the engine involved rethinking abstractions, understanding dependencies and cor concepts that have grown around the old library. Migrating the engine also exposes areas for modularity, decoupling, and improved maintainability, where core systems have to be adapdted they are also updated and improved turning the challenge itself into a valuable engine development milestone rather than just a technical challenge. And for all of That SFML was a perfect fit, a very different yet similar library. It's also a great API for gameDevleopment.
+### <ins>**Why SFML**</ins>
 
-## Improvements & Additions
+Changing library is more than just swapping APIs. It's an exercise in **problem-solving**, and learning to manage **wide-reaching changes** across a codebase. 
+Migrating the engine involved rethinking abstractions, understanding dependencies and core concepts that have grown around the old library. It also exposed areas where the engine could be made more modular, decoupled, and maintainable.
+Where core systems had to be adapted, it was also updated and improved turning the challenge into a valuable engine development milestone rather than just a technical challenge. 
+And for all of that, [**SFML**](https://www.sfml-dev.org)  was a perfect fit. A very different, yet in many ways similar library. It offers a clean, intuitive API and is overall a great tool for 2D game development. 
 
-With the library changes out of the way let's get into the improvenets and additions to the engine.
+## <ins>**Improvements & Additions**</ins>
 
-### Engine Pipeline
+With the library changes out of the way let's get into the **improvenets and additions** to the engine.
 
-The first major changes come in the form of the engine pipeline, While keeping the pipeline simple was the objective of my first engine it quickly became obvious that many workarounds needed to be made for more complex games and such the pipeline saw the addition of `start` and `onDestroy`, while components saw the addition of `OnEnable` and `OnDisable` for entry and exit logic it is not fully implemented within the pipeline and GameObjects but are rather helpers, marked as an improvement to be fully inclided within the piepline. the pipeline aslo saw changes in the form of EndFrameUpdate moving the scenehandling and cleanup to the end of the frame as well as an expansion on the render pipeline with the addition of the HUDs being draw later in the pipeline.
+### <ins>**Engine Pipeline**</ins>
 
-For reference we can see here the previous pipeline,
+The first major changes come in the form of the **engine pipeline**. While keeping the pipeline simple was the main objective in my first engine, it quickly became clear that many workarounds were needed for more complex games. 
+To address this, the pipeline saw the addition of `Start` and `OnDestroy`, while components gained `OnEnable` and `OnDisable` methods for entry and exit logic. These are not yet fully integrated into the pipeline and GameObjects, but currently serve as helpers, marked for full inclusion in a [future update](future-improvements--todos).
+The pipeline also saw changes in the form of an `EndFrameUpdate`, moving scene handling and cleanup to the end of the frame. Along with an expansion of the render pipeline, HUDs are now drawn later in the frame, after the rest of the game content.
+
+For reference, here’s the previous pipeline:
 
 ![Picture of the Pipeline](https://github.com/DijiOfficial/Diji-Engine/blob/master/GitHubAssets/Pipeline.png)
 
-and the current Pipeline:
+And the current pipeline:
 
 ![Picture of the Pipeline](https://github.com/DijiOfficial/SFML-Engine/blob/master/GitHubAssets/PipelineSFML.png)
 
-While it is not shown in the diagram, part of loading the new scene is calling the `Init` And `Start`, same thing for destroying object at the end of the frame, the `onDestroy` is called. While the pipeline has been expanded on almost all fronts we can see the `FixedUpdated` lagging a bit behind. One of the [improvemtns]() will be the expansion of the physics part of the engine with the fixed upadte.
+While it’s not shown in the diagram, part of loading a new scene involves calling both `Init` and `Start`. Similarly, when destroying objects at the end of the frame, `OnDestroy` is called.
 
-#### Engine Optimizations
+The pipeline has been expanded across nearly all fronts, but we can still see `FixedUpdate` lagging behind. One of the [future improvements](future-improvements--todos) will include an expansion of the physics system through the `FixedUpdate` cycle.
 
-VIEWPORT and Window are now global static variables allowing access anywhere this prevents having to duplicate pass reference down and helps with keeping miantainable code. Altough I'm aware the user can cause issues having global acces to the window it can be improved through the use of a wrapper class see [improvemtns]().
+#### <ins>**Engine Optimizations**</ins>
 
-### Pause Singleton
+`VIEWPORT` and `Window` are now global static variables, allowing access from anywhere in the codebase. This prevents the need to repeatedly pass references down through the hierarchy and helps keep the code more maintainable. 
+Although I'm aware that giving global access to the window can lead to issues, this can be [improved in the future](future-improvements--todos) by wrapping the window pointer in a wrapper class.
 
-Addition of the pause Singleton allowing players to easily pause or unpause the game when needed. This feature is in its early stages. see [improvements & todos]() on how this feature can be expanded in the future.
+### <ins>**Pause Singleton**</ins>
 
-### GameObjects
+A Pause Singleton has been added, allowing the player to easily pause or unpause the game as needed. This feature is still in its early stages—see the [Improvements & Todos](future-improvements--todos) section for how it may be expanded in the future.
 
-Addition of OnEnable and OnDisable methods, though the methods are not fully supported within the engine yet they can be used independantly within the gameobjec herarchy.
-GameObjects can now be duplicated, keeping a memory footrpint of their creation to use as a blueprint for the creation of duplicated assets. Both for compile and runtime.
+### <ins>**GameObjects**</ins>
 
-### RandNumber Helper
+`OnEnable` and `OnDisable` methods have been added to GameObjects. While these are not yet fully supported within the engine lifecycle, they can be used independently within the GameObject hierarchy.
 
-Introduction of the static RandomNumber helper class with thread safety to generate any int or float random number given a min and max value.
+GameObjects can now also be **duplicated**, with a memory footprint of their creation used as a blueprint for instantiating duplicated assets. This works both at **compile time** and **runtime**.
 
-### Input Manager
+### <ins>**RandNumber Helper**</ins>
 
-The input manager saw major changes compared to the original. Now has working HELP/PRESSED/RELEASED states for keys using unordered maps. 
-Optimized the call to assiociated Command with Hash Map to have O(1) execution over the previous O(n)
+Introduced a static `RandomNumber` helper class with **thread safety**, capable of generating both `int` and `float` random numbers given a `min` and `max` value.
+
+### <ins>**Input Manager**</ins>
+
+The Input Manager saw **major improvements** over the original version. It now supports proper `HELD`, `PRESSED`, and `RELEASED` states for keys using **unordered maps**.
+
+The call to the associated command has been optimized using a hash map, reducing lookup time from **O(n)** to** O(1)**:
 
 ![image of hash map optimization]()
 
-Further addition of mouse movements and mouse buttons, using templates.
+Mouse movement and mouse button support have also been added, implemented using templates for flexibility.
 
-### Event System
+### <ins>**Event System**</ins>
 
-Complete removal of Observer/Listener Pattern. Instead completly replaced by an event system like the unreal engine one. All components now have access to creating and subscribing to events as well as passing information to those events using templates. Heavily inspired by the unreal engine Event system it is a very close replica. It allows me to simplify the pattern and the code while keeping it clean and decoupled. A massive improvement from the original
+The original **Observer/Listener pattern** has been completely removed and replaced by an **event system** inspired by [**Unreal Engine's approach**](https://dev.epicgames.com/documentation/en-us/unreal-engine/custom-events-in-unreal-engine).
+
+Now, all components have access to:
+- Creating events
+- Subscribing to events
+- Passing data through events using templates
+
+This new system is a very close replica of Unreal’s and brings massive improvements allowing me to simplify the code while keeping it clean and decoupled.
+
+A significant step forward from the original engine:
 
 ![image of hash map optimization]()
 image of use case
 
-### Timers
+### <ins>**Timers**</ins>
 
-Addition of Timers, Once again inspired from Unreal Engine's timers Users can now create Timers while passing a function or lambda to be executed. The come with multiple parameters, including initial delay, delay, isLooping. Timers are also stored and mapped with TimerHandles to be canceled at any time.
+Timers have been added, once again inspired by [**Unreal Engine**](https://dev.epicgames.com/documentation/en-us/unreal-engine/using-timers-in-unreal-engine). Users can now create timers by passing a function or lambda to be executed.
+
+Timers support multiple parameters, including:
+- `initialDelay`
+- `delay`
+- `isLooping`
+
+Timers are stored and mapped using **TimerHandles**, which allow them to be canceled at any time.
 
 image of code
 image of use case
 
-### Camera
+### <ins>**Camera**</ins>
 
-Addition of Camera. Engine now supports cameras using the view class from smfl. Cameras can be set to follow gameobjects, locked/unlocked to prevent movement, offset for needed adjustments, and can be clamped within the game's boundaries.
+A Camera system has been added. The engine now supports cameras using SFML’s `View` class. Features include:
+- Following GameObjects
+- Locking or unlocking movement
+- Applying offsets for precise adjustments
+- Clamping movement within game boundaries
 
-### RectRender
+### <ins>**RectRender**</ins>
 
-Addition of the RectRender class to easily draw rectangles. Can be used for simple shapes or debugging.
+A **RectRender** component was added to simplify drawing rectangles. It can be used for simple shape rendering or collider debugging purposes.
 
-### Score Counter
+### <ins>**Score Counter**</ins>
 
-Addition of ScoreCounter component, it serves as a generic counter for score, lives or any other counters needed. It can send event on increase/decrease and goal reached for ease of use.
-Purpose
+A reusable component for tracking numeric gameplay values.
+The **ScoreCounter** component serves as a generic counter for score, lives, or any other numeric values needed in gameplay. It can emit events on score changes or when a goal is reached, making integration with other systems straightforward.
 
-A reusable component for tracking numeric gameplay values (score, lives, counters) and exposing changes to other systems and the UI.
-- Finds attached TextComp to display a formatted score string (default: "Score = ").
-	- Ability to change the string
-- ScoreValue can be fetched or reset.
-- Increase and decrease score with overloaded IncreaseScore / DecreaseScore methods and a configurable increment.
-- Set and check a goal score; the component can notify when the goal is reached.
-- Emits events on score changes so other systems remain decoupled.
-A useful generic counter: it can track lives, currency, or any incremental metric beyond “score.” as well as update displays
+**Features:**
 
-### Transform
+- Finds an attached `TextComponent` to display a formatted score string (default: `"Score = "`), with the ability to customize the string
+- `ScoreValue` can be fetched or reset
+- Increase or decrease the score with overloaded `IncreaseScore` / `DecreaseScore` methods, with a configurable increment
+- Set a goal score for the component to notify when the goal is reached
+- Emits events on score changes so other systems remain decoupled
 
-Addition of basic Seek behavior, Altough a usefull features it is noted as to be expanded and impletemented seperatly see [improvemtns and todos]()
+This component is versatile: it can track lives, currency, or any incremental metric beyond “score,” while automatically updating displays.
 
-### Scene & Scene Manager
+### <ins>**Transform**</ins>
 
-inspired from Unreal engine.
-SceneManager now allows users to find any gameobject within the scene. Set object to be destroyed, when the loop is finished pending destoy object will be safely destroyed. 
-SpawnGameObject, you can now spawn any gameobject similar to UnrealEngine given a gameobject template.
+A basic Seek behavior has been added. Although this is a useful feature, it is noted as needing further expansion and separate implementation. See [**Improvements and Todos**](future-improvements--todos) for details.
+
+### <ins>**Scene & Scene Manager**</ins>
+
+Inspired by **Unreal Engine**, the **SceneManager** has been significantly enhanced:
+- Users can now find any GameObject within the scene.
+- Objects can be marked for destruction where at the end of the update loop pending objects are safely destroyed.
+- `SpawnGameObject` allows users to spawn any GameObject using a template, similar to [**Unreal Engine**](https://dev.epicgames.com/documentation/en-us/unreal-engine/spawning-actors-in-unreal-engine).
+
 (image)
-Scene was adapted to Engine's new functions and SceneManager's new additions.
 
-SceneManager now loads scenes automatically when switched, granted the user registers the sceneLoader. Previously when changing the scene, the new scene needed to be called from the Loader. Now users can register a scene from the sceneLoader to be loaded automatically when switching the scene. see [improvemtns and todos]() on how I plan to expand this ssytem
+The **Scene** was adapted to support the engine’s new functions and the SceneManager’s additions.
 
-## Future Improvements & Todo's
+Additionally, **SceneManager now loads scenes automatically** when switching, provided the user has registered the scene with the `SceneLoader`. Previously, changing the scene required manually calling the loader. With the new system, scenes registered with the `SceneLoader` are loaded automatically during a scene switch.
 
-While working on this project I had to find a right balance between time invested and how worth a feature is to implement. Thus many features were left in early stages as they worked for my use cases. This with the inevitablity of making mistakes a few systems need some revisions as well.
+See [**Improvements and Todos**](future-improvements--todos) for planned expansions to this system.
+
+## <ins>**Future Improvements & Todo's**</ins>
+
+While working on this project, I had to find the right balance between time invested and the value of implementing a feature. As a result, many features were left in early stages, as they worked for my use cases. Additionally, some systems need revisions due to inevitable mistakes and imperfections during development.
 
 Here is a list of Potential Imporvemtns and marked todo's within the engine for future upgrades:
 
-- The physics and Collision system. Having worked on non heavy physics games it was inevitebale that the engine would lack in that domain. Its refelceted in the pipeliine for the fixed update which is very basic. Collision is handled through a singleton and is poorly optimized. So future updates would see:
-	- Removing Collision as a singleton.
- 	- adding collisino to the physics pipeline with different events similar to unreal engine.
-  	- optimization such as tags from unity, collision presets from Unreal as well as Partitionning and other optimization methods
-  	- Addtion of deeper physics simulation
+- **Physics and Collision system:** Having worked primarily on games without heavy physics, it was inevitable that the engine lacks depth in this area. This is reflected in the basic `FixedUpdate` pipeline. Collisions are currently handled via a singleton and are poorly optimized. Future updates should include:
+	- Removing Collision as a singleton
+ 	- Integrating collision into the physics pipeline with events similar to Unreal Engine.
+  	- Optimizations such as Unity's tags, Unreal's collision presets, spatial partitioning, and other methods
+  	- Adding deeper physics simulation
   	- Optimizing collider updates
-  	- Use of static flag for objects for ignoring updates.
-- Complete Implementation of `OnEnable` and `OnDisable` systems with optimization within game object logics
-- Introdcution of wrapper class for Viewport and ViewWindow allowing users the benefit of global acces to window while keeping it safe, expandebale and maintaineble
-- Improvemtns over the PauseSignleton, Currently only compatible with input system. It can be improved to allow Huds to update, whilst also seperating pause commands and gamecommands allowing gamecommands to be ignored while the game is paused and pause commands to contiue working.
-- Addition of TimerPhysics, with the addition of timer capable of slowing down or accelerating physics.
-- Addition of deeper AI systems, Seperating Ai behaviours from Core compoennts and moving it into an AI system complete with Blackboards, Behavior Tree (AI controlller), Tasks, Services, and Decorators.
-- addition of Navigation System to work in tandem with new AI systems
-- Scene Manager registering SceneLoaders for scenes. Improve the current system when creating a scene to register the loader with it. Removing user error in the process.
-- Introduce static Mathematical helpers. SFML does not support mathematicals helpers like GLM.
-- Improve current command registration system, it can be expnaded upon like the unity or unreal input ssytems to be more complete.
-	- Find a solution for duplicate Commands, Manually destroying commands before creeating them is not a good solution. either mapping them to the scene to be destroyed with the scene or static commands or...
-- Introduce Interfaces for decoupling and ....
-- Change all component base class methods to be non-pure virtual. It's Unecessary
-- Pimpl away the constructor of the Event System
-- Most GameObjects need custom logic, find a way to simplify the addition of custom components within gameObject. (like how unreal actors come packaged with their own unique blueprint)
-- GameObjects should all come with a TRansform component on creation
+  	- Using static flags for objects to ignore updates
+- Complete implementation of `OnEnable` and `OnDisable` systems, including optimization within GameObject logic
+- Introduction of **wrapper class** for `ViewWindow `to allow safe, global access while keeping the code **maintainable** and **expandable**
+- **Pause Singleton improvements:** Currently only compatible with the input system. Future updates should allow HUDs to update, separating pause commands from game commands, and ensure that game commands are ignored while pause commands continue functioning
+- **Addition of TimerPhysics**, supporting timers capable of slowing down or accelerating physics
+- **Deeper AI systems:** Separate AI behaviors from core components into an AI system complete with **Blackboards**, **Behavior Trees** (AI controllers), **Tasks**, **Services**, and **Decorators**
+- **Navigation System** to work in tandem with AI systems
+- **SceneManager improvements:** Automatically register SceneLoaders to remove user error during scene creation
+- **Introduce static mathematical helpers**, since SFML does not provide helpers like GLM
+- **Improve command registration system** to match the completeness of Unity or Unreal input systems
+	- Find a solution for duplicate commands (manual destruction before creation is not ideal; consider mapping to scenes or static commands)
+- Change all component base class methods to non-pure virtual (pure virtual unnecessary)
+- Most GameObjects need custom logic. Simplify the addition of custom components to GameObjects (like Unreal Actors with built-in blueprints)
+- Ensure all GameObjects come with a **Transform component** upon creation
 - Improve the call to play audio. Audio files can be mapped to an enum and use that instead of the file name. it makes it easier to use and more readeable it also avoid user erros.
-- Expand on the InputManager playerIndexes allowing more than just 4 unique players. perhaps moving from an enum class to size_t
-- Change Renderer to take in textures as parameters instead of all the parameters seperately. And update it to use the static window ptr
-- Render Comopoentent revamped
-	- Either -> it would be better if every object had a render component and that render comp was different than a component. You could then regardless of the component call a virtual Render function on it, making the use of custom renderer much rarer
-  	- Or render should be a separate kind of component different from component components that goes for textures and text too allowing me to clearly seperate rendering and game logic.
-- Optimize the CreateGameObjectFromTemplate function. Likely some optimization can be done here. Like keeping track of the last used suffix or internal counter or ...
-- Optimize deletion of gameObjects at the end of the frame. currently pushing O(n^2) can be optimized to O(n) by moving the components to the end of the vector while keeping track of how many are moved. Then resizing the vector to delete them all at once. Or perhaps use a list?
-- Load scene asynchronously to allow loading screns and whatnot.
-- rename SetNextSceneToActivate to ChangeScene and replace Scene int with SceneId enum or size_t for readability.
-- rename ScoreCounter to a more General counter name reflecting its general use.
-- Add scaling to text comoponents
-- Optimize timer class by using a map or list to erase (stop) timers faster.
-- Add DelayUntilNext tick Fucntion to the timer class
-- Change SetTimer function to take in a TimerHandle parameter that assigns it isntead of creating one and returnging it.
+- Expand **InputManager** player indexes to allow more than four unique players (consider switching from enum class to size_t)
+- Modify **Renderer** to accept textures as parameters instead of individual parameters, and update it to use the static window pointer
+- **Render Component revamp:**
+	- Option 1: Every object has a render component separate from normal components, allowing a `virtual Render` function to be edited when needed.
+  	- Option 2: Rendering should be a separate system from components, clearly separating rendering logic from game logic
+- Optimize `CreateGameObjectFromTemplate` by tracking the last used suffix or using an internal counter
+- Optimize deletion of GameObjects at the end of the frame: currently O(n²), could be improved to O(n) by moving components to the end of the vector and resizing once, or by using a list
+- **Asynchronous scene loading** to allow smooth transitions
+- Rename `SetNextSceneToActivate` to `ChangeScene` and replace Scene `int` with a SceneId `enum` or `size_t` for readability
+- Rename `ScoreCounter` to a more general counter name reflecting its broader usage
+- Add **scaling** for text components
+- Optimize **Timer class** by using a map or list to erase (stop) timers faster
+- Add `DelayUntilNextTick` function to the **Timer class**
+- Change `SetTimer` to take a `TimerHandle` parameter, assigning it instead of creating a new handle and returning it
 
-# Conclusion
-## References
+# <ins>**Conclusion**</ins>
+
+The **SFML Engine** represents a significant step forward from the original [**Diji-Engine**](https://github.com/DijiOfficial/Diji-Engine), not only in terms of library migration but also in system design, architecture, and extensibility. By transitioning from SDL to SFML, many systems were simplified, made more maintainable, and enhanced with new functionality inspired by industry-standard engines like **Unity** and **Unreal Engine**.
+
+While the engine is still a work in progress, it provides a solid foundation for learning and game development in C++. Many features, such as the Event System, Input Manager, Timers, and SceneManager, have been redesigned to be more modular and flexible, while future improvements promise to further optimize performance and expand functionality.
+
+I hope to expand on this engine in the coming months learning more about engine development and game development to solidify my knowledge and abilities to develop games!
+
+## <ins>**References**</ins>
+- [**Diji-Engine**](https://github.com/DijiOfficial/Diji-Engine) Original engine upon which SFML Engine is based.
+- [**SFML**](https://www.sfml-dev.org) Simple and Fast Multimedia Library used as the core graphics and input library.
+- [**Unreal Engine**](https://www.unrealengine.com) Inspiration for the event system, AI framework, scene management, and various design patterns.
+- [**Unity Engine**](https://unity.com) Referenced for the engine pipeline, component architecture, input management, and naming conventions.
+- [**C++ Core Guidelines**](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) Followed as best practices for modern, safe, and maintainable C++ code.
+- [**Game Programming Patterns** by Robert Nystrom](https://gameprogrammingpatterns.com/) Used as guidance for architecture patterns and system design in a decoupled engine environment.
