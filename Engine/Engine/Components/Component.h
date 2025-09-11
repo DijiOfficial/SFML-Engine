@@ -5,7 +5,6 @@ namespace diji
 {
     class GameObject;
 
-    // todo: should be interface?
     class Component
     {
     public:
@@ -30,7 +29,7 @@ namespace diji
 
     protected:
         explicit Component(GameObject* ownerPtr) : m_OwnerPtr{ ownerPtr } {}
-        const GameObject* GetOwner() const { return m_OwnerPtr; }
+        [[nodiscard]] const GameObject* GetOwner() const { return m_OwnerPtr; }
 
     private:
         GameObject* m_OwnerPtr = {};

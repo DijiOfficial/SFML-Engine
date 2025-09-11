@@ -172,10 +172,11 @@ namespace diji
 		// 	SDL_RenderGeometry(m_RendererPtr, nullptr, verts.data(), static_cast<int>(verts.size()), nullptr, 0);
 		// }
 
-		const sf::Color& GetBackgroundColor() const { return m_ClearColor; }
+		[[nodiscard]] const sf::Color& GetBackgroundColor() const { return m_ClearColor; }
 		void SetBackgroundColor(const sf::Color& color);
 
 	private:
+		// todo: use the static global window pointer instead
 		sf::RenderWindow* m_WindowPtr = nullptr;
 		sf::Color m_ClearColor;
 	};

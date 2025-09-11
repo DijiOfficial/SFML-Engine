@@ -131,7 +131,7 @@ namespace diji
                 const std::size_t h1 = std::hash<int>{}(static_cast<int>(k.state));
                 const std::size_t h2 = std::visit([]<typename T0>(T0&& arg) -> std::size_t
                 {
-                    return std::hash<std::underlying_type_t<std::decay_t<T0>>>{}(static_cast<std::underlying_type_t<std::decay_t<T0>>>(arg));
+                    return std::hash<std::underlying_type_t<std::decay_t<T0>>>{}(static_cast<std::underlying_type_t<std::decay_t<T0>>>(std::forward<T0>(arg)));
                 }, k.input);
 
                 return h1 ^ (h2 << 1);

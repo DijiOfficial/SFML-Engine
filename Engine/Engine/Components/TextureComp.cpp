@@ -66,19 +66,19 @@ void diji::TextureComp::SetScale(const float scale)
 
 void diji::TextureComp::SetWidth(const int width)
 {
-	SetScaleX(static_cast<float>(width) / m_SFMLTexture.getSize().x);
+	SetScaleX(static_cast<float>(width) / static_cast<float>(m_SFMLTexture.getSize().x));
 }
 
 void diji::TextureComp::SetHeight(const int height)
 {
-	SetScaleY(static_cast<float>(height) / m_SFMLTexture.getSize().y);
+	SetScaleY(static_cast<float>(height) / static_cast<float>(m_SFMLTexture.getSize().y));
 }
 
 void diji::TextureComp::SetOriginToCenter()
 {
 	m_IsCentered = true;
 	const auto textureSize = m_SFMLTexture.getSize();
-	m_Origin = { textureSize.x * 0.5f, textureSize.y * 0.5f };
+	m_Origin = { static_cast<float>(textureSize.x) * 0.5f, static_cast<float>(textureSize.y) * 0.5f };
 
 	// if texture is not set yet, dirty flag it
 	if (textureSize.x == 0 || textureSize.y == 0)
@@ -90,12 +90,12 @@ void diji::TextureComp::SetOriginToCenter()
 // todo: consider whether I should use float for sizes?
 int diji::TextureComp::GetWidth() const
 {
-	return static_cast<int>(m_SFMLTexture.getSize().x * m_ScaleX);
+	return static_cast<int>(static_cast<float>(m_SFMLTexture.getSize().x) * m_ScaleX);
 }
 
 int diji::TextureComp::GetHeight() const
 {
-	return static_cast<int>(m_SFMLTexture.getSize().y * m_ScaleY);
+	return static_cast<int>(static_cast<float>(m_SFMLTexture.getSize().y) * m_ScaleY);
 }
 
 sf::Vector2u diji::TextureComp::GetSize() const

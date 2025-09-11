@@ -76,7 +76,7 @@ void diji::GameObject::OnDestroy() const
     }
 }
 
-void diji::GameObject::Destroy()
+void diji::GameObject::Destroy() const
 {
     SceneManager::GetInstance().SetPendingDestroy(this);
 }

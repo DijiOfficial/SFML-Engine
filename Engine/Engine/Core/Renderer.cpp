@@ -48,8 +48,8 @@ void diji::Renderer::RenderTexture(const sf::Texture& texture, const sf::Vector2
 void diji::Renderer::RenderTexture(const sf::Texture& texture, const sf::Vector2f& origin, const sf::Angle& rotation, const float x, const float y, const int width, const int height) const
 {
 	const sf::Vector2u texSize = texture.getSize();
-	const float scaleX = static_cast<float>(width) / texSize.x;
-	const float scaleY = static_cast<float>(height) / texSize.y;
+	const float scaleX = static_cast<float>(width) / static_cast<float>(texSize.x);
+	const float scaleY = static_cast<float>(height) / static_cast<float>(texSize.y);
 
 	RenderTexture(texture, origin, rotation, x, y, scaleX, scaleY);
 }
@@ -92,7 +92,7 @@ void diji::Renderer::RenderRotatedTexture(const sf::Texture& texture, const floa
 	sf::Sprite sprite(texture);
 
 	const sf::Vector2u texSize = texture.getSize();
-	sprite.setOrigin(sf::Vector2f{ texSize.x * 0.5f, texSize.y * 0.5f});
+	sprite.setOrigin(sf::Vector2f{ static_cast<float>(texSize.x) * 0.5f, static_cast<float>(texSize.y) * 0.5f });
 
 	sprite.setPosition(sf::Vector2f{ x, y });
 	sprite.setRotation(angle);
@@ -109,8 +109,8 @@ void diji::Renderer::RenderRotatedTexture(const sf::Texture& texture, const floa
 void diji::Renderer::RenderRotatedTexture(const sf::Texture& texture, const float x, const float y, const int width, const int height, const sf::Angle angle) const
 {
 	const sf::Vector2u texSize = texture.getSize();
-	const float scaleX = static_cast<float>(width) / texSize.x;
-	const float scaleY = static_cast<float>(height) / texSize.y;
+	const float scaleX = static_cast<float>(width) / static_cast<float>(texSize.x);
+	const float scaleY = static_cast<float>(height) / static_cast<float>(texSize.y);
 
 	RenderRotatedTexture(texture, x, y, angle, scaleX, scaleY);
 }

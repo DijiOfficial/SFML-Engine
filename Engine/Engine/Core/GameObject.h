@@ -37,7 +37,7 @@ namespace diji
 		void OnDisable() const;
 		void OnDestroy() const;
 
-		void Destroy();
+		void Destroy() const;
 		void CreateDuplicate(GameObject* duplicate) const;
 		
 #pragma region Components
@@ -92,11 +92,10 @@ namespace diji
 			}
 		}
 		
-		const std::vector<std::unique_ptr<Component>>& GetComponents() const { return m_ComponentsPtrVec; }
+		[[nodiscard]] const std::vector<std::unique_ptr<Component>>& GetComponents() const { return m_ComponentsPtrVec; }
 
-		// todo: set [[no discard]]
 		template<typename T>
-		T* GetComponent() const
+		[[nodiscard]] T* GetComponent() const
 		{
 			static_assert(std::is_base_of_v<Component, T>, "T must derive from Component");
 
@@ -111,7 +110,7 @@ namespace diji
 		}
 
 		template<typename T>
-		bool HasComponent() const
+		[[nodiscard]] bool HasComponent() const
 		{
 			static_assert(std::is_base_of_v<Component, T>, "T must derive from Component");
 
@@ -124,9 +123,9 @@ namespace diji
 #pragma endregion Components
 		
 		//SceneGraph
-		GameObject* GetParent() const { return m_ParentPtr; }
-		GameObject* GetChild(const int index) const { return m_ChildrenPtrVec[index]; }
-		int GetChildCount() const { return static_cast<int>(m_ChildrenPtrVec.size()); }
+		[[nodiscard]] GameObject* GetParent() const { return m_ParentPtr; }
+		[[nodiscard]] GameObject* GetChild(const int index) const { return m_ChildrenPtrVec[index]; }
+		[[nodiscard]] int GetChildCount() const { return static_cast<int>(m_ChildrenPtrVec.size()); }
 		sf::Vector2f GetWorldPosition();
 
 		void SetParent(GameObject* parent, bool keepWorldPosition);
