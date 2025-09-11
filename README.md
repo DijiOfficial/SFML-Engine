@@ -1,50 +1,34 @@
 # <ins>**SFML Engine**</ins>
 
-**My SFML Engine is a lightweight C++ engine built with [Simple and Fast Multimedia Library or SFML](https://www.sfml-dev.org), with [Four Simple Games]() each showcasing new capabilities of the engine, implemented following the C++ Core Guidelines.**
+**My SFML Engine is a lightweight C++ engine built with [Simple and Fast Multimedia Library or SFML](https://www.sfml-dev.org), implemented following the C++ Core Guidelines.**
 
 # <ins>**Overview**</ins>
 
 This Engine is built on the foundation of my [**Diji-Engine**](https://github.com/DijiOfficial/Diji-Engine), using [**SFML**]() over [**SDL**]() this project aims to improve my knowledge of programming, programming guidelines, game programming and learning capacities using new library.
 Since it's based of my Diji-Engine the structure is based of the Unity Engine as well as The Unreal Engine using systems appropritate for my use case. With an Improved more robust Pipeline simplyfying systems while expanding on them.
 
-The [**Four Games**]() included in this repo serves as proof of the engine's capabilites. A complete, [**playable example**]() that ties the engine’s core systems together.
-
 # <ins>**Contents**</ins>
 
 - [**The Engine**](#the-engine)
-    - [**Features**](#features--architecture)
-    	- [**Core Engine Systems**](#core-engine-systems)
-     	- [**Component System**](#component-system)
-      	- [**Graphics & Rendering**](#graphics--rendering)
-      	- [**Audio System**](#audio-system)
-      	- [**Input & Controls**](#input--controls)
-      	- [**Advanced Features**](#advanced-features)
-      	- [**Development Tools**](#development-tools)
-    - [**Game Programming Patterns**](#game-programming-patterns)
-    	- [**Command Pattern**](#command-pattern) 
-    	- [**Observer Pattern**](#observer-pattern) 
-    	- [**Singleton Pattern**](#singleton-pattern) 
-    	- [**Game Loop**](#game-loop) 
-    	- [**Update Method**](#update-method) 
-    	- [**Component Pattern**](#component-pattern) 
-    	- [**Dirty Flag**](#dirty-flag) 
-    	- [**Event Queue Pattern**](#event-queue-pattern) 
-    	- [**Service Locator Pattern**](#service-locator-pattern) 
-    	- [**GameObject Parent-Child Relationship**](#gameobjects-parent-child-relationships) 
-    - [**Pipeline**](#pipeline)
-    - [**Improvements & todos**](#improvements--todos)
-- [**Pac-Man**](#pac-man)
-    - [**Intro**](#intro)
-    - [**Overview**](#overview-1)
-    - [**Controls**](#controls)
-    - [**Single Player**](#single-player)
-    	- [**AI**](#ai) 
-    - [**CO-OP**](#co-op)
-    - [**VERSUS**](#versus)
-    	- [**FREEMODE**](#freemode)
-    	- [**GHOST RULES**](#ghost-rules)
-     - [**Create Level**](#create-level)
-     - [**Play The Game**](#play-the-game)
+    - [**SDL to SFML**](#sdl-to-sfml)
+    	- [**Resource Manager**](#resource-manager)
+     	- [**Renderer & Render Component**](#renderer--render-component)
+      	- [**Why SFML**](#why-sfml)
+	- [**Improvements & Additions**](#improvements--additions)
+      	- [**Engine Pipeline**](#engine-pipeline)
+      		- [**Engine Optimizations**](#engine-optimizations)
+    	- [**Pause Singleton**](#pause-singleton) 
+    	- [**GameObjects**](#gameobjects) 
+    	- [**RandNumber Helper**](#randnumber-helper) 
+    	- [**Input Manager**](#input-manager) 
+    	- [**Event System**](#event-system) 
+    	- [**Timers**](#timers) 
+    	- [**Camera**](#camera) 
+    	- [**RectRender**](#rectrender) 
+    	- [**Score Counter**](#score-counter) 
+    	- [**Transform**](#transform) 
+    	- [**Scene & Scene Manager**](scene--scene-manager) 
+    - [**Future Improvements & Todo's**](#future-improvements--todo--s)
   - [**Conclusion**](#conclusion)
     - [**References**](#references) 
 
@@ -52,16 +36,13 @@ The [**Four Games**]() included in this repo serves as proof of the engine's cap
 
 In this section I will cover the changes and improvements over my first engine. I won't go over the features and programming patterns as they are essentially the same as my [**Diji-Engine**](). I will instead cover the transition and differences with an extensive focus on the Improvements made.
 
-<details>
-	 <summary>Click to expand Library porting details</summary>
-
-## From SDL to SFML
+## SDL to SFML
 
 As this engine was made with a different library than my orginal a few systems had to be modified. Where SDL provides a low-level, C-based API focused on maximum portability across platforms, SFML is built for modern C++ and offers a more object-oriented, user-friendly library, making it easier to use and understand, thus the change was not a difficult challenge as SDL needed more abstractions already ocvered by SFML.
 
 The biggest changes related to the libraries will be about resources and renderering having vastly different handling methods between the two.
 
-### ResourceManager
+### Resource Manager
 
 The resource manager saw changes all across as SDL provides raw pointers to the information needed for textures, fonts and other resources. Needing RAII Wrappers to encaspulate those resources. SFML already provides Wrappers for those making it much easier to use and therefore seeing the removal of all the existing RAII wrappers. 
 
@@ -75,12 +56,7 @@ The renderer was simplified, used in tandem with the SFML RenderWindow. SFML als
 
 Changing library is more than just swapping APIs. it's an exercise in problem-solving, and learning to manage wide-reaching changes across a codebase. Migrating the engine involved rethinking abstractions, understanding dependencies and cor concepts that have grown around the old library. Migrating the engine also exposes areas for modularity, decoupling, and improved maintainability, where core systems have to be adapdted they are also updated and improved turning the challenge itself into a valuable engine development milestone rather than just a technical challenge. And for all of That SFML was a perfect fit, a very different yet similar library. It's also a great API for gameDevleopment.
 
-</details>
-
-## Improvements and Additions
-
-<details>
-	 <summary>Click to expand engine improvements and roadmap details</summary>
+## Improvements & Additions
 
 With the library changes out of the way let's get into the improvenets and additions to the engine.
 
@@ -115,7 +91,7 @@ GameObjects can now be duplicated, keeping a memory footrpint of their creation 
 
 Introduction of the static RandomNumber helper class with thread safety to generate any int or float random number given a min and max value.
 
-### InputManager
+### Input Manager
 
 The input manager saw major changes compared to the original. Now has working HELP/PRESSED/RELEASED states for keys using unordered maps. 
 Optimized the call to assiociated Command with Hash Map to have O(1) execution over the previous O(n)
@@ -146,7 +122,7 @@ Addition of Camera. Engine now supports cameras using the view class from smfl. 
 
 Addition of the RectRender class to easily draw rectangles. Can be used for simple shapes or debugging.
 
-### ScoreCounter
+### Score Counter
 
 Addition of ScoreCounter component, it serves as a generic counter for score, lives or any other counters needed. It can send event on increase/decrease and goal reached for ease of use.
 Purpose
@@ -174,7 +150,7 @@ Scene was adapted to Engine's new functions and SceneManager's new additions.
 
 SceneManager now loads scenes automatically when switched, granted the user registers the sceneLoader. Previously when changing the scene, the new scene needed to be called from the Loader. Now users can register a scene from the sceneLoader to be loaded automatically when switching the scene. see [improvemtns and todos]() on how I plan to expand this ssytem
 
-## Improvements & Todos
+## Future Improvements & Todo's
 
 While working on this project I had to find a right balance between time invested and how worth a feature is to implement. Thus many features were left in early stages as they worked for my use cases. This with the inevitablity of making mistakes a few systems need some revisions as well.
 
@@ -217,21 +193,6 @@ Here is a list of Potential Imporvemtns and marked todo's within the engine for 
 - Optimize timer class by using a map or list to erase (stop) timers faster.
 - Add DelayUntilNext tick Fucntion to the timer class
 - Change SetTimer function to take in a TimerHandle parameter that assigns it isntead of creating one and returnging it.
-
-</details>
-
-# The Four Games
-## Intro
-    
-# Overview
-
-# The Games
-## Timber
-## Pong
-## Zombie Game
-## Tom?Other?
-
-## Playe The Games
 
 # Conclusion
 ## References
