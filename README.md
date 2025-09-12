@@ -1,6 +1,6 @@
 # <ins>**SFML Engine**</ins>
 
-**My SFML Engine is a lightweight C++ engine built with [SFML (Simple and Fast Multimedia Library)](https://www.sfml-dev.org), implemented following the C++ Core Guidelines.**
+**My SFML Engine is a lightweight C++ engine built with [SFML (Simple and Fast Multimedia Library)](https://www.sfml-dev.org), implemented following the [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines).**
 
 # <ins>**Overview**</ins>
 
