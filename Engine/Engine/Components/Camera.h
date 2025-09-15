@@ -13,6 +13,8 @@ namespace diji
     {
     public:
         explicit Camera(GameObject* ownerPtr, float width, float height);
+        explicit Camera(GameObject* ownerPtr, sf::Vector2f size);
+        explicit Camera(GameObject* ownerPtr, sf::Vector2u size);
         ~Camera() noexcept override = default;
 
         void Init() override;

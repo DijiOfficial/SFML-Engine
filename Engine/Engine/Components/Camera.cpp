@@ -14,6 +14,23 @@ diji::Camera::Camera(GameObject* ownerPtr, const float width, const float height
     m_CameraView = sf::View(sf::Vector2f{ 0, 0 }, sf::Vector2f{ width, height });
 }
 
+diji::Camera::Camera(GameObject* ownerPtr, const sf::Vector2f size)
+    : Component(ownerPtr)
+    , m_LevelBoundaries{ sf::Vector2f{ 0, 0 }, size }
+    , m_CameraOffset{ 0, 0 }
+    , m_Width{ size.x }
+    , m_Height{ size.y }
+    , m_IsLocked{ false }
+{
+    m_CameraView = sf::View(sf::Vector2f{ 0, 0 }, size);
+}
+
+diji::Camera::Camera(GameObject* ownerPtr, const sf::Vector2u size)
+    : Camera(ownerPtr, static_cast<sf::Vector2f>(size))
+{
+    
+}
+
 void diji::Camera::Init()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<Transform>();
