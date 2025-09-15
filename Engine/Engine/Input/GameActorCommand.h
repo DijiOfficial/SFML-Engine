@@ -12,7 +12,7 @@ namespace diji
         ~GameActorCommands() noexcept override = default;
 
     protected:
-        GameObject* GetGameActor() const { return m_ActorPtr; }
+        [[nodiscard]] GameObject* GetGameActor() const { return m_ActorPtr; }
 
     private:
         GameObject* m_ActorPtr;
