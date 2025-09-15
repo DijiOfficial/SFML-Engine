@@ -262,6 +262,7 @@ Here is a list of Potential Imporvemtns and marked todo's within the engine for 
 - Optimize **Timer class** by using a map or list to erase (stop) timers faster
 - Add `DelayUntilNextTick` function to the **Timer class**
 - Change `SetTimer` to take a `TimerHandle` parameter, assigning it instead of creating a new handle and returning it
+- Expand on the HUD system to allow the creation of different canvas and control over their render. On/Off and other.
 
 # <ins>**Conclusion**</ins>
 
