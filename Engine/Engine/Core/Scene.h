@@ -24,7 +24,8 @@ namespace diji
         void Update();
         void LateUpdate();
         void Render() const;
-
+        void RenderMultiplayerViews() const;
+        
         void OnDestroy();
 		
         [[nodiscard]] GameObject* CreateGameObject(const std::string& name);
@@ -39,10 +40,16 @@ namespace diji
         void SetGameObjectAsCanvasObject(const std::string& name);
         void SetGameObjectAsCanvasObject(const GameObject* object);
         void SetCanvasView(const sf::View& view) { m_CanvasView = view; }
-		
+
+        void SetMultiplayerSplitScreen(int numPlayers);
     private:
         std::map<std::string, std::unique_ptr<GameObject>> m_ObjectsUPtrMap;
         std::map<std::string, std::unique_ptr<GameObject>> m_CanvasObjectsUPtrMap;
         sf::View m_CanvasView = sf::View(sf::Vector2f{ 1920 * 0.5f, 1080 * 0.5f }, sf::Vector2f{ 1920, 1080 });
+
+        std::vector<sf::View> m_MultiplayerViews;
+        bool m_IsUsingMultiplayerViews = false;
+
+        void DrawGameObjects() const;
     };
 }

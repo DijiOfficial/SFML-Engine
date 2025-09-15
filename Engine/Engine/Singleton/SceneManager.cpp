@@ -1,5 +1,6 @@
 ﻿#include "SceneManager.h"
 
+#include <ranges>
 #include <stdexcept>
 
 #include "TimerManager.h"
@@ -17,6 +18,11 @@ diji::Scene* diji::SceneManager::CreateScene(const int id)
 
     // Scene does not exist, create a new one and store it in the map
     m_ScenesUPtrMap[id] = std::make_unique<Scene>();
+
+    // if multiplayer is enabled, set the new scene to use split screen
+    if (m_IsMultiplayer)
+        m_ScenesUPtrMap[id].get()->SetMultiplayerSplitScreen(m_NumPlayers);
+    
     return m_ScenesUPtrMap[id].get();
 }
 
@@ -120,4 +126,19 @@ diji::GameObject* diji::SceneManager::SpawnGameObject(const std::string& name, c
     gameObject->Start();
 
     return gameObject;
+}
+
+void diji::SceneManager::SetMultiplayerSplitScreen(const int numPlayers)
+{
+    m_IsMultiplayer = true;
+    m_NumPlayers = numPlayers;
+
+    if (numPlayers == 1)
+        m_IsMultiplayer = false;
+
+    // update all existing scenes to use split screen
+    for (const auto& scene : m_ScenesUPtrMap | std::views::values)
+    {
+        scene->SetMultiplayerSplitScreen(numPlayers);
+    }
 }
