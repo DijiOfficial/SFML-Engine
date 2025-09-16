@@ -3,6 +3,7 @@
 #include "Engine/Collision/Collider.h"
 #include "../Singletons/GameManager.h"
 #include "Engine/Components/Camera.h"
+#include "Engine/Components/Transform.h"
 
 //temp
 // #include "../Core/GameLoader.h"
@@ -13,6 +14,11 @@ thomasWasLate::PlayerCharacter::PlayerCharacter(diji::GameObject* ownerPtr, cons
     : Component{ ownerPtr }
     , m_CurrentCharacter{ currPlayer }
 {
+}
+
+void thomasWasLate::PlayerCharacter::Init()
+{
+    m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
 }
 
 void thomasWasLate::PlayerCharacter::Start()
@@ -28,6 +34,11 @@ void thomasWasLate::PlayerCharacter::RefreshView(const bool isSplitscreen) const
         diji::SceneManager::GetInstance().SetViewParameters(static_cast<bool>(m_CurrentCharacter) ? 0 : 1, GetOwner()->GetComponent<diji::Transform>(), true, sf::Vector2f{ 25.f, 25.f });
     else
         SetCameraFollow();
+}
+
+void thomasWasLate::PlayerCharacter::Move(const sf::Vector2f& direction) const
+{
+    m_TransformCompPtr->AddOffset(direction * m_Speed * diji::TimeSingleton::GetInstance().GetDeltaTime());
 }
 
 void thomasWasLate::PlayerCharacter::SetCameraFollow() const

@@ -18,4 +18,17 @@ namespace thomasWasLate
         PlayerCharacter* m_Thomas = nullptr;
         PlayerCharacter* m_Bob = nullptr;
     };
+
+    class MoveCharacter final : public diji::GameActorCommands
+    {
+    public:
+        explicit MoveCharacter(diji::GameObject* actor, const sf::Vector2f& direction);
+        ~MoveCharacter() noexcept override = default;
+
+        void Execute() override;
+
+    private:
+        const sf::Vector2f m_Direction;
+        PlayerCharacter* m_Character = nullptr;
+    };
 }

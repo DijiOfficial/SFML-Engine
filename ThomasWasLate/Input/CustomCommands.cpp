@@ -17,3 +17,16 @@ void thomasWasLate::SwitchSplitScreenView::Execute()
     m_Thomas->RefreshView(m_IsMultiplayer);
     m_Bob->RefreshView(m_IsMultiplayer);
 }
+
+thomasWasLate::MoveCharacter::MoveCharacter(diji::GameObject* actor, const sf::Vector2f& direction)
+    : GameActorCommands{ actor }
+    , m_Direction{ direction }
+{
+    m_Character = actor->GetComponent<PlayerCharacter>();
+}
+
+void thomasWasLate::MoveCharacter::Execute()
+{
+    m_Character->Move(m_Direction);
+}
+
