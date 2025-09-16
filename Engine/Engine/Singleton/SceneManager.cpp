@@ -5,6 +5,7 @@
 
 #include "TimerManager.h"
 #include "../Components/Transform.h"
+#include "../Input/InputManager.h"
 
 diji::Scene* diji::SceneManager::CreateScene(const int id)
 {
@@ -82,6 +83,9 @@ void diji::SceneManager::EndFrameUpdate()
     if (m_IsSceneChange) // todo: async new scene loading
     {
         m_IsSceneChange = false;
+
+        // Clear Commands assigned for that scene
+        InputManager::GetInstance().ResetCommands();
         
         // Destroy current scene
         OnDestroy();
