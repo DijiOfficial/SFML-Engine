@@ -42,10 +42,12 @@ void SceneLoader::Level()
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(thomasWasLate::thomasWasLateState::Level));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(thomasWasLate::thomasWasLateState::Level));
 
+    // static_cast<float>(window::VIEWPORT.x) * -0.5f + 25.f, static_cast<float>(window::VIEWPORT.y) * -0.5f + 25.f
     const auto staticBackground = scene->CreateGameObject("A_StaticBackground");
-    staticBackground->AddComponents<Transform>(static_cast<float>(window::VIEWPORT.x) * -0.5f + 25.f, static_cast<float>(window::VIEWPORT.y) * -0.5f + 25.f);
+    staticBackground->AddComponents<Transform>(0, 0);
     staticBackground->AddComponents<TextureComp>("graphics/background.png");
     staticBackground->AddComponents<Render>();
+    scene->SetGameObjectAsStaticBackground(staticBackground);
 
     const auto background = scene->CreateGameObject("B_Background");
     background->AddComponents<Transform>(0, 0);
@@ -53,7 +55,7 @@ void SceneLoader::Level()
     background->AddComponents<Render>();
     background->AddComponents<thomasWasLate::BackgroundHandler>();
     
-    const auto camera = scene->CreateGameObject("A_Camera");
+    const auto camera = scene->CreateCameraObject("A_Camera");
     camera->AddComponents<Transform>(0, 0);
     camera->AddComponents<Camera>(window::VIEWPORT);
     // camera->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));

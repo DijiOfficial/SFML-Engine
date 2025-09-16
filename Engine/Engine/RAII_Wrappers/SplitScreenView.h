@@ -11,10 +11,10 @@ namespace diji
         explicit SplitScreenView(const sf::FloatRect& viewport);
         ~SplitScreenView() noexcept = default;
 
-        SplitScreenView(const SplitScreenView& other) = delete;
+        SplitScreenView(const SplitScreenView& other) noexcept = default;
         SplitScreenView(SplitScreenView&& other) noexcept = default;
-        SplitScreenView& operator=(const SplitScreenView& other) = delete;
-        SplitScreenView& operator=(SplitScreenView&& other) = delete;
+        SplitScreenView& operator=(const SplitScreenView& other) noexcept = default;
+        SplitScreenView& operator=(SplitScreenView&& other) noexcept = default;
 
         void Update();
 

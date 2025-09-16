@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include "Engine.h"
+#include "../Components/Camera.h"
 
 diji::Scene::~Scene() noexcept
 {
@@ -21,6 +22,9 @@ void diji::Scene::Init()
     {
         gameObject->Init();
     }
+
+    if (m_StaticBackgroundObjUPtr)
+        m_StaticBackgroundObjUPtr->Init();
 }
 
 void diji::Scene::Start()
@@ -34,6 +38,13 @@ void diji::Scene::Start()
     {
         gameObject->Start();
     }
+
+    if (m_StaticBackgroundObjUPtr)
+        m_StaticBackgroundObjUPtr->Start();
+
+    m_MainCameraCompPtr = m_MainCameraObjPtr ? m_MainCameraObjPtr->GetComponent<Camera>() : nullptr;
+    m_MainCameraViewCopy = m_MainCameraCompPtr ? m_MainCameraCompPtr->GetCameraView() : sf::View{};
+    m_RenderBackground = m_StaticBackgroundObjUPtr && m_MainCameraCompPtr;
 }
 
 void diji::Scene::FixedUpdate()
@@ -88,6 +99,15 @@ void diji::Scene::Render() const
     }
     else
     {
+        if (m_RenderBackground)
+        {
+            window::g_window_ptr->setView(m_MainCameraViewCopy);
+            m_StaticBackgroundObjUPtr->Render();
+        }
+        
+        if (m_MainCameraCompPtr)
+            window::g_window_ptr->setView(m_MainCameraCompPtr->GetCameraView());
+        
         DrawGameObjects();
     }
 
@@ -100,21 +120,19 @@ void diji::Scene::Render() const
 
 void diji::Scene::RenderMultiplayerViews() const
 {
-    for (const auto& view : m_MultiplayerViews)
+    for (size_t i = 0; i < m_MultiplayerViews.size(); ++i)
     {
-        // Set the background
-        window::g_window_ptr->setView(view.GetView());
-        DrawGameObjects();
-        // window::g_window_ptr->setView(m_LeftView);
-        // DrawGameObjects();//?
-    }
-    
-    // // Switch to background view
-    // window::g_window_ptr->setView(m_BGRightView);
-    // DrawGameObjects();
-    // // window::g_window_ptr->setView(m_RightView);
-    // // DrawGameObjects(); // ??
+        // Set background view
+        if (m_StaticBackgroundObjUPtr)
+        {
+            window::g_window_ptr->setView(m_MultiplayerViewsCopy[i].GetView());
+            m_StaticBackgroundObjUPtr->Render();
+        }
 
+        // Set gameplay view
+        window::g_window_ptr->setView(m_MultiplayerViews[i].GetView());
+        DrawGameObjects();
+    }
 }
 
 void diji::Scene::OnDestroy()
@@ -131,6 +149,13 @@ void diji::Scene::OnDestroy()
 
     m_ObjectsUPtrMap.clear();
     m_CanvasObjectsUPtrMap.clear();
+}
+
+diji::GameObject* diji::Scene::CreateCameraObject(const std::string& name)
+{
+    m_MainCameraObjPtr = CreateGameObject(name);
+
+    return m_MainCameraObjPtr;
 }
 
 diji::GameObject* diji::Scene::CreateGameObject(const std::string& name)
@@ -248,7 +273,6 @@ void diji::Scene::SetGameObjectAsCanvasObject(const std::string& name)
     const auto it = m_ObjectsUPtrMap.find(name);
     if (it != m_ObjectsUPtrMap.end())
     {
-        // Move the GameObject to m_CanvasObjectsUPtrMap
         m_CanvasObjectsUPtrMap[name] = std::move(it->second);
         m_ObjectsUPtrMap.erase(it);
     }
@@ -262,7 +286,6 @@ void diji::Scene::SetGameObjectAsCanvasObject(const GameObject* object)
     {
         if (it->second.get() == object)
         {
-            // Move the GameObject to m_CanvasObjectsUPtrMap
             m_CanvasObjectsUPtrMap[it->first] = std::move(it->second);
             m_ObjectsUPtrMap.erase(it);
             return;
@@ -288,8 +311,8 @@ void diji::Scene::SetMultiplayerSplitScreen(const int numPlayers)
             SplitScreenView leftView    (sf::FloatRect(sf::Vector2{ 0.f, 0.f  }, sf::Vector2{ 0.5f, 1.f }));
             SplitScreenView rightView   (sf::FloatRect(sf::Vector2{ 0.5f, 0.f }, sf::Vector2{ 0.5f, 1.f }));
 
-            m_MultiplayerViews.emplace_back(std::move(leftView));
-            m_MultiplayerViews.emplace_back(std::move(rightView));
+            m_MultiplayerViews.emplace_back(leftView);
+            m_MultiplayerViews.emplace_back(rightView);
             break;
         }
     case 3:
@@ -299,9 +322,9 @@ void diji::Scene::SetMultiplayerSplitScreen(const int numPlayers)
             SplitScreenView topRight(sf::FloatRect(sf::Vector2{ 0.5f, 0.f }, sf::Vector2{ 0.5f, 0.5f }));
             SplitScreenView bottom  (sf::FloatRect(sf::Vector2{ 0.f, 0.5f }, sf::Vector2{ 1.f, 0.5f  }));
 
-            m_MultiplayerViews.emplace_back(std::move(topLeft));
-            m_MultiplayerViews.emplace_back(std::move(topRight));
-            m_MultiplayerViews.emplace_back(std::move(bottom));
+            m_MultiplayerViews.emplace_back(topLeft);
+            m_MultiplayerViews.emplace_back(topRight);
+            m_MultiplayerViews.emplace_back(bottom);
             break;
         }
     case 4:
@@ -312,15 +335,44 @@ void diji::Scene::SetMultiplayerSplitScreen(const int numPlayers)
             SplitScreenView bottomLeft  (sf::FloatRect(sf::Vector2{ 0.f, 0.5f  }, sf::Vector2{ 0.5f, 0.5f }));
             SplitScreenView bottomRight (sf::FloatRect(sf::Vector2{ 0.5f, 0.5f }, sf::Vector2{ 0.5f, 0.5f }));
 
-            m_MultiplayerViews.emplace_back(std::move(topLeft));
-            m_MultiplayerViews.emplace_back(std::move(topRight));
-            m_MultiplayerViews.emplace_back(std::move(bottomLeft));
-            m_MultiplayerViews.emplace_back(std::move(bottomRight));
+            m_MultiplayerViews.emplace_back(topLeft);
+            m_MultiplayerViews.emplace_back(topRight);
+            m_MultiplayerViews.emplace_back(bottomLeft);
+            m_MultiplayerViews.emplace_back(bottomRight);
             break;
         }
     default:
         throw std::invalid_argument("Invalid number of players. Must be 2, 3, or 4.");
     }
+
+    m_MultiplayerViewsCopy = m_MultiplayerViews;
+}
+
+void diji::Scene::SetGameObjectAsStaticBackground(const std::string& name)
+{
+    const auto it = m_ObjectsUPtrMap.find(name);
+    if (it != m_ObjectsUPtrMap.end())
+    {
+        m_StaticBackgroundObjUPtr = std::move(it->second);
+        m_ObjectsUPtrMap.erase(it);
+    }
+    else
+        throw std::runtime_error("GameObject with the given name does not exist in the scene.");
+}
+
+void diji::Scene::SetGameObjectAsStaticBackground(const GameObject* object)
+{
+    for (auto it = m_ObjectsUPtrMap.begin(); it != m_ObjectsUPtrMap.end(); ++it)
+    {
+        if (it->second.get() == object)
+        {
+            m_StaticBackgroundObjUPtr = std::move(it->second);
+            m_ObjectsUPtrMap.erase(it);
+            return;
+        }
+    }
+
+    throw std::runtime_error("GameObject does not exist in the scene.");
 }
 
 void diji::Scene::DrawGameObjects() const

@@ -4,10 +4,14 @@
 #include <memory>
 #include <string>
 #include <SFML/Graphics/View.hpp>
+
+#include "Engine.h"
 #include "../RAII_Wrappers/SplitScreenView.h"
 
 namespace diji 
 {
+    class Camera;
+
     class Scene final
     {
     public:
@@ -29,6 +33,7 @@ namespace diji
         
         void OnDestroy();
 		
+        [[nodiscard]] GameObject* CreateCameraObject(const std::string& name);
         [[nodiscard]] GameObject* CreateGameObject(const std::string& name);
         [[nodiscard]] GameObject* CreateGameObject(const std::string& name, const GameObject* original);
         [[nodiscard]] GameObject* CreateGameObjectFromTemplate(const std::string& name, const GameObject* original);
@@ -36,7 +41,7 @@ namespace diji
         void Remove(const std::string& name);
         void RemoveAll();
         [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
-        std::string GetGameObjectName(const GameObject* object) const;
+        [[nodiscard]] std::string GetGameObjectName(const GameObject* object) const;
         void ChangeViewCenter(int idx, const sf::Vector2f& newCenter);
         void SetViewParameters(int idx, const Transform* target, bool isFollowing = false, const sf::Vector2f& offset = {});
 
@@ -45,13 +50,21 @@ namespace diji
         void SetCanvasView(const sf::View& view) { m_CanvasView = view; }
 
         void SetMultiplayerSplitScreen(int numPlayers);
+        void SetGameObjectAsStaticBackground(const std::string& name);
+        void SetGameObjectAsStaticBackground(const GameObject* object);
+        
     private:
         std::map<std::string, std::unique_ptr<GameObject>> m_ObjectsUPtrMap;
         std::map<std::string, std::unique_ptr<GameObject>> m_CanvasObjectsUPtrMap;
-        sf::View m_CanvasView = sf::View(sf::Vector2f{ 1920 * 0.5f, 1080 * 0.5f }, sf::Vector2f{ 1920, 1080 });
-
         std::vector<SplitScreenView> m_MultiplayerViews;
+        std::vector<SplitScreenView> m_MultiplayerViewsCopy;
+        std::unique_ptr<GameObject> m_StaticBackgroundObjUPtr = nullptr;
+        GameObject* m_MainCameraObjPtr = nullptr;
+        Camera* m_MainCameraCompPtr = nullptr;
+        sf::View m_MainCameraViewCopy = {};
+        sf::View m_CanvasView = sf::View(sf::Vector2f{ static_cast<float>(window::VIEWPORT.x) * 0.5f, static_cast<float>(window::VIEWPORT.y) * 0.5f }, sf::Vector2f{ window::VIEWPORT });
         bool m_IsUsingMultiplayerViews = false;
+        bool m_RenderBackground = false;
 
         void DrawGameObjects() const;
     };
