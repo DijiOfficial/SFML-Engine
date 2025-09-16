@@ -19,6 +19,8 @@ thomasWasLate::PlayerCharacter::PlayerCharacter(diji::GameObject* ownerPtr, cons
 void thomasWasLate::PlayerCharacter::Init()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
+
+    GameManager::GetInstance().OnPlayerSwitchedEvent.AddListener(this, &PlayerCharacter::RefreshView);
 }
 
 void thomasWasLate::PlayerCharacter::Start()
@@ -45,7 +47,8 @@ void thomasWasLate::PlayerCharacter::SetCameraFollow() const
 {
     if (m_CurrentCharacter == GameManager::GetInstance().GetCurrentPlayer())
     {
+        const auto& collision = GetOwner()->GetComponent<diji::Collider>()->GetCollisionBox();
         m_CameraCompPtr->SetFollow(GetOwner());
-        m_CameraCompPtr->SetOffsetCamera(GetOwner()->GetComponent<diji::Collider>()->GetCenter());
+        m_CameraCompPtr->SetOffsetCamera(sf::Vector2f{ collision.width * 0.5f, collision.height * 0.5f });
     }
 }

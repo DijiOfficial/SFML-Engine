@@ -31,4 +31,13 @@ namespace thomasWasLate
         const sf::Vector2f m_Direction;
         PlayerCharacter* m_Character = nullptr;
     };
+
+    class SwitchCharacter final : public diji::GameActorCommands
+    {
+    public:
+        explicit SwitchCharacter(diji::GameObject* actor) : GameActorCommands{ actor } {}
+        ~SwitchCharacter() noexcept override = default;
+
+        void Execute() override;
+    };
 }

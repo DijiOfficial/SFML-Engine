@@ -86,10 +86,18 @@ void SceneLoader::Level()
 #pragma region Commands
     auto& input = InputManager::GetInstance();
 
-    input.BindCommand<thomasWasLate::SwitchSplitScreenView>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::E, nullptr, thomas->GetComponent<thomasWasLate::PlayerCharacter>(), bob->GetComponent<thomasWasLate::PlayerCharacter>());
+    input.BindCommand<thomasWasLate::SwitchSplitScreenView>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::E, nullptr, thomas->GetComponent<thomasWasLate::PlayerCharacter>(), bob->GetComponent<thomasWasLate::PlayerCharacter>());
     input.BindCommand<thomasWasLate::MoveCharacter>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::D, thomas, sf::Vector2f{ 1.f, 0.f });
     input.BindCommand<thomasWasLate::MoveCharacter>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::A, thomas, sf::Vector2f{ -1.f, 0.f });
     input.BindCommand<thomasWasLate::MoveCharacter>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::Right, bob, sf::Vector2f{ 1.f, 0.f });
     input.BindCommand<thomasWasLate::MoveCharacter>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::Left, bob, sf::Vector2f{ -1.f, 0.f });
+
+    input.BindCommand<thomasWasLate::SwitchCharacter>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Q, nullptr);
+#pragma endregion
+
+#pragma region Events
+
+    // zombiesRemainingText->GetComponent<ScoreCounter>()->OnGivenScoreReachedEvent.AddListener(pistol->GetComponent<zombieArena::Pistol>(), &zombieArena::Pistol::SaveInfo);
+    
 #pragma endregion
 }

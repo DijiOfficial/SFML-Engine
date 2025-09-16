@@ -42,5 +42,6 @@ namespace thomasWasLate
         CurrentPlayer m_CurrentCharacter;
 
         void SetCameraFollow() const;
+        void RefreshView() const { RefreshView(false); }
     };
 }

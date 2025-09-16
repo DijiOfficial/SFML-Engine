@@ -2,5 +2,7 @@
 
 void thomasWasLate::GameManager::SwitchPlayer()
 {
-    m_CurrentPlayer = static_cast<bool>(m_CurrentPlayer) ? CurrentPlayer::Bob : CurrentPlayer::Thomas;
+    m_CurrentPlayer = static_cast<bool>(m_CurrentPlayer) ? CurrentPlayer::Thomas : CurrentPlayer::Bob;
+
+    OnPlayerSwitchedEvent.Broadcast();
 }

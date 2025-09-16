@@ -1,6 +1,7 @@
 ﻿#include "CustomCommands.h"
 #include "Engine/Singleton/SceneManager.h"
 #include "../Components/PlayerCharacter.h"
+#include "../Singletons/GameManager.h"
 
 thomasWasLate::SwitchSplitScreenView::SwitchSplitScreenView(diji::GameObject* actor, PlayerCharacter* thomas, PlayerCharacter* bob)
     : GameActorCommands{ actor }
@@ -28,5 +29,10 @@ thomasWasLate::MoveCharacter::MoveCharacter(diji::GameObject* actor, const sf::V
 void thomasWasLate::MoveCharacter::Execute()
 {
     m_Character->Move(m_Direction);
+}
+
+void thomasWasLate::SwitchCharacter::Execute()
+{
+    GameManager::GetInstance().SwitchPlayer();
 }
 
