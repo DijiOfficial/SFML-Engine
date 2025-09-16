@@ -32,10 +32,13 @@ namespace diji
         void UnlockCamera() { m_IsLocked = false; }
         void LockCamera() { m_IsLocked = true; }
         void SetOffsetCamera(const sf::Vector2f& offset) { m_CameraOffset = offset; }
+        void AddOffsetCamera(const sf::Vector2f& offset) { m_CameraOffset += offset; }
         void ResetOffset() { m_CameraOffset = sf::Vector2f{ 0, 0 }; }
         void SetFollow(const GameObject* target);
         void SetFollowSelf();
         void SetAsMainView() const;
+        void SetClampingMode(const bool isClamped) { m_IsClamped = isClamped; }
+        void ClearFollow();
         
         sf::Vector2f GetCameraOffset() const { return m_CameraOffset; }
         bool GetIsCameraLocked() const { return m_IsLocked; }
@@ -50,6 +53,7 @@ namespace diji
         float m_Width;
         float m_Height;
         bool m_IsLocked;
+        bool m_IsClamped = true;
 
         void Clamp(sf::Vector2f& pos) const;
     };

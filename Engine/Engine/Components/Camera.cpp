@@ -42,7 +42,10 @@ void diji::Camera::Update()
     if (m_IsLocked) return;
 
     sf::Vector2f cameraPos = m_TransformCompPtr->GetPosition() + m_CameraOffset;
-    Clamp(cameraPos);
+
+    if (m_IsClamped)
+        Clamp(cameraPos);
+    
     m_CameraView.setCenter(cameraPos);
     window::g_window_ptr->setView(m_CameraView); // big L from SFML imo
 }
@@ -60,6 +63,11 @@ void diji::Camera::SetFollowSelf()
 void diji::Camera::SetAsMainView() const
 {
     window::g_window_ptr->setView(m_CameraView);
+}
+
+void diji::Camera::ClearFollow()
+{
+    m_TransformCompPtr = GetOwner()->GetComponent<Transform>();
 }
 
 sf::Vector2i diji::Camera::GetMouseWorldPosition(const sf::Vector2i& pos) const
