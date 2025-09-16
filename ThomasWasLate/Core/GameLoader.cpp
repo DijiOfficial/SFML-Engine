@@ -1,7 +1,9 @@
 ﻿#include "GameLoader.h"
 
 #include "GameState.h"
+#include "../Components/PlayerCharacter.h"
 #include "../Input/CustomCommands.h"
+#include "../Singletons/GameManager.h"
 #include "Engine/Collision/CollisionSingleton.h"
 #include "Engine//Collision/Collider.h"
 #include "Engine/Components/TextureComp.h"
@@ -11,10 +13,6 @@
 #include "Engine/Components/Transform.h"
 #include "Engine/Components/Render.h"
 #include "Engine/Components/Camera.h"
-#include "Engine/Components/FPSCounter.h"
-#include "Engine/Components/RectRender.h"
-#include "Engine/Components/ScoreCounter.h"
-#include "Engine/Components/Sprite.h"
 #include "Engine/Components/TextComp.h"
 #include "Engine/Core/Engine.h"
 #include "Engine/Singleton/GameStateManager.h"
@@ -41,14 +39,31 @@ void SceneLoader::Level()
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(thomasWasLate::thomasWasLateState::Level));
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(thomasWasLate::thomasWasLateState::Level));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(thomasWasLate::thomasWasLateState::Level));
-    constexpr sf::IntRect arena{ sf::Vector2i{ 0, 0 }, sf::Vector2i{ 1920, 1080 } };
 
     const auto background = scene->CreateGameObject("A_Background");
-    background->AddComponents<Transform>(0, 0);
+    background->AddComponents<Transform>(static_cast<float>(window::VIEWPORT.x) * -0.5f + 25.f, static_cast<float>(window::VIEWPORT.y) * -0.5f + 25.f);
     background->AddComponents<TextureComp>("graphics/background.png");
     background->AddComponents<Render>();
-    background->AddComponents<Camera>(window::VIEWPORT);
-    background->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
+
+    const auto camera = scene->CreateGameObject("A_Camera");
+    camera->AddComponents<Transform>(0, 0);
+    camera->AddComponents<Camera>(window::VIEWPORT);
+    // camera->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
+    camera->GetComponent<Camera>()->SetClampingMode(false);
+
+    const auto thomas = scene->CreateGameObject("X_Thomas");
+    thomas->AddComponents<Transform>(0, 0);
+    thomas->AddComponents<TextureComp>("graphics/thomas.png");
+    thomas->AddComponents<Render>();
+    thomas->AddComponents<Collider>();
+    thomas->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Thomas);
+
+    const auto bob = scene->CreateGameObject("X_Bob");
+    bob->AddComponents<Transform>(100, 0);
+    bob->AddComponents<TextureComp>("graphics/bob.png");
+    bob->AddComponents<Render>();
+    bob->AddComponents<Collider>();
+    bob->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Bob);
 
     // // set up a camera and use the camera instead of the window sizes
     // const auto HUD = scene->CreateGameObject("Z_HUD");
@@ -71,6 +86,6 @@ void SceneLoader::Level()
 #pragma region Commands
     auto& input = InputManager::GetInstance();
 
-    input.BindCommand<thomasWasLate::SwitchSplitScreenView>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::E, nullptr);
+    input.BindCommand<thomasWasLate::SwitchSplitScreenView>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::E, nullptr, thomas->GetComponent<thomasWasLate::PlayerCharacter>(), bob->GetComponent<thomasWasLate::PlayerCharacter>());
 #pragma endregion
 }

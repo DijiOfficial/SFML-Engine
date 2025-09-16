@@ -7,8 +7,6 @@
 #include "Engine/Core/GameObject.h"
 #include "Engine/Singleton/TimerManager.h"
 
-//todo: add zombie counter and scene changes
-// todo: increase core when zombie dies
 namespace zombieArena
 {
     enum class PickUpType;
