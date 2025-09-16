@@ -54,7 +54,7 @@ namespace diji
 
         void ClearListeners()
         {
-            m_Listeners.clear();
+            m_Listeners = std::vector<Callback>();
         }
 
     private:

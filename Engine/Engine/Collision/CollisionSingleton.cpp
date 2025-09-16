@@ -5,7 +5,7 @@
 
 void diji::CollisionSingleton::Reset()
 {
-	m_Colliders.clear();
+	m_Colliders = std::map<const Collider*, Rectf>();
 }
 
 void diji::CollisionSingleton::AddCollider(const Collider* object, const Rectf& collider)

@@ -74,7 +74,7 @@ void diji::SceneManager::EndFrameUpdate()
             m_ScenesUPtrMap.at(m_ActiveSceneId)->Remove(gameObject);
         }
 
-        m_PendingDestroyVec.clear();
+        m_PendingDestroyVec = std::vector<const GameObject*>();
         m_HasPendingDestroy = false;
     }
     

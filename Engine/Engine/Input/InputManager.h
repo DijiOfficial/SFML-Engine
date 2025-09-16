@@ -87,7 +87,7 @@ namespace diji
             m_MouseMoveCommandsVec.emplace_back(std::make_unique<T>(actor, std::forward<Args>(args)...));
         }
 
-        void ResetCommands() { m_CommandUMap.clear(); }
+        void ResetCommands() { m_CommandUMap = std::unordered_map<CommandKey, std::vector<PlayerCommand>, CommandKeyHash>(); }
         void Quit() { m_Continue = false; }
         [[nodiscard]] sf::Vector2i GetMousePosition() const { return m_MousePosition; }
         

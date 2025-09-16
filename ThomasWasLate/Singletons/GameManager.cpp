@@ -60,7 +60,7 @@ void thomasWasLate::GameManager::ReadLevelInfo(const std::string& filepath)
     std::string line;
     m_Rows = 0;
     m_Cols = 0;
-    m_LevelInfo.clear();
+    m_LevelInfo = std::vector<int>();
 
     while (std::getline(file, line))
     {

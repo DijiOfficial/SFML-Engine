@@ -9,6 +9,7 @@
 diji::Scene::~Scene() noexcept
 {
     m_ObjectsUPtrMap.clear();
+    m_CanvasObjectsUPtrMap.clear();
 }
 
 void diji::Scene::Init()
@@ -147,8 +148,8 @@ void diji::Scene::OnDestroy()
         gameObject->OnDestroy();
     }
 
-    m_ObjectsUPtrMap.clear();
-    m_CanvasObjectsUPtrMap.clear();
+    m_ObjectsUPtrMap = std::map<std::string, std::unique_ptr<GameObject>>();
+    m_CanvasObjectsUPtrMap = std::map<std::string, std::unique_ptr<GameObject>>();
 }
 
 diji::GameObject* diji::Scene::CreateCameraObject(const std::string& name)
@@ -234,7 +235,7 @@ void diji::Scene::Remove(const std::string& name)
 
 void diji::Scene::RemoveAll()
 {
-    m_ObjectsUPtrMap.clear();
+    m_ObjectsUPtrMap = std::map<std::string, std::unique_ptr<GameObject>>();
 }
 
 diji::GameObject* diji::Scene::GetGameObject(const std::string& name) const
@@ -297,7 +298,7 @@ void diji::Scene::SetGameObjectAsCanvasObject(const GameObject* object)
 
 void diji::Scene::SetMultiplayerSplitScreen(const int numPlayers)
 {
-    m_MultiplayerViews.clear();
+    m_MultiplayerViews = std::vector<SplitScreenView>();
     m_IsUsingMultiplayerViews = true;
 
     switch (numPlayers)
