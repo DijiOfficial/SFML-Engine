@@ -226,6 +226,11 @@ std::string diji::Scene::GetGameObjectName(const GameObject* object) const
     throw std::runtime_error("GameObject not found in the scene.");
 }
 
+void diji::Scene::ChangeViewCenter(const int idx, const sf::Vector2f& newCenter)
+{
+    m_MultiplayerViews.at(idx).setCenter(newCenter);
+}
+
 void diji::Scene::SetGameObjectAsCanvasObject(const std::string& name)
 {
     const auto it = m_ObjectsUPtrMap.find(name);

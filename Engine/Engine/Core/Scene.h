@@ -36,6 +36,7 @@ namespace diji
         void RemoveAll();
         [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
         std::string GetGameObjectName(const GameObject* object) const;
+        void ChangeViewCenter(int idx, const sf::Vector2f& newCenter);
 
         void SetGameObjectAsCanvasObject(const std::string& name);
         void SetGameObjectAsCanvasObject(const GameObject* object);

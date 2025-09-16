@@ -128,6 +128,11 @@ diji::GameObject* diji::SceneManager::SpawnGameObject(const std::string& name, c
     return gameObject;
 }
 
+void diji::SceneManager::ChangePlayerViewCenter(const int currPlayer, const sf::Vector2f& newCenter) const
+{
+    m_ScenesUPtrMap.at(m_ActiveSceneId)->ChangeViewCenter(currPlayer, newCenter);
+}
+
 void diji::SceneManager::SetMultiplayerSplitScreen(const int numPlayers)
 {
     m_IsMultiplayer = true;
