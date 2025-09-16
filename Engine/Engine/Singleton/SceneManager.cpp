@@ -133,6 +133,14 @@ void diji::SceneManager::ChangePlayerViewCenter(const int currPlayer, const sf::
     m_ScenesUPtrMap.at(m_ActiveSceneId)->ChangeViewCenter(currPlayer, newCenter);
 }
 
+void diji::SceneManager::SetViewParameters(const int idx, const Transform* target, const bool isFollowing, const sf::Vector2f& offset) const
+{
+    for (const auto& scene : m_ScenesUPtrMap | std::views::values)
+    {
+        scene->SetViewParameters(idx, target, isFollowing, offset);
+    }
+}
+
 void diji::SceneManager::SetMultiplayerSplitScreen(const int numPlayers)
 {
     m_IsMultiplayer = true;

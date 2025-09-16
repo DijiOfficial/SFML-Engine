@@ -41,6 +41,7 @@
     <ClInclude Include="Engine\Input\InputManager.h" />
     <ClInclude Include="Engine\Interfaces\EventSystem.h" />
     <ClInclude Include="Engine\Interfaces\ISoundSystem.h" />
+    <ClInclude Include="Engine\RAII_Wrappers\SplitScreenView.h" />
     <ClInclude Include="Engine\Singleton\GameStateManager.h" />
     <ClInclude Include="Engine\Singleton\PauseSingleton.h" />
     <ClInclude Include="Engine\Singleton\RandNumber.h" />
@@ -69,12 +70,10 @@
     <ClCompile Include="Engine\Input\Controller.cpp" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\Interfaces\ISoundSystem.cpp" />
+    <ClCompile Include="Engine\RAII_Wrappers\SplitScreenView.cpp" />
     <ClCompile Include="Engine\Singleton\ResourceManager.cpp" />
     <ClCompile Include="Engine\Singleton\SceneManager.cpp" />
     <ClCompile Include="Engine\Singleton\TimerManager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Engine\RAII_Wrappers\" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -25,7 +25,7 @@ void thomasWasLate::PlayerCharacter::Start()
 void thomasWasLate::PlayerCharacter::RefreshView(const bool isSplitscreen) const
 {
     if (isSplitscreen)
-        diji::SceneManager::GetInstance().ChangePlayerViewCenter(static_cast<bool>(m_CurrentCharacter) ? 0 : 1, GetOwner()->GetComponent<diji::Collider>()->GetCenter());
+        diji::SceneManager::GetInstance().SetViewParameters(static_cast<bool>(m_CurrentCharacter) ? 0 : 1, GetOwner()->GetComponent<diji::Transform>(), true, sf::Vector2f{ 25.f, 25.f });
     else
         SetCameraFollow();
 }

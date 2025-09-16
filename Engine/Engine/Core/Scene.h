@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <SFML/Graphics/View.hpp>
+#include "../RAII_Wrappers/SplitScreenView.h"
 
 namespace diji 
 {
@@ -37,6 +38,7 @@ namespace diji
         [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
         std::string GetGameObjectName(const GameObject* object) const;
         void ChangeViewCenter(int idx, const sf::Vector2f& newCenter);
+        void SetViewParameters(int idx, const Transform* target, bool isFollowing = false, const sf::Vector2f& offset = {});
 
         void SetGameObjectAsCanvasObject(const std::string& name);
         void SetGameObjectAsCanvasObject(const GameObject* object);
@@ -48,7 +50,7 @@ namespace diji
         std::map<std::string, std::unique_ptr<GameObject>> m_CanvasObjectsUPtrMap;
         sf::View m_CanvasView = sf::View(sf::Vector2f{ 1920 * 0.5f, 1080 * 0.5f }, sf::Vector2f{ 1920, 1080 });
 
-        std::vector<sf::View> m_MultiplayerViews;
+        std::vector<SplitScreenView> m_MultiplayerViews;
         bool m_IsUsingMultiplayerViews = false;
 
         void DrawGameObjects() const;

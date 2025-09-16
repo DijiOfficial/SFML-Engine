@@ -8,7 +8,7 @@
 diji::Scene::~Scene() noexcept
 {
     m_ObjectsUPtrMap.clear();
-};
+}
 
 void diji::Scene::Init()
 {
@@ -73,6 +73,11 @@ void diji::Scene::LateUpdate()
     {
         gameObject->LateUpdate();
     }
+
+    for (auto& view : m_MultiplayerViews)
+    {
+        view.Update();
+    }
 }
 
 void diji::Scene::Render() const
@@ -98,7 +103,7 @@ void diji::Scene::RenderMultiplayerViews() const
     for (const auto& view : m_MultiplayerViews)
     {
         // Set the background
-        window::g_window_ptr->setView(view);
+        window::g_window_ptr->setView(view.GetView());
         DrawGameObjects();
         // window::g_window_ptr->setView(m_LeftView);
         // DrawGameObjects();//?
@@ -228,7 +233,14 @@ std::string diji::Scene::GetGameObjectName(const GameObject* object) const
 
 void diji::Scene::ChangeViewCenter(const int idx, const sf::Vector2f& newCenter)
 {
-    m_MultiplayerViews.at(idx).setCenter(newCenter);
+    m_MultiplayerViews.at(idx).SetCenter(newCenter);
+}
+
+void diji::Scene::SetViewParameters(const int idx, const Transform* target, const bool isFollowing, const sf::Vector2f& offset)
+{
+    m_MultiplayerViews.at(idx).SetTargetTransform(target);
+    m_MultiplayerViews.at(idx).SetIsFollowing(isFollowing);
+    m_MultiplayerViews.at(idx).SetOffset(offset);
 }
 
 void diji::Scene::SetGameObjectAsCanvasObject(const std::string& name)
@@ -273,57 +285,39 @@ void diji::Scene::SetMultiplayerSplitScreen(const int numPlayers)
     case 2:
         {
             // Two players: left and right
-            sf::View leftView;
-            leftView.setViewport(sf::FloatRect(sf::Vector2{ 0.f, 0.f }, sf::Vector2{ 0.5f, 1.f }));
+            SplitScreenView leftView    (sf::FloatRect(sf::Vector2{ 0.f, 0.f  }, sf::Vector2{ 0.5f, 1.f }));
+            SplitScreenView rightView   (sf::FloatRect(sf::Vector2{ 0.5f, 0.f }, sf::Vector2{ 0.5f, 1.f }));
 
-            sf::View rightView;
-            rightView.setViewport(sf::FloatRect(sf::Vector2{ 0.5f, 0.f }, sf::Vector2{ 0.5f, 1.f } ));
-
-            m_MultiplayerViews.push_back(leftView);
-            m_MultiplayerViews.push_back(rightView);
+            m_MultiplayerViews.emplace_back(std::move(leftView));
+            m_MultiplayerViews.emplace_back(std::move(rightView));
             break;
         }
-
     case 3:
         {
             // Three players: two top, one bottom (wider)
-            sf::View topLeft;
-            topLeft.setViewport(sf::FloatRect(sf::Vector2{ 0.f, 0.f }, sf::Vector2{ 0.5f, 0.5f }));
+            SplitScreenView topLeft (sf::FloatRect(sf::Vector2{ 0.f, 0.f  }, sf::Vector2{ 0.5f, 0.5f }));
+            SplitScreenView topRight(sf::FloatRect(sf::Vector2{ 0.5f, 0.f }, sf::Vector2{ 0.5f, 0.5f }));
+            SplitScreenView bottom  (sf::FloatRect(sf::Vector2{ 0.f, 0.5f }, sf::Vector2{ 1.f, 0.5f  }));
 
-            sf::View topRight;
-            topRight.setViewport(sf::FloatRect(sf::Vector2{ 0.5f, 0.f }, sf::Vector2{ 0.5f, 0.5f }));
-
-            sf::View bottom;
-            bottom.setViewport(sf::FloatRect(sf::Vector2{ 0.f, 0.5f }, sf::Vector2{ 1.f, 0.5f }));
-
-            m_MultiplayerViews.push_back(topLeft);
-            m_MultiplayerViews.push_back(topRight);
-            m_MultiplayerViews.push_back(bottom);
+            m_MultiplayerViews.emplace_back(std::move(topLeft));
+            m_MultiplayerViews.emplace_back(std::move(topRight));
+            m_MultiplayerViews.emplace_back(std::move(bottom));
             break;
         }
-
     case 4:
         {
             // Four players: 2x2 grid
-            sf::View topLeft;
-            topLeft.setViewport(sf::FloatRect(sf::Vector2{ 0.f, 0.f }, sf::Vector2{ 0.5f, 0.5f }));
+            SplitScreenView topLeft     (sf::FloatRect(sf::Vector2{ 0.f, 0.f   }, sf::Vector2{ 0.5f, 0.5f }));
+            SplitScreenView topRight    (sf::FloatRect(sf::Vector2{ 0.5f, 0.f  }, sf::Vector2{ 0.5f, 0.5f }));
+            SplitScreenView bottomLeft  (sf::FloatRect(sf::Vector2{ 0.f, 0.5f  }, sf::Vector2{ 0.5f, 0.5f }));
+            SplitScreenView bottomRight (sf::FloatRect(sf::Vector2{ 0.5f, 0.5f }, sf::Vector2{ 0.5f, 0.5f }));
 
-            sf::View topRight;
-            topRight.setViewport(sf::FloatRect(sf::Vector2{ 0.5f, 0.f }, sf::Vector2{ 0.5f, 0.5f }));
-
-            sf::View bottomLeft;
-            bottomLeft.setViewport(sf::FloatRect(sf::Vector2{ 0.f, 0.5f }, sf::Vector2{ 0.5f, 0.5f }));
-
-            sf::View bottomRight;
-            bottomRight.setViewport(sf::FloatRect(sf::Vector2{ 0.5f, 0.5f }, sf::Vector2{ 0.5f, 0.5f }));
-
-            m_MultiplayerViews.push_back(topLeft);
-            m_MultiplayerViews.push_back(topRight);
-            m_MultiplayerViews.push_back(bottomLeft);
-            m_MultiplayerViews.push_back(bottomRight);
+            m_MultiplayerViews.emplace_back(std::move(topLeft));
+            m_MultiplayerViews.emplace_back(std::move(topRight));
+            m_MultiplayerViews.emplace_back(std::move(bottomLeft));
+            m_MultiplayerViews.emplace_back(std::move(bottomRight));
             break;
         }
-
     default:
         throw std::invalid_argument("Invalid number of players. Must be 2, 3, or 4.");
     }
