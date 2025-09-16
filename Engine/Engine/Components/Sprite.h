@@ -34,12 +34,22 @@ namespace diji
         void SetMaxWidth(const int maxWidth) { m_MaxWidth = maxWidth; }
         void SetMaxHeight(const int maxHeight) { m_MaxHeight = maxHeight; }
         void SetWallSpritePosition(const sf::FloatRect& position) { m_WallSpritePosition = position; }
+        void ResizeVertexArray()
+        {
+            m_VertexArray.resize
+            (
+                static_cast<size_t>(m_TileCountX) * 
+                static_cast<size_t>(m_TileCountY) * 
+                static_cast<size_t>(TRIANGLE_VERTICES)
+            );
+        }
         
         sf::Texture GetTexture() const { return m_SFMLTexture; }
-        sf::VertexArray GetVertexArray() const { return m_VertexArray; } // consider passing by reference
+        [[nodiscard]] sf::VertexArray& GetVertexArray() { return m_VertexArray; }
 
         void Render() const;
-        
+        void GenerateMap();
+
     private:
         sf::VertexArray m_VertexArray;
         sf::Texture m_SFMLTexture;
@@ -53,7 +63,5 @@ namespace diji
         int m_MaxWidth = 0;
         int m_MaxHeight = 0;
         const int TRIANGLE_VERTICES = 6;
-
-        void GenerateMap();
     };
 }
