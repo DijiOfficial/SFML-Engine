@@ -43,7 +43,7 @@ namespace diji
         sf::Vector2f GetCameraOffset() const { return m_CameraOffset; }
         bool GetIsCameraLocked() const { return m_IsLocked; }
         sf::Vector2i GetMouseWorldPosition(const sf::Vector2i& pos) const;
-        // Rectf GetCameraView(const Rectf& target) const {return }???
+        const sf::View& GetCameraView() const { return m_CameraView; }
         
     private:
         Transform* m_TransformCompPtr = nullptr;

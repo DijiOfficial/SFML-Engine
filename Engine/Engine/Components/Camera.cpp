@@ -11,7 +11,7 @@ diji::Camera::Camera(GameObject* ownerPtr, const float width, const float height
     , m_Height{ height }
     , m_IsLocked{ false }
 {
-    m_CameraView = sf::View(sf::Vector2f{ 0, 0 }, sf::Vector2f{ width, height });
+    m_CameraView = sf::View(sf::Vector2f{ width * 0.5f, height * 0.5f }, sf::Vector2f{ width, height });
 }
 
 diji::Camera::Camera(GameObject* ownerPtr, const sf::Vector2f size)
@@ -22,7 +22,7 @@ diji::Camera::Camera(GameObject* ownerPtr, const sf::Vector2f size)
     , m_Height{ size.y }
     , m_IsLocked{ false }
 {
-    m_CameraView = sf::View(sf::Vector2f{ 0, 0 }, size);
+    m_CameraView = sf::View(sf::Vector2f{ size.x * 0.5f, size.y * 0.5f }, size);
 }
 
 diji::Camera::Camera(GameObject* ownerPtr, const sf::Vector2u size)
