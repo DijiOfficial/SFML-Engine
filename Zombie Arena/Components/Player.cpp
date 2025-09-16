@@ -12,11 +12,13 @@
 #include "Engine/Collision/CollisionSingleton.h"
 #include "Engine/Collision/Collider.h"
 #include "Engine/Components/Camera.h"
+#include "Engine/Components/Sprite.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Components/Transform.h"
 #include "Engine/Core/GameObject.h"
 #include "Engine/Singleton/GameStateManager.h"
 #include "Engine/Singleton/PauseSingleton.h"
+#include "Engine/Singleton/SceneManager.h"
 #include "Engine/Singleton/TimerManager.h"
 #include "Engine/Singleton/TimeSingleton.h"
 
@@ -38,6 +40,11 @@ void zombieArena::Player::Init()
     m_MaxHealth = gameManager.GetMaxHealth();
     m_CurrentHealth = gameManager.GetPlayerHealth();
     m_CurrentSpeed = gameManager.GetRunSpeed();
+}
+
+void zombieArena::Player::Start()
+{
+    diji::SceneManager::GetInstance().GetGameObject("A_Background")->GetComponent<diji::Sprite>()->GenerateMap();
 }
 
 void zombieArena::Player::Update()

@@ -30,7 +30,7 @@ namespace zombieArena
 
         void Init() override;
         void OnEnable() override {}
-        void Start() override {}
+        void Start() override;
         
         void Update() override;
         void FixedUpdate() override;
