@@ -1,6 +1,7 @@
 ﻿#include "GameLoader.h"
 
 #include "GameState.h"
+#include "../Components/BackgroundHandler.h"
 #include "../Components/PlayerCharacter.h"
 #include "../Input/CustomCommands.h"
 #include "../Singletons/GameManager.h"
@@ -13,6 +14,7 @@
 #include "Engine/Components/Transform.h"
 #include "Engine/Components/Render.h"
 #include "Engine/Components/Camera.h"
+#include "Engine/Components/Sprite.h"
 #include "Engine/Components/TextComp.h"
 #include "Engine/Core/Engine.h"
 #include "Engine/Singleton/GameStateManager.h"
@@ -40,11 +42,17 @@ void SceneLoader::Level()
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(thomasWasLate::thomasWasLateState::Level));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(thomasWasLate::thomasWasLateState::Level));
 
-    const auto background = scene->CreateGameObject("A_Background");
-    background->AddComponents<Transform>(static_cast<float>(window::VIEWPORT.x) * -0.5f + 25.f, static_cast<float>(window::VIEWPORT.y) * -0.5f + 25.f);
-    background->AddComponents<TextureComp>("graphics/background.png");
-    background->AddComponents<Render>();
+    const auto staticBackground = scene->CreateGameObject("A_StaticBackground");
+    staticBackground->AddComponents<Transform>(static_cast<float>(window::VIEWPORT.x) * -0.5f + 25.f, static_cast<float>(window::VIEWPORT.y) * -0.5f + 25.f);
+    staticBackground->AddComponents<TextureComp>("graphics/background.png");
+    staticBackground->AddComponents<Render>();
 
+    const auto background = scene->CreateGameObject("B_Background");
+    background->AddComponents<Transform>(0, 0);
+    background->AddComponents<Sprite>("graphics/tiles_sheet.png");
+    background->AddComponents<Render>();
+    background->AddComponents<thomasWasLate::BackgroundHandler>();
+    
     const auto camera = scene->CreateGameObject("A_Camera");
     camera->AddComponents<Transform>(0, 0);
     camera->AddComponents<Camera>(window::VIEWPORT);
@@ -64,24 +72,6 @@ void SceneLoader::Level()
     bob->AddComponents<Render>();
     bob->AddComponents<Collider>();
     bob->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Bob);
-
-    // // set up a camera and use the camera instead of the window sizes
-    // const auto HUD = scene->CreateGameObject("Z_HUD");
-    // HUD->AddComponents<Transform>(0, 0);
-    //
-    // const auto startText = scene->CreateGameObject("Z_playerTextHUD");
-    // startText->AddComponents<Transform>(250, 850);
-    // startText->AddComponents<TextComp>("PRESS ENTER TO PLAY", "fonts/zombiecontrol.ttf");
-    // startText->GetComponent<TextComp>()->GetText().setCharacterSize(125);
-    // startText->AddComponents<Render>();
-    // startText->SetParent(HUD, true);
-    //
-    // const auto fpsCounter = scene->CreateGameObject("Z_FPSCounter");
-    // fpsCounter->AddComponents<TextComp>("0 FPS", "fonts/digital-7.ttf", sf::Color::White, true);
-    // fpsCounter->GetComponent<TextComp>()->GetText().setCharacterSize(33);
-    // fpsCounter->AddComponents<FPSCounter>();
-    // fpsCounter->AddComponents<Transform>(static_cast<int>(1920 - 100.f), 40);
-    // fpsCounter->AddComponents<Render>();
     
 #pragma region Commands
     auto& input = InputManager::GetInstance();

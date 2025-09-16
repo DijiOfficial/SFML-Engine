@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\BackgroundHandler.cpp" />
     <ClCompile Include="Components\PlayerCharacter.cpp" />
     <ClCompile Include="Core\GameLoader.cpp" />
     <ClCompile Include="Input\CustomCommands.cpp" />
@@ -253,6 +254,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\BackgroundHandler.h" />
     <ClInclude Include="Components\PlayerCharacter.h" />
     <ClInclude Include="Core\GameLoader.h" />
     <ClInclude Include="Core\GameState.h" />
