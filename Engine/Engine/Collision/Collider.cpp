@@ -90,3 +90,8 @@ sf::Vector2f diji::Collider::GetPosition() const
 {
     return sf::Vector2f{ m_CollisionBox.left, m_CollisionBox.bottom };
 }
+
+sf::Vector2f diji::Collider::GetCenter() const
+{
+    return sf::Vector2f{ m_CollisionBox.left + m_CollisionBox.width * 0.5f, m_CollisionBox.bottom + m_CollisionBox.height * 0.5f };
+}

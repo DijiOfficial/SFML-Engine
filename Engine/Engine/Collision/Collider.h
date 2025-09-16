@@ -34,6 +34,7 @@ namespace diji
         [[nodiscard]] Rectf GetLastState() const { return m_CollisionBox; }
         [[nodiscard]] sf::Vector2f GetOffset() const { return m_Offset; }
         [[nodiscard]] sf::Vector2f GetPosition() const;
+        [[nodiscard]] sf::Vector2f GetCenter() const;
 
     private:
         sf::Vector2f m_Offset{ 0, 0 };
