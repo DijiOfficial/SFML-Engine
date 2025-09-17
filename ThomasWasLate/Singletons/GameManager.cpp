@@ -6,7 +6,10 @@
 #include <stdexcept>
 #include <string>
 
+#include "../Core/GameState.h"
 #include "Engine/Collision/CollisionSingleton.h"
+#include "Engine/Singleton/GameStateManager.h"
+#include "Engine/Singleton/SceneManager.h"
 
 void thomasWasLate::GameManager::SwitchPlayer()
 {
@@ -22,6 +25,15 @@ void thomasWasLate::GameManager::LoadLevel()
     CreateWorldCollision();
 
     OnNewLevelLoadedEvent.Broadcast();
+}
+
+void thomasWasLate::GameManager::SetLevelCleared()
+{
+    ++m_CurrentLevel;
+
+    OnNewLevelLoadedEvent.ClearListeners();
+    OnPlayerSwitchedEvent.ClearListeners();
+    diji::SceneManager::GetInstance().SetNextSceneToActivate(static_cast<int>(thomasWasLateState::Level));
 }
 
 std::string thomasWasLate::GameManager::LoadInformation()
@@ -96,13 +108,18 @@ void thomasWasLate::GameManager::CreateWorldCollision()
 
     auto& collision = diji::CollisionSingleton::GetInstance();
 
+    // Clear previously created tagged colliders for tiles 2/3/4
+    m_TileColliders = std::vector<std::unique_ptr<diji::Collider>>();
+    
     for (int row = 0; row < m_Rows; ++row)
     {
         int col = 0;
         while (col < m_Cols)
         {
             const int idx = row * m_Cols + col;
-            if (m_LevelInfo[idx] == 1)
+            const int tile = m_LevelInfo[idx];
+
+            if (tile == 1)
             {
                 const int startC = col;
                 while (col < m_Cols && m_LevelInfo[row * m_Cols + col] == 1)
@@ -120,8 +137,51 @@ void thomasWasLate::GameManager::CreateWorldCollision()
             }
             else
             {
+                // Create individual colliders for special tiles 2/3/4 with tags
+                if (tile == 2 || tile == 3 || tile == 4)
+                {
+                    diji::Rectf rect{};
+                    rect.left   = static_cast<float>(col) * kTileSize;
+                    rect.bottom = static_cast<float>(row) * kTileSize;
+                    rect.width  = kTileSize;
+                    rect.height = kTileSize;
+
+                    auto collider = std::make_unique<diji::Collider>(nullptr, static_cast<int>(kTileSize), static_cast<int>(kTileSize));
+                    switch (tile)
+                    {
+                    case 2:
+                        collider->SetTag("lava");
+                        break;
+                    case 3:
+                        collider->SetTag("water");
+                        break;
+                    case 4:
+                        collider->SetTag("goal");
+                        break;
+                    default:
+                        break;
+                    }
+
+                    collision.AddCollider(collider.get(), rect);
+                    m_TileColliders.emplace_back(std::move(collider));
+                }
                 ++col;
             }
+        }
+
+        if (row == m_Rows - 1)
+        {
+            diji::Rectf voidRect{};
+            voidRect.left   = 0.0f;
+            voidRect.bottom = static_cast<float>(row) * kTileSize;
+            voidRect.width  = static_cast<float>(m_Cols) * kTileSize;
+            voidRect.height = kTileSize;
+
+            auto voidCollider = std::make_unique<diji::Collider>(nullptr, diji::Rectf{ .left= -voidRect.width * 0.5f, .bottom= 0.f, .width= voidRect.width * 2.f , .height= voidRect.height });
+            voidCollider->SetTag("void");
+            voidRect = diji::Rectf{ .left= -voidRect.width * 0.5f, .bottom= voidRect.bottom, .width= voidRect.width * 2.f , .height= voidRect.height };
+            collision.AddCollider(voidCollider.get(), voidRect);
+            m_TileColliders.emplace_back(std::move(voidCollider));
         }
     }
 }

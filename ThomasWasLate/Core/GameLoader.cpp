@@ -66,16 +66,16 @@ void SceneLoader::Level()
     thomas->AddComponents<Transform>(0, 0);
     thomas->AddComponents<TextureComp>("graphics/thomas.png");
     thomas->AddComponents<Render>();
-    thomas->AddComponents<Collider>();
-    thomas->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Thomas);
+    thomas->AddComponents<Collider>(44, 70, sf::Vector2f{ 3.f, 30.f });
+    thomas->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Thomas, 0.45f);
     thomas->AddComponents<RectRender>(true);
 
     const auto bob = scene->CreateGameObject("X_Bob");
     bob->AddComponents<Transform>(100, 0);
     bob->AddComponents<TextureComp>("graphics/bob.png");
     bob->AddComponents<Render>();
-    bob->AddComponents<Collider>();
-    bob->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Bob);
+    bob->AddComponents<Collider>(44, 35, sf::Vector2f{ 3.f, 15.f });
+    bob->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Bob, 0.25f);
     bob->AddComponents<RectRender>(true);
     
 #pragma region Commands
@@ -88,6 +88,13 @@ void SceneLoader::Level()
     input.BindCommand<thomasWasLate::MoveCharacter>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::Left, bob, sf::Vector2f{ -1.f, 0.f });
 
     input.BindCommand<thomasWasLate::SwitchCharacter>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::Q, nullptr);
+
+    input.BindCommand<thomasWasLate::CharacterJump>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::W, thomas, true);
+    input.BindCommand<thomasWasLate::CharacterJump>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::W, thomas, false);
+    input.BindCommand<thomasWasLate::CharacterJump>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::Up, bob, true);
+    input.BindCommand<thomasWasLate::CharacterJump>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::Up, bob, false);
+    
+    
 #pragma endregion
 
 #pragma region Events

@@ -40,4 +40,17 @@ namespace thomasWasLate
 
         void Execute() override;
     };
+
+    class CharacterJump final : public diji::GameActorCommands
+    {
+    public:
+        explicit CharacterJump(diji::GameObject* actor, const bool isJumping);
+        ~CharacterJump() noexcept override = default;
+
+        void Execute() override;
+
+    private:
+        PlayerCharacter* m_Character = nullptr;
+        bool m_IsJumping = false;
+    };
 }

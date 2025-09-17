@@ -36,3 +36,18 @@ void thomasWasLate::SwitchCharacter::Execute()
     GameManager::GetInstance().SwitchPlayer();
 }
 
+thomasWasLate::CharacterJump::CharacterJump(diji::GameObject* actor, const bool isJumping)
+    : GameActorCommands{ actor }
+    , m_IsJumping{ isJumping }
+{
+    m_Character = actor->GetComponent<PlayerCharacter>();
+}
+
+void thomasWasLate::CharacterJump::Execute()
+{
+    if (m_IsJumping)
+        m_Character->Jump();
+    else
+        m_Character->ClearJump();
+}
+
