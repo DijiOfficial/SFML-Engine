@@ -6,6 +6,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "Engine/Collision/CollisionSingleton.h"
+
 void thomasWasLate::GameManager::SwitchPlayer()
 {
     m_CurrentPlayer = static_cast<bool>(m_CurrentPlayer) ? CurrentPlayer::Thomas : CurrentPlayer::Bob;
@@ -16,6 +18,8 @@ void thomasWasLate::GameManager::SwitchPlayer()
 void thomasWasLate::GameManager::LoadLevel()
 {
     ReadLevelInfo(LoadInformation());
+
+    CreateWorldCollision();
 
     OnNewLevelLoadedEvent.Broadcast();
 }
@@ -84,4 +88,40 @@ void thomasWasLate::GameManager::ReadLevelInfo(const std::string& filepath)
 
     
     file.close();
+}
+
+void thomasWasLate::GameManager::CreateWorldCollision()
+{
+    constexpr float kTileSize = 50.0f;
+
+    auto& collision = diji::CollisionSingleton::GetInstance();
+
+    for (int row = 0; row < m_Rows; ++row)
+    {
+        int col = 0;
+        while (col < m_Cols)
+        {
+            const int idx = row * m_Cols + col;
+            if (m_LevelInfo[idx] == 1)
+            {
+                const int startC = col;
+                while (col < m_Cols && m_LevelInfo[row * m_Cols + col] == 1)
+                    ++col;
+
+                const int len = col - startC;
+
+                diji::Rectf rect{};
+                rect.left   = static_cast<float>(startC) * kTileSize;
+                rect.bottom = static_cast<float>(row) * kTileSize;
+                rect.width  = static_cast<float>(len) * kTileSize;
+                rect.height = kTileSize;
+
+                collision.ParseRectInLevelCollider(rect);
+            }
+            else
+            {
+                ++col;
+            }
+        }
+    }
 }

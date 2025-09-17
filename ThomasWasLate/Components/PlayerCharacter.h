@@ -7,6 +7,7 @@ namespace diji
 {
     class Transform;
     class Camera;
+    class Collider;
 }
 
 namespace thomasWasLate
@@ -24,7 +25,7 @@ namespace thomasWasLate
         void Start() override;
         
         void Update() override {}
-        void FixedUpdate() override {}
+        void FixedUpdate() override;
         void LateUpdate() override {}
 
         void OnDisable() override {}
@@ -39,7 +40,10 @@ namespace thomasWasLate
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::Camera* m_CameraCompPtr = nullptr;
+        diji::Collider* m_ColliderCompPtr = nullptr;
         CurrentPlayer m_CurrentCharacter;
+        const float GRAVITY = 300.f;
+        bool m_IsOnGround = false;
 
         void SetCameraFollow() const;
         void RefreshView() const { RefreshView(false); }

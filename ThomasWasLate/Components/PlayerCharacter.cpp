@@ -19,6 +19,7 @@ thomasWasLate::PlayerCharacter::PlayerCharacter(diji::GameObject* ownerPtr, cons
 void thomasWasLate::PlayerCharacter::Init()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
+    m_ColliderCompPtr = GetOwner()->GetComponent<diji::Collider>();
 
     GameManager::GetInstance().OnPlayerSwitchedEvent.AddListener(this, &PlayerCharacter::RefreshView);
 }
@@ -28,6 +29,26 @@ void thomasWasLate::PlayerCharacter::Start()
    m_CameraCompPtr = diji::SceneManager::GetInstance().GetGameObject("A_Camera")->GetComponent<diji::Camera>();
     
     SetCameraFollow();
+}
+
+void thomasWasLate::PlayerCharacter::FixedUpdate()
+{
+    diji::Rectf newCollisionBox = m_ColliderCompPtr->GetCollisionBox();
+    newCollisionBox.bottom += GRAVITY * diji::TimeSingleton::GetInstance().GetFixedUpdateDeltaTime() + m_ColliderCompPtr->GetOffset().y;
+
+    // check for collision with world
+    if (diji::CollisionSingleton::GetInstance().IsCollidingWithWorld(newCollisionBox))
+    {
+        if (m_IsOnGround)
+            return;
+        
+        m_IsOnGround = true;
+        m_TransformCompPtr->SetPosition(m_TransformCompPtr->GetPosition().x, std::round(newCollisionBox.bottom / 50) * 50 - 1);
+        
+        return;
+    }
+
+    m_TransformCompPtr->AddOffset(0.f, GRAVITY * diji::TimeSingleton::GetInstance().GetFixedUpdateDeltaTime());
 }
 
 void thomasWasLate::PlayerCharacter::RefreshView(const bool isSplitscreen) const
@@ -40,6 +61,28 @@ void thomasWasLate::PlayerCharacter::RefreshView(const bool isSplitscreen) const
 
 void thomasWasLate::PlayerCharacter::Move(const sf::Vector2f& direction) const
 {
+    diji::Rectf newCollisionBox = m_ColliderCompPtr->GetCollisionBox();
+    newCollisionBox.left += direction.x * m_Speed * diji::TimeSingleton::GetInstance().GetDeltaTime();
+
+    // check for collision with world
+    if (diji::CollisionSingleton::GetInstance().IsCollidingWithWorld(newCollisionBox))
+        return;
+
+    // Check collision with others
+    const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr);
+    for (const auto& collider : colliders)
+    {
+        if (collider->GetParent()->HasComponent<PlayerCharacter>())
+        {
+            const auto otherBox = collider->GetCollisionBox();
+
+            if (direction.x > 0.f && otherBox.left > newCollisionBox.left)
+                return;
+            if (direction.x < 0.f && otherBox.left < newCollisionBox.left)
+                return;
+        }
+    }
+    
     m_TransformCompPtr->AddOffset(direction * m_Speed * diji::TimeSingleton::GetInstance().GetDeltaTime());
 }
 

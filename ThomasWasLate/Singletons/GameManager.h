@@ -40,5 +40,6 @@ namespace thomasWasLate
 
         std::string LoadInformation();
         void ReadLevelInfo(const std::string& filepath);
+        void CreateWorldCollision();
     };
 }

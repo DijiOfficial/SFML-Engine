@@ -14,6 +14,7 @@
 #include "Engine/Components/Transform.h"
 #include "Engine/Components/Render.h"
 #include "Engine/Components/Camera.h"
+#include "Engine/Components/RectRender.h"
 #include "Engine/Components/Sprite.h"
 #include "Engine/Components/TextComp.h"
 #include "Engine/Core/Engine.h"
@@ -67,6 +68,7 @@ void SceneLoader::Level()
     thomas->AddComponents<Render>();
     thomas->AddComponents<Collider>();
     thomas->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Thomas);
+    thomas->AddComponents<RectRender>(true);
 
     const auto bob = scene->CreateGameObject("X_Bob");
     bob->AddComponents<Transform>(100, 0);
@@ -74,6 +76,7 @@ void SceneLoader::Level()
     bob->AddComponents<Render>();
     bob->AddComponents<Collider>();
     bob->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Bob);
+    bob->AddComponents<RectRender>(true);
     
 #pragma region Commands
     auto& input = InputManager::GetInstance();
