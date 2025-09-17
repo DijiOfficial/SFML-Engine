@@ -23,9 +23,10 @@ namespace diji
         // todo: Use template for better and cleaner code, make use create a TimerHandle and pass it instead of returning one. because I'm just voiding it
         [[nodiscard]] TimerHandle SetTimer(std::function<void()> callback, float interval, bool isLooping = false, float initialDelay = 0.0f);
         void ClearTimer(const TimerHandle& handle);
+        void ClearAllTimers();
 
     private:
-        diji::TimeSingleton* m_TimeSingleton = nullptr;
+        TimeSingleton* m_TimeSingleton = nullptr;
         struct Timer
         {
             size_t id;

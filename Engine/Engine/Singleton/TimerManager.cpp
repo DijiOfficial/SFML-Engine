@@ -58,3 +58,8 @@ void diji::TimerManager::ClearTimer(const TimerHandle& handle) // Todo: consider
     if (it != m_Timers.end())
         m_Timers.erase(it);
 }
+
+void diji::TimerManager::ClearAllTimers()
+{
+    m_Timers = std::vector<Timer>();
+}
