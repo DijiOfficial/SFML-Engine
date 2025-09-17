@@ -52,6 +52,7 @@ void diji::Collider::Start()
     CollisionSingleton::GetInstance().AddCollider(this, m_CollisionBox);
 }
 
+// todo: this should be late update and check for world collision it;s shit right now
 void diji::Collider::Update() // todo: not a fan, consider updating position when necessary rather than every frame, using dirty flag or other
 {
     m_LastState = m_CollisionBox;
