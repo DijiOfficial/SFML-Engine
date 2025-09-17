@@ -6,6 +6,7 @@
 void diji::CollisionSingleton::Reset()
 {
 	m_Colliders = std::map<const Collider*, Rectf>();
+	m_LevelCollider = std::vector<std::vector<sf::Vector2f>>();
 }
 
 void diji::CollisionSingleton::AddCollider(const Collider* object, const Rectf& collider)
@@ -45,6 +46,20 @@ std::vector<const diji::Collider*> diji::CollisionSingleton::IsColliding(const C
 			continue;
 		
 		if (AreRectsColliding(m_Colliders[object], Rectf))
+			collidingObjects.push_back(ColliderPtr);
+	}
+	return collidingObjects;
+}
+
+std::vector<const diji::Collider*> diji::CollisionSingleton::IsColliding(const Collider* object, const Rectf& shape)
+{
+	std::vector<const Collider*> collidingObjects;
+	for (auto& [ColliderPtr, Rectf] : m_Colliders)
+	{
+		if (ColliderPtr == object)
+			continue;
+		
+		if (AreRectsColliding(shape, Rectf))
 			collidingObjects.push_back(ColliderPtr);
 	}
 	return collidingObjects;

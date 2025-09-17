@@ -12,6 +12,14 @@ namespace diji
 	struct Rectf
 	{
 		float left, bottom, width, height;
+		Rectf operator+(const sf::Vector2f& vector2) const
+		{
+			return{ .left= left + vector2.x, .bottom= bottom + vector2.y, .width= width, .height= height};
+		}
+		Rectf operator-(const sf::Vector2f& vector2) const
+		{
+			return { .left= left - vector2.x, .bottom= bottom - vector2.y, .width= width, .height= height};
+		}
 	};
 
 	// Todo: Change collision to Unreal System, Colliders are automatically added and compared for collisions with overlap events?
@@ -31,6 +39,7 @@ namespace diji
 		void UpdateCollider(const Collider* object, const Rectf& collider);
 
 		[[nodiscard]] std::vector<const Collider*> IsColliding(const Collider* object);
+		[[nodiscard]] std::vector<const Collider*> IsColliding(const Collider* object, const Rectf& shape);
 		[[nodiscard]] bool AreColliding(const Collider* source, const Collider* target);
 		[[nodiscard]] bool IsCollidingWithWorld(const Rectf& shape) const;
 		[[nodiscard]] bool IsCollidingWithWorld(const sf::Vector2f& point1, const sf::Vector2f& point2) const;

@@ -31,6 +31,12 @@ diji::Collider::Collider(GameObject* ownerPtr, const int width, const int height
     m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width), .height = static_cast<float>(height) };
 }
 
+diji::Collider::Collider(GameObject* ownerPtr, const Rectf& rect)
+    : Component(ownerPtr)
+    , m_CollisionBox{ rect }
+{
+}
+
 void diji::Collider::Start()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<Transform>();
@@ -57,7 +63,7 @@ void diji::Collider::Update() // todo: not a fan, consider updating position whe
 {
     m_LastState = m_CollisionBox;
     const auto& pos = m_TransformCompPtr->GetPosition();
-    if ((std::is_eq( pos.x <=> m_CollisionBox.left) and std::is_eq(pos.y <=> m_CollisionBox.bottom)) or m_IsOffsetSet)
+    if (std::is_eq( pos.x <=> m_CollisionBox.left) and std::is_eq(pos.y <=> m_CollisionBox.bottom))
         return;
 
     m_CollisionBox.left = pos.x + m_Offset.x;
